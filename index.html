@@ -107,7 +107,7 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm h-16 flex items-center px-6 md:px-8">
         <div class="flex-1 flex items-center gap-3">
             <span class="text-xl font-black text-slate-900 tracking-tight">📱 세린캠 예약 관리자</span>
-            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-md">v1</span>
+            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-md">버전1.1</span>
         </div>
         
         <div class="flex-1 max-w-md mx-auto">
@@ -135,14 +135,25 @@
         
         <!-- 왼쪽 사이드바 (고정 필터 영역) -->
         <aside class="w-[300px] shrink-0 flex flex-col gap-5">
-            <!-- 1. 대여 일정 필터 (NEW) -->
+            <!-- 1. 대여 일정 필터 -->
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 수령일(예약일)</h3>
+                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 시작일</h3>
                     <button onclick="setDateFilter('all')" id="btn-clear-date" class="hidden text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors">초기화 ✕</button>
                 </div>
                 <div id="filter-group-date" class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-1">
                     <button onclick="setDateFilter('all')" class="chip-btn date-filter-item active" data-id="all">전체</button>
+                </div>
+            </div>
+
+            <!-- 1-2. 반납 일정 필터 (NEW) -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 반납일</h3>
+                    <button onclick="setReturnDateFilter('all')" id="btn-clear-return-date" class="hidden text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors">초기화 ✕</button>
+                </div>
+                <div id="filter-group-return-date" class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-1">
+                    <button onclick="setReturnDateFilter('all')" class="chip-btn return-date-filter-item active" data-id="all">전체</button>
                 </div>
             </div>
 
@@ -246,7 +257,7 @@
                 <button onclick="bulkUpdateStatus('취소')" class="text-[13px] font-bold bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">취소 ➔</button>
                 
                 <div class="w-px h-4 bg-slate-600 mx-1"></div>
-                <!-- [NEW] 일괄 삭제 버튼 추가 -->
+                <!-- 일괄 삭제 버튼 추가 -->
                 <button onclick="bulkDeleteRecords()" class="text-[13px] font-bold bg-transparent border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">삭제 🗑️</button>
             </div>
             <button onclick="clearSelection()" class="ml-1 p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors shrink-0" title="선택 해제">
@@ -466,6 +477,7 @@
         let currentDeliverySubFilter = 'all';
         let currentReturnFilter = 'all';
         let selectedDates = []; 
+        let selectedReturnDates = []; // [NEW] 반납일 필터 상태 추가
         let currentSortMode = 'latest'; // 정렬 모드 'latest'로 변경
 
         window.onload = () => fetchData();
@@ -494,6 +506,7 @@
                     
                     allData = validData.sort(sortLogic);
                     renderDateFilters();
+                    renderReturnDateFilters(); // [NEW] 반납일 필터 렌더링 호출
                     filterData();
                 } else { showToast("데이터 로드 실패: " + (json.message || "")); }
             } catch(e) { 
@@ -536,6 +549,46 @@
             const clearBtn = document.getElementById('btn-clear-date');
             if(clearBtn) {
                 if(selectedDates.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+
+            filterData();
+        }
+
+        // [NEW] 반납일 필터 렌더링 함수 추가
+        function renderReturnDateFilters() {
+            const container = document.getElementById('filter-group-return-date');
+            const dates = [...new Set(allData.map(item => String(item.endDate || '')).filter(d => d && d.includes('-')))].sort();
+            
+            let html = `<button onclick="setReturnDateFilter('all')" class="chip-btn return-date-filter-item ${selectedReturnDates.length === 0 ? 'active' : ''}" data-id="all">전체</button>`;
+            dates.forEach(date => {
+                const parts = date.split('-');
+                if(parts.length === 3) {
+                    const label = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
+                    const isActive = selectedReturnDates.includes(date) ? 'active' : '';
+                    html += `<button onclick="setReturnDateFilter('${date}')" class="chip-btn return-date-filter-item ${isActive}" data-id="${date}">${label}</button>`;
+                }
+            });
+            container.innerHTML = html;
+        }
+
+        // [NEW] 반납일 필터 설정 함수 추가
+        function setReturnDateFilter(d) {
+            if (d === 'all') selectedReturnDates = []; 
+            else {
+                const index = selectedReturnDates.indexOf(d);
+                if (index > -1) selectedReturnDates.splice(index, 1);
+                else selectedReturnDates.push(d); 
+            }
+
+            document.querySelectorAll('.return-date-filter-item').forEach(b => {
+                if (b.dataset.id === 'all') b.classList.toggle('active', selectedReturnDates.length === 0);
+                else b.classList.toggle('active', selectedReturnDates.includes(b.dataset.id));
+            });
+
+            const clearBtn = document.getElementById('btn-clear-return-date');
+            if(clearBtn) {
+                if(selectedReturnDates.length > 0) clearBtn.classList.remove('hidden');
                 else clearBtn.classList.add('hidden');
             }
 
@@ -597,6 +650,7 @@
             
             const counts = { 
                 date: { 'all': 0 },
+                returnDate: { 'all': 0 }, // [NEW] 반납일 카운트 객체 추가
                 model: { 'all': 0, '23U': 0, '24U': 0, '25U': 0, '26U': 0, '17P': 0, '17PM': 0, '백업': 0, '연장': 0, '배터리': 0 },
                 delivery: { 'all': 0, '택배': 0, '공연장': 0, '사무실': 0 },
                 deliverySub: { 'all': 0, 'remaining': 0, 'pickedup': 0 },
@@ -607,12 +661,18 @@
                 if(b.dataset.id !== 'all') counts.date[b.dataset.id] = 0;
             });
 
+            // [NEW] 반납일 초기화
+            document.querySelectorAll('.return-date-filter-item').forEach(b => {
+                if(b.dataset.id !== 'all') counts.returnDate[b.dataset.id] = 0;
+            });
+
             const filtered = allData.filter(item => {
                 // 엑셀의 자동 변환(숫자, 날짜 포맷)으로 인한 앱 크래시 방지를 위해 모두 텍스트로 강제 변환
                 const model = String(item.model || '').toUpperCase();
                 const delivery = String(item.delivery || '');
                 const status = String(item.status || '');
                 const startDateStr = String(item.startDate || '');
+                const endDateStr = String(item.endDate || ''); // [NEW] 반납일 텍스트
                 
                 const cleanModel = model.replace(/\s*\+?\s*보조배터리/g, '').trim();
                 const isAssigned = /\d$/.test(cleanModel);
@@ -628,13 +688,19 @@
                 );
                 
                 const matchDate = selectedDates.length === 0 || selectedDates.includes(startDateStr);
+                const matchReturnDate = selectedReturnDates.length === 0 || selectedReturnDates.includes(endDateStr); // [NEW] 반납일 조건
 
                 if (matchQuery) {
                     counts.date['all']++;
                     if (startDateStr && counts.date[startDateStr] !== undefined) counts.date[startDateStr]++;
+
+                    // [NEW] 반납일 기본 카운팅
+                    counts.returnDate['all']++;
+                    if (endDateStr && counts.returnDate[endDateStr] !== undefined) counts.returnDate[endDateStr]++;
                 }
 
-                if (matchDate && matchQuery) {
+                // [UPDATE] 반납일 조건 추가 (matchReturnDate)
+                if (matchDate && matchReturnDate && matchQuery) {
                     counts.model.all++;
                     MODEL_LIST.forEach(m => { if(model.includes(m)) counts.model[m]++; });
                     if (isBackup) counts.model['백업']++;
@@ -676,7 +742,8 @@
                      if (currentDeliverySubFilter === 'pickedup' && !isAssigned) matchDeliverySub = false;
                 }
 
-                return matchQuery && matchDate && matchModel && matchDelivery && matchReturn && matchDeliverySub;
+                // [UPDATE] 반납일 매칭 여부 포함해서 최종 리턴
+                return matchQuery && matchDate && matchReturnDate && matchModel && matchDelivery && matchReturn && matchDeliverySub;
             });
 
             updateFilterUI(counts);
@@ -709,6 +776,7 @@
             };
             
             updateTabCounts('filter-group-date', counts.date, true);
+            updateTabCounts('filter-group-return-date', counts.returnDate, true); // [NEW] 반납일 UI 업데이트
             updateTabCounts('filter-group-model', counts.model);
             updateTabCounts('filter-group-delivery', counts.delivery);
             updateTabCounts('sub-filter-group-delivery', counts.deliverySub); 
