@@ -226,8 +226,9 @@
                 <div class="w-14 text-center shrink-0">상태</div>
                 <div class="w-20 text-center shrink-0">접수일시</div>
                 <div class="w-32 shrink-0">기기 및 번호</div>
-                <div class="flex-1 shrink-0">고객 정보</div>
-                <div class="w-48 shrink-0 px-2">배송지 주소</div>
+                <!-- [수정] 고객정보 가로폭 축소, 배송지 주소 가로폭 최대 확장 -->
+                <div class="w-44 shrink-0">고객 정보</div>
+                <div class="flex-1 shrink-0 px-2">배송지 주소</div>
                 <div class="w-64 shrink-0">대여 일정 및 행사명</div>
                 <div class="w-[72px] shrink-0">결제 금액</div>
                 <div class="w-24 shrink-0 text-center">송장번호</div>
@@ -1333,7 +1334,8 @@
                         </div>
                     </div>
                     
-                    <div class="flex-1 shrink-0 flex flex-col justify-center min-w-0 pr-2">
+                    <!-- [수정] 고객정보 가로폭 축소, 배송지 주소 가로폭 최대 확장 -->
+                    <div class="w-44 shrink-0 flex flex-col justify-center min-w-0 pr-2">
                         <div class="flex items-center gap-1">
                             <span class="text-base font-black text-slate-900 truncate">${item.name}</span>
                             ${backupBadge}
@@ -1344,7 +1346,8 @@
                         </div>
                     </div>
                     
-                    <div class="w-48 shrink-0 flex flex-col justify-center px-2 min-w-0">
+                    <!-- [수정] 고객정보 가로폭 축소, 배송지 주소 가로폭 최대 확장 -->
+                    <div class="flex-1 shrink-0 flex flex-col justify-center px-2 min-w-0">
                         ${fullAddress.trim() ? `
                             <div class="flex items-center gap-1 mb-0.5">
                                 <span class="text-[10px] font-black bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-tnum border border-slate-200">${item.zipCode || '우편번호 없음'}</span>
@@ -1597,16 +1600,6 @@
             
             // 엔터를 친 경우 다음 칸 편집 모드 자동 활성화
             if (focusNext && nextRowId) setTimeout(() => enableTrackingInlineEdit(null, nextRowId), 10);
-        }
-
-        // [NEW] 진행 상태 필터 토글 및 스크롤업 기능 추가
-        function setStatusFilter(status) {
-            if (currentFilterStatus === status && status !== 'all') currentFilterStatus = 'all';
-            else currentFilterStatus = status;
-            
-            document.querySelectorAll('.status-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentFilterStatus));
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // 화면 맨 위로 스크롤
-            filterData();
         }
 
         function setEditStatus(status) {
