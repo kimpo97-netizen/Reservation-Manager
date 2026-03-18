@@ -107,13 +107,12 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm h-16 flex items-center px-6 md:px-8">
         <div class="flex-1 flex items-center gap-3">
             <span class="text-xl font-black text-slate-900 tracking-tight">📱 세린캠 예약 관리자</span>
-            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-md">버전1.1</span>
+            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-md">v1</span>
         </div>
         
         <div class="flex-1 max-w-md mx-auto">
             <div class="relative flex items-center bg-slate-100 border border-slate-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:bg-white transition-all">
                 <svg class="text-slate-400 ml-3 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <!-- [수정] placeholder 텍스트 업데이트 -->
                 <input type="text" id="search-input" onkeyup="filterData()" placeholder="모든 정보 검색 (이름, 주소, 송장, 메모, 행사명 등)" class="w-full bg-transparent border-none text-sm font-bold text-slate-800 placeholder-slate-400 outline-none p-2.5">
             </div>
         </div>
@@ -138,7 +137,7 @@
             <!-- 1. 대여 일정 필터 -->
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 시작일</h3>
+                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 수령일(예약일)</h3>
                     <button onclick="setDateFilter('all')" id="btn-clear-date" class="hidden text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors">초기화 ✕</button>
                 </div>
                 <div id="filter-group-date" class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-1">
@@ -552,6 +551,7 @@
                 else clearBtn.classList.add('hidden');
             }
 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 스크롤
             filterData();
         }
 
@@ -592,6 +592,7 @@
                 else clearBtn.classList.add('hidden');
             }
 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 스크롤
             filterData();
         }
 
@@ -820,23 +821,55 @@
             }
         }
 
-        function toggleBatteryFilter() { setModelFilter(currentModelFilter === '배터리' ? 'all' : '배터리'); }
-        function toggleBackupFilter() { setModelFilter(currentModelFilter === '백업' ? 'all' : '백업'); }
-        function toggleExtensionFilter() { setModelFilter(currentModelFilter === '연장' ? 'all' : '연장'); }
-        function setModelFilter(m) { currentModelFilter = m; document.querySelectorAll('.model-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === m)); filterData(); }
+        // [NEW] 모든 모델 관련 빠른 필터 버튼들은 한 번 더 누르면 원래대로(all) 돌아가게 변경됨
+        function toggleBatteryFilter() { setModelFilter('배터리'); }
+        function toggleBackupFilter() { setModelFilter('백업'); }
+        function toggleExtensionFilter() { setModelFilter('연장'); }
+        
+        function setModelFilter(m) { 
+            // [NEW] 필터 토글 기능 추가
+            if (currentModelFilter === m && m !== 'all') currentModelFilter = 'all';
+            else currentModelFilter = m; 
+            
+            document.querySelectorAll('.model-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentModelFilter)); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 자동 스크롤
+            filterData(); 
+        }
         
         function setDeliveryFilter(d) { 
-            currentDeliveryFilter = d; currentDeliverySubFilter = 'all'; 
-            document.querySelectorAll('.delivery-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === d)); 
+            // [NEW] 필터 토글 기능 추가
+            if (currentDeliveryFilter === d && d !== 'all') currentDeliveryFilter = 'all';
+            else currentDeliveryFilter = d; 
+            
+            currentDeliverySubFilter = 'all'; 
+            document.querySelectorAll('.delivery-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentDeliveryFilter)); 
             const subGroup = document.getElementById('sub-filter-group-delivery');
-            if (d === 'all') { subGroup.classList.add('hidden'); subGroup.classList.remove('flex'); } 
+            if (currentDeliveryFilter === 'all') { subGroup.classList.add('hidden'); subGroup.classList.remove('flex'); } 
             else { subGroup.classList.remove('hidden'); subGroup.classList.add('flex'); }
             document.querySelectorAll('.delivery-sub-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === 'all'));
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 자동 스크롤
             filterData(); 
         }
 
-        function setDeliverySubFilter(sub) { currentDeliverySubFilter = sub; document.querySelectorAll('.delivery-sub-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === sub)); filterData(); }
-        function setReturnFilter(r) { currentReturnFilter = r; document.querySelectorAll('.return-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === r)); filterData(); }
+        function setDeliverySubFilter(sub) { 
+            // [NEW] 필터 토글 기능 추가
+            if (currentDeliverySubFilter === sub && sub !== 'all') currentDeliverySubFilter = 'all';
+            else currentDeliverySubFilter = sub; 
+            
+            document.querySelectorAll('.delivery-sub-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentDeliverySubFilter)); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 자동 스크롤
+            filterData(); 
+        }
+
+        function setReturnFilter(r) { 
+            // [NEW] 필터 토글 기능 추가
+            if (currentReturnFilter === r && r !== 'all') currentReturnFilter = 'all';
+            else currentReturnFilter = r; 
+            
+            document.querySelectorAll('.return-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentReturnFilter)); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 자동 스크롤
+            filterData(); 
+        }
 
         // --- 다중 선택 로직 시작 ---
         function toggleRowSelection(e, rowId) {
@@ -1239,14 +1272,27 @@
                 const formatMD = (d) => { if(!d) return '-'; const p = String(d).split('-'); return p.length >= 3 ? `${parseInt(p[1])}/${parseInt(p[2])}` : String(d); };
                 const start = formatMD(item.startDate);
                 const end = formatMD(item.endDate);
+                
                 const displayModel = String(item.model || '').replace(/\r?\n|\r/g, ' ').replace(/\s*\+?\s*보조배터리/g, '').trim();
                 const battery = String(item.model || '').includes('보조배터리') ? '⚡' : '';
                 const trackingDisplay = item.trackingNumber ? item.trackingNumber : '입력';
                 const memo = item.memo ? '📝' : '';
                 
-                // [NEW] 백업 여부 확인 및 클래스/뱃지 생성
+                // [NEW] 대여 모델 배정 완료 여부 (끝자리가 숫자인지 체크)
+                const cleanModelForBorder = String(item.model || '').toUpperCase().replace(/\s*\+?\s*보조배터리/g, '').trim();
+                const isAssigned = /\d$/.test(cleanModelForBorder);
+
+                // [NEW] 백업 여부 확인
                 const isBackup = String(item.category).includes('백업') || String(item.model).includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
-                const backupBorderClass = isBackup ? '!border-2 !border-yellow-400 !bg-yellow-50/40' : '';
+                
+                // [UPDATE] 테두리 클래스 통합 (배정 완료 시 녹색 링, 백업 시 노란색 테두리)
+                let extraCardClasses = '';
+                if (isAssigned) {
+                    extraCardClasses = '!border-2 !border-emerald-400 !bg-emerald-50/10'; // 배정 시 녹색 테두리
+                } else if (isBackup) {
+                    extraCardClasses = '!border-2 !border-yellow-400 !bg-yellow-50/40'; // 배정 전 백업이면 노란 테두리
+                }
+
                 const backupBadge = isBackup ? `<span class="bg-yellow-400 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap shrink-0 ml-1">💾 백업</span>` : '';
 
                 let fullAddress = '';
@@ -1262,7 +1308,7 @@
                 else if(rawPay === '') { payShort = '-'; }
 
                 const card = document.createElement('div');
-                card.className = `list-row relative overflow-hidden flex items-center px-4 py-4 gap-3 ${isSelected ? 'selected' : ''} ${backupBorderClass}`;
+                card.className = `list-row relative overflow-hidden flex items-center px-4 py-4 gap-3 ${isSelected ? 'selected' : ''} ${extraCardClasses}`;
                 card.onclick = () => openModal(item);
                 
                 card.innerHTML = `
@@ -1551,6 +1597,16 @@
             
             // 엔터를 친 경우 다음 칸 편집 모드 자동 활성화
             if (focusNext && nextRowId) setTimeout(() => enableTrackingInlineEdit(null, nextRowId), 10);
+        }
+
+        // [NEW] 진행 상태 필터 토글 및 스크롤업 기능 추가
+        function setStatusFilter(status) {
+            if (currentFilterStatus === status && status !== 'all') currentFilterStatus = 'all';
+            else currentFilterStatus = status;
+            
+            document.querySelectorAll('.status-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentFilterStatus));
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // 화면 맨 위로 스크롤
+            filterData();
         }
 
         function setEditStatus(status) {
