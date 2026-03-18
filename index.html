@@ -465,7 +465,12 @@
         async function fetchData() {
             toggleLoading(true);
             try {
-                const res = await fetch(`${API_URL}?type=admin_list`);
+                // [UPDATE] 리다이렉트(redirect: 'follow') 속성을 명시적으로 추가
+                const res = await fetch(`${API_URL}?type=admin_list`, {
+                    method: 'GET',
+                    redirect: 'follow',
+                    headers: { 'Accept': 'application/json' }
+                });
                 const json = await res.json();
                 if(json.result === 'success') {
                     // [수정] 데이터에 빈 값이 있거나 숫자로 변환된 경우를 방어하기 위해 String() 처리 추가
@@ -817,9 +822,15 @@
                         model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                     };
                     
-                    return fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
-                        .then(res => res.json())
-                        .then(data => { if(data.result !== 'success') throw new Error("서버에서 처리를 실패했습니다."); });
+                    // [UPDATE] 리다이렉트 허용 및 헤더 강화
+                    return fetch(API_URL, { 
+                        method: 'POST', 
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload) 
+                    })
+                    .then(res => res.json())
+                    .then(data => { if(data.result !== 'success') throw new Error("서버에서 처리를 실패했습니다."); });
                 });
 
                 await Promise.all(promises);
@@ -1028,9 +1039,16 @@
                         startDate: item.startDate || '', endDate: item.endDate || '', delivery: item.delivery || '', returnWay: item.returnWay || '',
                         status: item.status || '', tracking: updateInfo.newTracking, model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                     };
-                    return fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
-                        .then(res => res.json())
-                        .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); });
+                    
+                    // [UPDATE] 리다이렉트 허용 및 헤더 강화
+                    return fetch(API_URL, { 
+                        method: 'POST', 
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload) 
+                    })
+                    .then(res => res.json())
+                    .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); });
                 });
                 await Promise.all(promises);
             } catch (err) {
@@ -1261,13 +1279,19 @@
                     status: item.status || '', tracking: item.trackingNumber || '', model: finalModel, memo: item.memo || '', totalPrice: item.totalPrice || 0
                 };
 
-                fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
-                    .then(res => res.json())
-                    .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
-                    .catch(err => {
-                        allData[itemIndex].model = oldModel; filterData();
-                        showToast("인터넷 연결 불안정으로 기기 배정이 취소되었습니다.");
-                    });
+                // [UPDATE] 리다이렉트 허용 및 헤더 강화
+                fetch(API_URL, { 
+                    method: 'POST', 
+                    redirect: 'follow',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload) 
+                })
+                .then(res => res.json())
+                .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
+                .catch(err => {
+                    allData[itemIndex].model = oldModel; filterData();
+                    showToast("인터넷 연결 불안정으로 기기 배정이 취소되었습니다.");
+                });
             }
 
             filterData(); // 화면 즉시 갱신
@@ -1355,13 +1379,19 @@
                     status: item.status || '', tracking: newTracking, model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                 };
 
-                fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
-                    .then(res => res.json())
-                    .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
-                    .catch(err => {
-                        allData[itemIndex].trackingNumber = oldTracking; filterData();
-                        showToast("인터넷 연결 불안정으로 송장번호 입력이 취소되었습니다.");
-                    });
+                // [UPDATE] 리다이렉트 허용 및 헤더 강화
+                fetch(API_URL, { 
+                    method: 'POST', 
+                    redirect: 'follow',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload) 
+                })
+                .then(res => res.json())
+                .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
+                .catch(err => {
+                    allData[itemIndex].trackingNumber = oldTracking; filterData();
+                    showToast("인터넷 연결 불안정으로 송장번호 입력이 취소되었습니다.");
+                });
             }
 
             filterData(); // 화면 즉시 갱신
@@ -1522,15 +1552,21 @@
             showAppAlert("수정 내역이 화면에 즉시 반영되었습니다.", "완료", "✅"); 
             btn.innerText = '수정 완료 (즉시반영)'; btn.disabled = false;
 
-            fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
-                .then(res => res.json())
-                .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
-                .catch(err => {
-                    if(targetIndex !== -1 && originalData) {
-                        allData[targetIndex] = originalData; filterData(); 
-                        showAppAlert("인터넷 연결이 불안정하여 원상복구 되었습니다.", "🚨 저장 실패", "⚠️");
-                    }
-                });
+            // [UPDATE] 리다이렉트 허용 및 헤더 강화
+            fetch(API_URL, { 
+                method: 'POST', 
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload) 
+            })
+            .then(res => res.json())
+            .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
+            .catch(err => {
+                if(targetIndex !== -1 && originalData) {
+                    allData[targetIndex] = originalData; filterData(); 
+                    showAppAlert("인터넷 연결이 불안정하여 원상복구 되었습니다.", "🚨 저장 실패", "⚠️");
+                }
+            });
         }
 
         function confirmDelete() {
@@ -1543,7 +1579,13 @@
                 closeModal();
                 showAppAlert("삭제 처리되었습니다.", "완료", "🗑️");
                 
-                fetch(API_URL, { method: 'POST', body: JSON.stringify({ type: 'delete', row: rowId, sheetName: document.getElementById('edit-sheet-name').value }) })
+                // [UPDATE] 리다이렉트 허용 및 헤더 강화
+                fetch(API_URL, { 
+                    method: 'POST', 
+                    redirect: 'follow',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ type: 'delete', row: rowId, sheetName: document.getElementById('edit-sheet-name').value }) 
+                })
                 .then(res => res.json())
                 .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
                 .catch(err => {
