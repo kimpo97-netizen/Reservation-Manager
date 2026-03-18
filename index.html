@@ -107,7 +107,7 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm h-16 flex items-center px-6 md:px-8">
         <div class="flex-1 flex items-center gap-3">
             <span class="text-xl font-black text-slate-900 tracking-tight">📱 세린캠 예약 관리자</span>
-            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-md">v1.2</span>
+            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-md">v1</span>
         </div>
         
         <div class="flex-1 max-w-md mx-auto">
@@ -145,7 +145,7 @@
                 </div>
             </div>
 
-            <!-- 1-2. 반납 일정 필터 (NEW) -->
+            <!-- 1-2. 반납 일정 필터 -->
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 반납일</h3>
@@ -218,7 +218,7 @@
                 <p class="text-sm font-bold text-slate-500">서버에서 예약 데이터를 불러오는 중입니다...</p>
             </div>
             
-            <!-- 리스트 헤더 (가로형) - 체크박스 및 열 순서/넓이 변경 -->
+            <!-- 리스트 헤더 (가로형) -->
             <div id="list-header" class="hidden bg-white border border-slate-200 rounded-xl mb-3 items-center px-4 py-3 text-[13px] font-extrabold text-slate-500 gap-3 shadow-sm sticky top-[72px] z-10">
                 <div class="w-8 text-center shrink-0 flex items-center justify-center pl-1">
                     <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(event)" class="checkbox-custom" title="전체 선택">
@@ -226,7 +226,6 @@
                 <div class="w-14 text-center shrink-0">상태</div>
                 <div class="w-20 text-center shrink-0">접수일시</div>
                 <div class="w-32 shrink-0">기기 및 번호</div>
-                <!-- [수정] 고객정보 가로폭 축소, 배송지 주소 가로폭 최대 확장 -->
                 <div class="w-44 shrink-0">고객 정보</div>
                 <div class="w-64 shrink-0">대여 일정 및 행사명</div>
                 <div class="flex-1 shrink-0 px-2">배송지 주소</div>
@@ -257,7 +256,6 @@
                 <button onclick="bulkUpdateStatus('취소')" class="text-[13px] font-bold bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">취소 ➔</button>
                 
                 <div class="w-px h-4 bg-slate-600 mx-1"></div>
-                <!-- 일괄 삭제 버튼 추가 -->
                 <button onclick="bulkDeleteRecords()" class="text-[13px] font-bold bg-transparent border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">삭제 🗑️</button>
             </div>
             <button onclick="clearSelection()" class="ml-1 p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors shrink-0" title="선택 해제">
@@ -404,7 +402,7 @@
         </div>
     </div>
 
-    <!-- 커스텀 알림창 (z-index를 100000으로 높여서 무조건 맨 위에 오도록 수정) -->
+    <!-- 커스텀 알림창 -->
     <div id="app-modal" class="fixed inset-0 hidden flex items-center justify-center p-6" style="z-index: 100000;">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onclick="closeAppModal()"></div>
         <div id="app-modal-box" class="bg-white rounded-[24px] p-8 w-full max-w-sm relative z-10 shadow-2xl transform transition-all">
@@ -438,7 +436,7 @@
         </div>
     </div>
 
-    <!-- [NEW] 송장 매칭 검토 모달 -->
+    <!-- 송장 매칭 검토 모달 -->
     <div id="bulk-tracking-review-modal" class="fixed inset-0 hidden flex items-center justify-center p-6" style="z-index: 10000;">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onclick="closeBulkTrackingReviewModal()"></div>
         <div class="bg-white rounded-[24px] p-6 w-full max-w-md relative z-10 shadow-2xl flex flex-col transform transition-all max-h-[85vh]">
@@ -452,7 +450,6 @@
                 아래 고객에게 배정될 송장번호가 맞는지 최종 확인해주세요.<br/>문제가 없다면 <strong>'최종 등록하기'</strong>를 눌러주세요.
             </p>
             <div class="overflow-y-auto flex-1 bg-slate-50 rounded-xl border border-slate-200 p-2.5 mb-6 space-y-2" id="bulk-tracking-review-list">
-                <!-- JS에서 검토 리스트가 자동으로 생성됩니다 -->
             </div>
             <div class="flex gap-3 mt-auto pt-2">
                 <button onclick="backToBulkTrackingModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl transition-colors">다시 수정</button>
@@ -467,9 +464,9 @@
         const STATUS_PRIORITY = { '예약신청': 1, '대기': 2, '확정': 3, '반납완료': 4, '취소': 5 };
 
         let allData = [];
-        let currentlyFilteredList = []; // 현재 필터링된 리스트 (전체선택을 위함)
-        let selectedRows = []; // 다중 선택된 row ID 배열
-        let tempTrackingNumbers = []; // [NEW] 검토용 임시 송장번호 저장
+        let currentlyFilteredList = []; // 현재 화면에 렌더링된 리스트 보관
+        let selectedRows = []; 
+        let tempTrackingNumbers = []; 
 
         let currentFilterStatus = 'all';
         let currentModelFilter = 'all';
@@ -477,15 +474,14 @@
         let currentDeliverySubFilter = 'all';
         let currentReturnFilter = 'all';
         let selectedDates = []; 
-        let selectedReturnDates = []; // [NEW] 반납일 필터 상태 추가
-        let currentSortMode = 'latest'; // 정렬 모드 'latest'로 변경
+        let selectedReturnDates = []; 
+        let currentSortMode = 'latest'; 
 
         window.onload = () => fetchData();
 
         async function fetchData() {
             toggleLoading(true);
             try {
-                // [UPDATE] 리다이렉트(redirect: 'follow') 속성을 명시적으로 추가
                 const res = await fetch(`${API_URL}?type=admin_list`, {
                     method: 'GET',
                     redirect: 'follow',
@@ -493,21 +489,16 @@
                 });
                 const json = await res.json();
                 if(json.result === 'success') {
-                    // [수정] 데이터에 빈 값이 있거나 숫자로 변환된 경우를 방어하기 위해 String() 처리 추가
-                    // [UPDATE] 구글 시트에서 우편번호의 맨 앞자리 0이 숫자로 인식되어 날아가는 현상 방지 (5자리 0 채우기)
                     const validData = json.data.filter(item => item.name || item.phone || (item.model && String(item.model).trim() !== '')).map(item => {
                         let zc = String(item.zipCode || item.zipcode || '').replace(/^'/, '').trim();
-                        // 우편번호가 숫자만 있고 5자리가 안 될 경우, 앞에 0을 붙여줌 (예: 1234 -> 01234)
-                        if (zc && /^\d{1,4}$/.test(zc)) {
-                            zc = zc.padStart(5, '0');
-                        }
+                        if (zc && /^\d{1,4}$/.test(zc)) { zc = zc.padStart(5, '0'); }
                         return { ...item, zipCode: zc };
                     });
                     
                     allData = validData.sort(sortLogic);
                     renderDateFilters();
-                    renderReturnDateFilters(); // [NEW] 반납일 필터 렌더링 호출
-                    filterData();
+                    renderReturnDateFilters(); 
+                    filterData(false); // 초기 로드: 강제 갱신
                 } else { showToast("데이터 로드 실패: " + (json.message || "")); }
             } catch(e) { 
                 console.error("Fetch Error:", e);
@@ -518,7 +509,6 @@
 
         function renderDateFilters() {
             const container = document.getElementById('filter-group-date');
-            // [수정] 날짜 데이터가 숫자로 깨져들어와도 에러가 나지 않도록 String() 강제 변환
             const dates = [...new Set(allData.map(item => String(item.startDate || '')).filter(d => d && d.includes('-')))].sort();
             
             let html = `<button onclick="setDateFilter('all')" class="chip-btn date-filter-item ${selectedDates.length === 0 ? 'active' : ''}" data-id="all">전체</button>`;
@@ -552,11 +542,10 @@
                 else clearBtn.classList.add('hidden');
             }
 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 스크롤
-            filterData();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterData(false);
         }
 
-        // [NEW] 반납일 필터 렌더링 함수 추가
         function renderReturnDateFilters() {
             const container = document.getElementById('filter-group-return-date');
             const dates = [...new Set(allData.map(item => String(item.endDate || '')).filter(d => d && d.includes('-')))].sort();
@@ -573,7 +562,6 @@
             container.innerHTML = html;
         }
 
-        // [NEW] 반납일 필터 설정 함수 추가
         function setReturnDateFilter(d) {
             if (d === 'all') selectedReturnDates = []; 
             else {
@@ -593,8 +581,8 @@
                 else clearBtn.classList.add('hidden');
             }
 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 스크롤
-            filterData();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterData(false);
         }
 
         function toggleSortMode() {
@@ -603,12 +591,11 @@
             if (btnText) {
                 btnText.innerText = currentSortMode === 'latest' ? '최신순' : '모델순';
             }
-            filterData();
+            filterData(false);
         }
 
         function sortLogic(a, b) {
             if (currentSortMode === 'model') {
-                // [수정] 모델명이 숫자로 변환된 경우를 대비해 String() 추가
                 const modelA = String(a.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim().toUpperCase();
                 const modelB = String(b.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim().toUpperCase();
                 
@@ -616,19 +603,17 @@
                 if (comp !== 0) return comp;
             }
 
-            // 최신순 정렬: 무조건 접수일시 기준 내림차순 (최근 접수가 맨 위로)
             const timeA = new Date(a.orderTime).getTime();
             const timeB = new Date(b.orderTime).getTime();
             
             if (!isNaN(timeA) && !isNaN(timeB)) {
                 if (timeA !== timeB) return timeB - timeA;
             } else if (!isNaN(timeA)) {
-                return -1; // A만 시간 있으면 A를 위로
+                return -1;
             } else if (!isNaN(timeB)) {
-                return 1;  // B만 시간 있으면 B를 위로
+                return 1;
             }
             
-            // 시간이 같거나 없을 경우 시트의 마지막에 추가된(row 번호가 큰) 데이터가 위로
             return b.row - a.row;
         }
 
@@ -647,67 +632,65 @@
             }
         }
 
-        function filterData() {
+        // [NEW] isSoftRefresh 파라미터 추가: true일 경우 화면의 리스트 목록/순서를 유지합니다.
+        function filterData(isSoftRefresh = false) {
             const query = document.getElementById('search-input').value.toLowerCase();
             
             const counts = { 
                 date: { 'all': 0 },
-                returnDate: { 'all': 0 }, // [NEW] 반납일 카운트 객체 추가
+                returnDate: { 'all': 0 },
                 model: { 'all': 0, '23U': 0, '24U': 0, '25U': 0, '26U': 0, '17P': 0, '17PM': 0, '백업': 0, '연장': 0, '배터리': 0 },
                 delivery: { 'all': 0, '택배': 0, '공연장': 0, '사무실': 0 },
                 deliverySub: { 'all': 0, 'remaining': 0, 'pickedup': 0 },
-                return: { 'all': 0, '택배': 0, '당일': 0, '사무실': 0 }
+                return: { 'all': 0, '택배': 0, '당일': 0, '사무실': 0 },
+                status: { 'all': 0, '예약신청': 0, '대기': 0, '확정': 0, '반납완료': 0, '취소': 0 } // 상태 카운트 추가
             };
 
             document.querySelectorAll('.date-filter-item').forEach(b => {
                 if(b.dataset.id !== 'all') counts.date[b.dataset.id] = 0;
             });
-
-            // [NEW] 반납일 초기화
             document.querySelectorAll('.return-date-filter-item').forEach(b => {
                 if(b.dataset.id !== 'all') counts.returnDate[b.dataset.id] = 0;
             });
 
             const filtered = allData.filter(item => {
-                // 엑셀의 자동 변환(숫자, 날짜 포맷)으로 인한 앱 크래시 방지를 위해 모두 텍스트로 강제 변환
                 const model = String(item.model || '').toUpperCase();
                 const delivery = String(item.delivery || '');
                 const status = String(item.status || '');
                 const startDateStr = String(item.startDate || '');
-                const endDateStr = String(item.endDate || ''); // [NEW] 반납일 텍스트
+                const endDateStr = String(item.endDate || ''); 
                 
                 const cleanModel = model.replace(/\s*\+?\s*보조배터리/g, '').trim();
                 const isAssigned = /\d$/.test(cleanModel);
 
-                // 카테고리, 모델명, 메모 등 어디에든 백업/연장이 포함되어 있으면 카운팅하도록 강화
                 const isBackup = String(item.category).includes('백업') || model.includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
                 const isExtension = String(item.category).includes('연장') || model.includes('연장') || String(item.memo).includes('연장');
-                const hasBattery = model.includes('보조배터리'); // [NEW] 보조배터리 여부 확인
+                const hasBattery = model.includes('보조배터리'); 
 
-                // [수정] 검색창에 입력한 텍스트가 객체의 모든 데이터 중 하나라도 포함되는지 검사하도록 변경 (전체 검색)
-                const matchQuery = query === '' || Object.values(item).some(val => 
-                    String(val).toLowerCase().includes(query)
-                );
+                const matchQuery = query === '' || Object.values(item).some(val => String(val).toLowerCase().includes(query));
                 
                 const matchDate = selectedDates.length === 0 || selectedDates.includes(startDateStr);
-                const matchReturnDate = selectedReturnDates.length === 0 || selectedReturnDates.includes(endDateStr); // [NEW] 반납일 조건
+                const matchReturnDate = selectedReturnDates.length === 0 || selectedReturnDates.includes(endDateStr); 
 
+                // 카운트 계산 로직
                 if (matchQuery) {
                     counts.date['all']++;
                     if (startDateStr && counts.date[startDateStr] !== undefined) counts.date[startDateStr]++;
 
-                    // [NEW] 반납일 기본 카운팅
                     counts.returnDate['all']++;
                     if (endDateStr && counts.returnDate[endDateStr] !== undefined) counts.returnDate[endDateStr]++;
                 }
 
-                // [UPDATE] 반납일 조건 추가 (matchReturnDate)
                 if (matchDate && matchReturnDate && matchQuery) {
+                    counts.status.all++;
+                    const s = status === '신청' || status === '' ? '예약신청' : status;
+                    if (counts.status[s] !== undefined) counts.status[s]++;
+
                     counts.model.all++;
                     MODEL_LIST.forEach(m => { if(model.includes(m)) counts.model[m]++; });
                     if (isBackup) counts.model['백업']++;
                     if (isExtension) counts.model['연장']++;
-                    if (hasBattery) counts.model['배터리']++; // [NEW] 보조배터리 카운팅
+                    if (hasBattery) counts.model['배터리']++; 
 
                     counts.delivery.all++;
                     if (delivery.includes('택배')) counts.delivery['택배']++;
@@ -727,7 +710,7 @@
                     if (item.returnWay && item.returnWay.includes('사무실')) counts.return['사무실']++;
                 }
 
-                if (currentFilterStatus !== 'all' && status !== currentFilterStatus) return false;
+                if (currentFilterStatus !== 'all' && status !== currentFilterStatus && (status !== '신청' && status !== '' || currentFilterStatus !== '예약신청')) return false;
 
                 const matchModel = (currentModelFilter === 'all') || 
                                    (currentModelFilter === '백업' ? isBackup : 
@@ -744,15 +727,19 @@
                      if (currentDeliverySubFilter === 'pickedup' && !isAssigned) matchDeliverySub = false;
                 }
 
-                // [UPDATE] 반납일 매칭 여부 포함해서 최종 리턴
                 return matchQuery && matchDate && matchReturnDate && matchModel && matchDelivery && matchReturn && matchDeliverySub;
             });
 
             updateFilterUI(counts);
-            filtered.sort(sortLogic);
-            currentlyFilteredList = filtered; // 필터링 결과 저장 (전체선택 용도)
-            renderList(filtered); 
-            updateBulkActionBar(); // UI 갱신 시 바 상태도 함께 체크
+            
+            // [NEW] 소프트 새로고침이 아닐 때만 정렬 및 리스트 업데이트를 수행
+            if (!isSoftRefresh) {
+                filtered.sort(sortLogic);
+                currentlyFilteredList = filtered;
+            }
+            
+            renderList(currentlyFilteredList); 
+            updateBulkActionBar(); 
         }
 
         function updateFilterUI(counts) {
@@ -765,6 +752,8 @@
                         if(id === 'all') baseText = '전체';
                         else if(id === 'remaining') baseText = '남은인원';
                         else if(id === 'pickedup') baseText = '수령완료';
+                        else if(id === '예약신청') baseText = '신청';
+                        else if(id === '반납완료') baseText = '반납';
                         else if(isDate && id !== 'all') {
                             const parts = id.split('-');
                             if(parts.length === 3) baseText = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
@@ -777,8 +766,9 @@
                 });
             };
             
+            updateTabCounts('filter-group-status', counts.status);
             updateTabCounts('filter-group-date', counts.date, true);
-            updateTabCounts('filter-group-return-date', counts.returnDate, true); // [NEW] 반납일 UI 업데이트
+            updateTabCounts('filter-group-return-date', counts.returnDate, true); 
             updateTabCounts('filter-group-model', counts.model);
             updateTabCounts('filter-group-delivery', counts.delivery);
             updateTabCounts('sub-filter-group-delivery', counts.deliverySub); 
@@ -808,7 +798,6 @@
                 }
             }
 
-            // [NEW] 보조배터리 UI 업데이트 로직
             const batteryBtn = document.getElementById('btn-quick-battery');
             const batteryCount = document.getElementById('quick-battery-count');
             if(batteryBtn) {
@@ -822,23 +811,30 @@
             }
         }
 
-        // [NEW] 모든 모델 관련 빠른 필터 버튼들은 한 번 더 누르면 원래대로(all) 돌아가게 변경됨
+        // [UPDATE] 진행 상태 필터 토글 및 자동 스크롤
+        function setStatusFilter(status) {
+            if (currentFilterStatus === status && status !== 'all') currentFilterStatus = 'all';
+            else currentFilterStatus = status;
+            
+            document.querySelectorAll('.status-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentFilterStatus));
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            filterData(false);
+        }
+
         function toggleBatteryFilter() { setModelFilter('배터리'); }
         function toggleBackupFilter() { setModelFilter('백업'); }
         function toggleExtensionFilter() { setModelFilter('연장'); }
         
         function setModelFilter(m) { 
-            // [NEW] 필터 토글 기능 추가
             if (currentModelFilter === m && m !== 'all') currentModelFilter = 'all';
             else currentModelFilter = m; 
             
             document.querySelectorAll('.model-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentModelFilter)); 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 자동 스크롤
-            filterData(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            filterData(false); 
         }
         
         function setDeliveryFilter(d) { 
-            // [NEW] 필터 토글 기능 추가
             if (currentDeliveryFilter === d && d !== 'all') currentDeliveryFilter = 'all';
             else currentDeliveryFilter = d; 
             
@@ -848,39 +844,36 @@
             if (currentDeliveryFilter === 'all') { subGroup.classList.add('hidden'); subGroup.classList.remove('flex'); } 
             else { subGroup.classList.remove('hidden'); subGroup.classList.add('flex'); }
             document.querySelectorAll('.delivery-sub-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === 'all'));
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 자동 스크롤
-            filterData(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            filterData(false); 
         }
 
         function setDeliverySubFilter(sub) { 
-            // [NEW] 필터 토글 기능 추가
             if (currentDeliverySubFilter === sub && sub !== 'all') currentDeliverySubFilter = 'all';
             else currentDeliverySubFilter = sub; 
             
             document.querySelectorAll('.delivery-sub-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentDeliverySubFilter)); 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 자동 스크롤
-            filterData(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            filterData(false); 
         }
 
         function setReturnFilter(r) { 
-            // [NEW] 필터 토글 기능 추가
             if (currentReturnFilter === r && r !== 'all') currentReturnFilter = 'all';
             else currentReturnFilter = r; 
             
             document.querySelectorAll('.return-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentReturnFilter)); 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // [NEW] 화면 맨 위로 자동 스크롤
-            filterData(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            filterData(false); 
         }
 
         // --- 다중 선택 로직 시작 ---
         function toggleRowSelection(e, rowId) {
-            e.stopPropagation(); // 카드 클릭(모달 팝업) 이벤트 방지
+            e.stopPropagation();
             rowId = String(rowId);
             const index = selectedRows.indexOf(rowId);
             if (index > -1) selectedRows.splice(index, 1);
             else selectedRows.push(rowId);
             
-            // 시각적 업데이트 최적화 (전체 재렌더링 대신 체크박스와 배경만 변경)
             const checkbox = e.currentTarget.querySelector('input');
             const card = e.currentTarget.closest('.list-row');
             if(checkbox) checkbox.checked = index === -1;
@@ -926,9 +919,8 @@
         async function bulkUpdateStatus(newStatus) {
             if (selectedRows.length === 0) return;
 
-            // 1. 실패 시 복구를 위한 원본 데이터 백업
             const originalDataBackup = [];
-            const rowsToUpdate = [...selectedRows]; // 배열 복사
+            const rowsToUpdate = [...selectedRows]; 
             
             rowsToUpdate.forEach(rowId => {
                 const targetIndex = allData.findIndex(item => String(item.row) === rowId);
@@ -938,14 +930,12 @@
                 }
             });
 
-            // 2. 낙관적 UI 업데이트 (빠른 반영)
+            // [NEW] 낙관적 UI 업데이트 후 소프트 새로고침으로 위치 유지
             clearSelection();
-            filterData();
+            filterData(true);
             showAppAlert(`${rowsToUpdate.length}건의 상태를 '${newStatus}'(으)로 일괄 변경했습니다.`, "일괄 변경 완료", "✅");
 
-            // 3. 백그라운 일괄 통신
             try {
-                // 구글 시트 특성상 한번에 하나씩 저장 API 호출 (Promise.all로 병렬 통신)
                 const promises = rowsToUpdate.map(rowId => {
                     const item = allData.find(i => String(i.row) === rowId);
                     if (!item) return Promise.resolve();
@@ -960,7 +950,6 @@
                         model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                     };
                     
-                    // [UPDATE] 리다이렉트 허용 및 헤더 강화
                     return fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
@@ -974,19 +963,16 @@
                 await Promise.all(promises);
             } catch (err) {
                 console.error("일괄 저장 실패", err);
-                // 에러 발생 시 원본 데이터로 다시 롤백
-                originalDataBackup.forEach(backup => { allData[backup.index] = backup.data; });
-                filterData();
+                originalDataBackup.forEach(backup => { Object.assign(allData[backup.index], backup.data); });
+                filterData(true);
                 showAppAlert("인터넷 연결 불안정으로 일부 변경사항이 저장되지 않아 원상복구 되었습니다. 다시 시도해 주세요.", "🚨 저장 실패", "⚠️");
             }
         }
 
-        // [NEW] 다중 선택 일괄 삭제 기능
         function bulkDeleteRecords() {
             if (selectedRows.length === 0) return;
 
             showAppConfirm(`선택한 ${selectedRows.length}개의 예약을 완전히 삭제하시겠습니까?\n(이 작업은 되돌릴 수 없습니다)`, async () => {
-                // 1. 실패 시 복구를 위한 원본 데이터 백업
                 const originalDataBackup = [];
                 const rowsToDelete = [...selectedRows];
 
@@ -997,13 +983,13 @@
                     }
                 });
 
-                // 2. 낙관적 UI 업데이트 (로컬에서 즉시 삭제)
                 allData = allData.filter(item => !rowsToDelete.includes(String(item.row)));
+                // [NEW] 현재 필터링된 리스트에서도 제거하여 바로 화면에서 사라지게 함
+                currentlyFilteredList = currentlyFilteredList.filter(item => !rowsToDelete.includes(String(item.row)));
                 clearSelection();
-                filterData();
+                filterData(true);
                 showAppAlert(`${rowsToDelete.length}건의 예약이 완전히 삭제되었습니다.`, "일괄 삭제 완료", "🗑️");
 
-                // 3. 백그라운드 일괄 통신
                 try {
                     const promises = rowsToDelete.map(rowId => {
                         const itemBackup = originalDataBackup.find(i => String(i.row) === String(rowId));
@@ -1022,19 +1008,17 @@
                     await Promise.all(promises);
                 } catch (err) {
                     console.error("일괄 삭제 실패", err);
-                    // 실패 시 원상복구
                     allData = [...allData, ...originalDataBackup];
-                    filterData();
+                    filterData(true);
                     showAppAlert("인터넷 연결 불안정으로 일부 데이터가 삭제되지 않아 원상복구 되었습니다.", "🚨 삭제 실패", "⚠️");
                 }
             }, "일괄 삭제", "삭제하기", "bg-[#DC2626]", "🗑️");
         }
 
-        // --- 우체국 배송등록 복사 로직 (NEW) ---
+        // --- 우체국 배송등록 복사 로직 ---
         function copyForPostOffice() {
             if (selectedRows.length === 0) return;
 
-            // 화면에 보이는 순서(위에서 아래)대로 정렬
             const sortedSelectedRows = [...selectedRows].sort((a, b) => {
                 const idxA = currentlyFilteredList.findIndex(item => String(item.row) === String(a));
                 const idxB = currentlyFilteredList.findIndex(item => String(item.row) === String(b));
@@ -1045,7 +1029,6 @@
             sortedSelectedRows.forEach(rowId => {
                 const item = allData.find(i => String(i.row) === String(rowId));
                 if (item) {
-                    // 1. 고객이 입력한 주소나 이름에 포함된 엔터(줄바꿈)를 전부 공백으로 치환하여 엑셀이 밀리는 현상 완벽 방지
                     const clean = (str) => (str || '').toString().replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
                     
                     const model = clean(item.model);
@@ -1053,18 +1036,15 @@
                     const zipCode = clean(item.zipCode);
                     const address = clean(item.address);
                     
-                    // 2. 엑셀에서 가독성 좋게 연락처 하이픈(-) 자동 추가 정렬
                     let phone = clean(item.phone);
                     let phoneNum = phone.replace(/[^0-9]/g, '');
                     if (phoneNum.length === 11) phone = `${phoneNum.slice(0,3)}-${phoneNum.slice(3,7)}-${phoneNum.slice(7)}`;
                     else if (phoneNum.length === 10) phone = `${phoneNum.slice(0,3)}-${phoneNum.slice(3,6)}-${phoneNum.slice(6)}`;
                     
-                    // 엑셀 셀 이동에 맞게 탭(\t) 문자로 항목들을 구분
                     copyText += `${model}\t${name}\t${zipCode}\t${address}\t${phone}\n`;
                 }
             });
 
-            // 클립보드에 복사
             const t = document.createElement('textarea');
             t.value = copyText;
             document.body.appendChild(t);
@@ -1094,7 +1074,6 @@
 
         function submitBulkTracking() {
             const inputVal = document.getElementById('bulk-tracking-input').value;
-            // 줄바꿈으로 나누고, 숫자와 하이픈만 남기기 (빈 줄 제외)
             let trackingNumbers = inputVal.split('\n').map(s => s.trim().replace(/[^0-9\-]/g, '')).filter(s => s !== '');
 
             if (trackingNumbers.length === 0) {
@@ -1102,9 +1081,8 @@
                 return;
             }
 
-            tempTrackingNumbers = trackingNumbers; // 임시 저장
+            tempTrackingNumbers = trackingNumbers; 
 
-            // 개수가 다를 경우 기본 confirm 대신 커스텀 모달 사용
             if (trackingNumbers.length !== selectedRows.length) {
                 showAppConfirm(
                     `체크된 고객은 ${selectedRows.length}명인데, 붙여넣은 송장번호는 ${trackingNumbers.length}개입니다.\n(위에서부터 순서대로 빈틈없이 배정됩니다) 계속 진행할까요?`, 
@@ -1119,20 +1097,17 @@
             }
         }
 
-        // [NEW] 검토 모달 열기 및 리스트 생성
         function openBulkTrackingReviewModal(trackingNumbers) {
-            closeBulkTrackingModal(); // 입력 모달 닫기
+            closeBulkTrackingModal(); 
             const reviewList = document.getElementById('bulk-tracking-review-list');
             reviewList.innerHTML = ''; 
 
-            // 화면상 보이는 순서대로 정렬
             const sortedSelectedRows = [...selectedRows].sort((a, b) => {
                 const idxA = currentlyFilteredList.findIndex(item => String(item.row) === String(a));
                 const idxB = currentlyFilteredList.findIndex(item => String(item.row) === String(b));
                 return idxA - idxB;
             });
 
-            // 고객 수와 송장번호 수 중 더 많은 것에 맞춤 (누락되거나 남는 송장도 보여주기 위함)
             const limit = Math.max(selectedRows.length, trackingNumbers.length);
 
             for (let i = 0; i < limit; i++) {
@@ -1169,18 +1144,15 @@
             document.getElementById('bulk-tracking-review-modal').classList.remove('hidden');
         }
 
-        // [NEW] 검토 모달 닫기
         function closeBulkTrackingReviewModal() {
             document.getElementById('bulk-tracking-review-modal').classList.add('hidden');
         }
 
-        // [NEW] 다시 수정하기 (입력 모달로 돌아가기)
         function backToBulkTrackingModal() {
             closeBulkTrackingReviewModal();
             document.getElementById('bulk-tracking-modal').classList.remove('hidden');
         }
 
-        // [NEW] 검토 후 최종 등록 실행
         function confirmBulkTracking() {
             closeBulkTrackingReviewModal();
             executeBulkTracking(tempTrackingNumbers);
@@ -1194,7 +1166,6 @@
             const rowsToUpdate = [];
             const limit = Math.min(selectedRows.length, trackingNumbers.length);
 
-            // 화면에 보이는 순서(위에서 아래)대로 매칭하기 위해 선택된 행들을 리스트 순서에 맞게 정렬
             const sortedSelectedRows = [...selectedRows].sort((a, b) => {
                 const idxA = currentlyFilteredList.findIndex(item => String(item.row) === String(a));
                 const idxB = currentlyFilteredList.findIndex(item => String(item.row) === String(b));
@@ -1206,18 +1177,17 @@
                 const targetIndex = allData.findIndex(item => String(item.row) === String(rowId));
                 if (targetIndex !== -1) {
                     originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
-                    allData[targetIndex].trackingNumber = trackingNumbers[i]; // 낙관적 업데이트
+                    allData[targetIndex].trackingNumber = trackingNumbers[i]; 
                     rowsToUpdate.push({ rowId: rowId, newTracking: trackingNumbers[i], item: allData[targetIndex] });
                 }
             }
 
             closeBulkTrackingModal();
             clearSelection();
-            filterData();
+            filterData(true); // [NEW] 소프트 새로고침
             showAppAlert(`${rowsToUpdate.length}건의 송장번호를 일괄 배정했습니다.`, "일괄 배정 완료", "✅");
 
             try {
-                // 병렬 비동기 통신
                 const promises = rowsToUpdate.map(updateInfo => {
                     const item = updateInfo.item;
                     const payload = {
@@ -1227,7 +1197,6 @@
                         status: item.status || '', tracking: updateInfo.newTracking, model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                     };
                     
-                    // [UPDATE] 리다이렉트 허용 및 헤더 강화
                     return fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
@@ -1240,13 +1209,11 @@
                 await Promise.all(promises);
             } catch (err) {
                 console.error("송장 일괄 저장 실패", err);
-                // 실패 시 백업해둔 데이터로 복구
-                originalDataBackup.forEach(backup => { allData[backup.index] = backup.data; });
-                filterData();
+                originalDataBackup.forEach(backup => { Object.assign(allData[backup.index], backup.data); });
+                filterData(true);
                 showAppAlert("인터넷 연결 불안정으로 일부 송장번호가 저장되지 않았습니다.", "🚨 저장 실패", "⚠️");
             }
         }
-        // --- 다중 선택 일괄 처리 로직 끝 ---
 
         function renderList(list) {
             const container = document.getElementById('list-container');
@@ -1279,14 +1246,13 @@
                 const trackingDisplay = item.trackingNumber ? item.trackingNumber : '입력';
                 const memo = item.memo ? '📝' : '';
                 
-                // [NEW] 대여 모델 배정 완료 여부 (끝자리가 숫자인지 체크)
+                // 대여 모델 배정 완료 여부 확인
                 const cleanModelForBorder = String(item.model || '').toUpperCase().replace(/\s*\+?\s*보조배터리/g, '').trim();
                 const isAssigned = /\d$/.test(cleanModelForBorder);
 
-                // [NEW] 백업 여부 확인
                 const isBackup = String(item.category).includes('백업') || String(item.model).includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
                 
-                // [UPDATE] 테두리 클래스 통합 (배정 완료 시 녹색 링, 백업 시 노란색 테두리)
+                // 테두리 클래스 통합
                 let extraCardClasses = '';
                 if (isAssigned) {
                     extraCardClasses = '!border-2 !border-emerald-400 !bg-emerald-50/10'; // 배정 시 녹색 테두리
@@ -1297,7 +1263,6 @@
                 const backupBadge = isBackup ? `<span class="bg-yellow-400 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap shrink-0 ml-1">💾 백업</span>` : '';
 
                 let fullAddress = '';
-                // 화면 리스트 UI에서도 주소가 2줄로 넘어가지 않도록 엔터(줄바꿈) 원천 차단
                 if(item.zipCode) fullAddress += `[${item.zipCode}] `;
                 if(item.address) fullAddress += String(item.address).replace(/\r?\n|\r/g, ' ');
 
@@ -1334,7 +1299,6 @@
                         </div>
                     </div>
                     
-                    <!-- [수정] 고객정보 가로폭 축소, 배송지 주소 가로폭 최대 확장 -->
                     <div class="w-44 shrink-0 flex flex-col justify-center min-w-0 pr-2">
                         <div class="flex items-center gap-1">
                             <span class="text-base font-black text-slate-900 truncate">${item.name}</span>
@@ -1346,7 +1310,6 @@
                         </div>
                     </div>
                     
-                    <!-- [수정] 대여 일정 및 행사명을 주소 왼쪽으로 이동 -->
                     <div class="w-64 shrink-0 flex flex-col justify-center gap-1.5">
                         <div class="flex items-center text-[13.5px] font-black text-slate-800 font-tnum tracking-tight">
                             <span>${start} <span class="text-blue-600 font-bold text-[12px]">(${item.delivery || '-'})</span></span>
@@ -1358,7 +1321,6 @@
                         </div>
                     </div>
                     
-                    <!-- [수정] 배송지 주소 영역 -->
                     <div class="flex-1 shrink-0 flex flex-col justify-center px-2 min-w-0">
                         ${fullAddress.trim() ? `
                             <div class="flex items-center gap-1 mb-0.5">
@@ -1399,7 +1361,6 @@
             return result;
         }
 
-        // --- 엑셀식 인라인(빠른) 편집 기능 ---
         let currentInlineEditRow = null;
 
         function enableInlineEdit(e, rowId) {
@@ -1415,13 +1376,12 @@
             const displayModel = String(item.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim();
             currentInlineEditRow = rowId;
 
-            // 라벨을 입력 폼(Input)으로 변경
             container.innerHTML = `<input type="text" id="inline-input-${rowId}" class="w-full px-1 py-0.5 text-[12px] font-extrabold border-2 border-blue-500 rounded outline-none font-tnum bg-white text-slate-900 shadow-sm" value="${displayModel}">`;
-            container.className = "w-[130px]"; // 입력 중 흔들리지 않게 너비 고정
+            container.className = "w-[130px]"; 
 
             const input = document.getElementById(`inline-input-${rowId}`);
             input.focus();
-            input.selectionStart = input.selectionEnd = input.value.length; // 커서를 맨 끝으로
+            input.selectionStart = input.selectionEnd = input.value.length; 
 
             let isSaved = false;
             const saveAndNext = (focusNext) => {
@@ -1431,7 +1391,6 @@
                 saveInlineEdit(rowId, input.value, focusNext);
             };
 
-            // 키보드 이벤트 (엔터 시 저장 후 다음 줄로 이동)
             input.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
@@ -1440,11 +1399,10 @@
                     event.preventDefault();
                     isSaved = true;
                     currentInlineEditRow = null;
-                    filterData(); // 취소 시 원래대로 복구
+                    filterData(true); // 취소 시 소프트 리프레시로 복구
                 }
             });
             
-            // 바깥쪽을 클릭하면 그냥 저장만
             input.addEventListener('blur', () => saveAndNext(false));
         }
 
@@ -1460,7 +1418,6 @@
             let finalModel = newValue.trim();
             if (hasBattery && !finalModel.includes('보조배터리')) finalModel += (finalModel ? ' ' : '') + '+보조배터리';
 
-            // 엔터를 쳤을 때 다음 줄의 ID 찾기
             let nextRowId = null;
             if (focusNext) {
                 const visibleRows = Array.from(document.querySelectorAll('.list-row'));
@@ -1471,7 +1428,6 @@
                 }
             }
 
-            // 값이 변경되었을 때만 서버에 저장
             if (oldDisplayModel !== newValue.trim()) {
                 allData[itemIndex].model = finalModel; // 낙관적 업데이트
                 
@@ -1482,7 +1438,6 @@
                     status: item.status || '', tracking: item.trackingNumber || '', model: finalModel, memo: item.memo || '', totalPrice: item.totalPrice || 0
                 };
 
-                // [UPDATE] 리다이렉트 허용 및 헤더 강화
                 fetch(API_URL, { 
                     method: 'POST', 
                     redirect: 'follow',
@@ -1492,18 +1447,16 @@
                 .then(res => res.json())
                 .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
                 .catch(err => {
-                    allData[itemIndex].model = oldModel; filterData();
+                    allData[itemIndex].model = oldModel; filterData(true);
                     showToast("인터넷 연결 불안정으로 기기 배정이 취소되었습니다.");
                 });
             }
 
-            filterData(); // 화면 즉시 갱신
+            filterData(true); // 화면 즉시 갱신 (소프트 새로고침)
             
-            // 엔터를 친 경우 다음 칸 편집 모드 자동 활성화
             if (focusNext && nextRowId) setTimeout(() => enableInlineEdit(null, nextRowId), 10);
         }
 
-        // --- 송장번호 엑셀식 인라인(빠른) 편집 기능 ---
         let currentTrackingInlineEditRow = null;
 
         function enableTrackingInlineEdit(e, rowId) {
@@ -1519,13 +1472,12 @@
             const currentTracking = String(item.trackingNumber || '');
             currentTrackingInlineEditRow = rowId;
 
-            // 라벨을 입력 폼(Input)으로 변경
             container.innerHTML = `<input type="text" id="inline-tracking-${rowId}" class="w-full px-1 py-0.5 text-[11px] font-extrabold border-2 border-blue-500 rounded outline-none font-tnum bg-white text-slate-900 shadow-sm" placeholder="송장" value="${currentTracking}">`;
-            container.className = "w-full max-w-[85px]"; // 입력 중 흔들리지 않게 너비 고정
+            container.className = "w-full max-w-[85px]"; 
 
             const input = document.getElementById(`inline-tracking-${rowId}`);
             input.focus();
-            input.select(); // 기존 번호 전체 선택 (Ctrl+V 시 바로 덮어씌워짐)
+            input.select(); 
 
             let isSaved = false;
             const saveAndNext = (focusNext) => {
@@ -1535,7 +1487,6 @@
                 saveTrackingInlineEdit(rowId, input.value, focusNext);
             };
 
-            // 키보드 이벤트 (엔터 시 저장 후 다음 줄로 이동)
             input.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
                     event.preventDefault();
@@ -1544,11 +1495,10 @@
                     event.preventDefault();
                     isSaved = true;
                     currentTrackingInlineEditRow = null;
-                    filterData(); // 취소 시 원래대로 복구
+                    filterData(true); 
                 }
             });
             
-            // 바깥쪽을 클릭하면 그냥 저장만
             input.addEventListener('blur', () => saveAndNext(false));
         }
 
@@ -1560,7 +1510,6 @@
             const oldTracking = String(item.trackingNumber || '');
             const newTracking = String(newValue).trim().replace(/[^0-9\-]/g, '');
 
-            // 엔터를 쳤을 때 다음 줄의 ID 찾기
             let nextRowId = null;
             if (focusNext) {
                 const visibleRows = Array.from(document.querySelectorAll('.list-row'));
@@ -1571,9 +1520,8 @@
                 }
             }
 
-            // 값이 변경되었을 때만 서버에 저장
             if (oldTracking !== newTracking) {
-                allData[itemIndex].trackingNumber = newTracking; // 낙관적 업데이트
+                allData[itemIndex].trackingNumber = newTracking; 
                 
                 const payload = {
                     type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
@@ -1582,7 +1530,6 @@
                     status: item.status || '', tracking: newTracking, model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                 };
 
-                // [UPDATE] 리다이렉트 허용 및 헤더 강화
                 fetch(API_URL, { 
                     method: 'POST', 
                     redirect: 'follow',
@@ -1592,14 +1539,13 @@
                 .then(res => res.json())
                 .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
                 .catch(err => {
-                    allData[itemIndex].trackingNumber = oldTracking; filterData();
+                    allData[itemIndex].trackingNumber = oldTracking; filterData(true);
                     showToast("인터넷 연결 불안정으로 송장번호 입력이 취소되었습니다.");
                 });
             }
 
-            filterData(); // 화면 즉시 갱신
+            filterData(true); 
             
-            // 엔터를 친 경우 다음 칸 편집 모드 자동 활성화
             if (focusNext && nextRowId) setTimeout(() => enableTrackingInlineEdit(null, nextRowId), 10);
         }
 
@@ -1747,15 +1693,19 @@
             let originalData = null;
             if(targetIndex !== -1) {
                 originalData = { ...allData[targetIndex] };
-                allData[targetIndex] = { ...allData[targetIndex], name: payload.name, phone: payload.phone, zipCode: payload.zipCode, address: payload.address, startDate: payload.startDate, endDate: payload.endDate, delivery: payload.delivery, returnWay: payload.returnWay, status: payload.status, trackingNumber: payload.tracking, model: payload.model, memo: payload.memo, totalPrice: payload.totalPrice };
+                // [NEW] Object.assign을 사용하여 객체를 직접 수정함으로써 currentlyFilteredList에도 반영되게 함
+                Object.assign(allData[targetIndex], { 
+                    name: payload.name, phone: payload.phone, zipCode: payload.zipCode, address: payload.address, 
+                    startDate: payload.startDate, endDate: payload.endDate, delivery: payload.delivery, returnWay: payload.returnWay, 
+                    status: payload.status, trackingNumber: payload.tracking, model: payload.model, memo: payload.memo, totalPrice: payload.totalPrice 
+                });
             }
 
-            filterData();
+            filterData(true); // [NEW] 소프트 새로고침: 리스트 유지
             closeModal();
             showAppAlert("수정 내역이 화면에 즉시 반영되었습니다.", "완료", "✅"); 
             btn.innerText = '수정 완료 (즉시반영)'; btn.disabled = false;
 
-            // [UPDATE] 리다이렉트 허용 및 헤더 강화
             fetch(API_URL, { 
                 method: 'POST', 
                 redirect: 'follow',
@@ -1766,23 +1716,24 @@
             .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
             .catch(err => {
                 if(targetIndex !== -1 && originalData) {
-                    allData[targetIndex] = originalData; filterData(); 
+                    Object.assign(allData[targetIndex], originalData); // 롤백 시에도 Object.assign 사용
+                    filterData(true); 
                     showAppAlert("인터넷 연결이 불안정하여 원상복구 되었습니다.", "🚨 저장 실패", "⚠️");
                 }
             });
         }
 
         function confirmDelete() {
+            const rowId = document.getElementById('edit-row').value;
             showAppConfirm("목록에서 완전히 삭제(이동)하시겠습니까?", () => {
-                const rowId = document.getElementById('edit-row').value;
                 const targetItem = allData.find(item => String(item.row) === String(rowId));
                 allData = allData.filter(item => String(item.row) !== String(rowId));
+                currentlyFilteredList = currentlyFilteredList.filter(item => String(item.row) !== String(rowId)); // 즉시 화면에서 제거
                 
-                filterData();
+                filterData(true);
                 closeModal();
                 showAppAlert("삭제 처리되었습니다.", "완료", "🗑️");
                 
-                // [UPDATE] 리다이렉트 허용 및 헤더 강화
                 fetch(API_URL, { 
                     method: 'POST', 
                     redirect: 'follow',
@@ -1793,7 +1744,7 @@
                 .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
                 .catch(err => {
                     if(targetItem) {
-                        allData.push(targetItem); filterData(); 
+                        allData.push(targetItem); filterData(true); 
                         showAppAlert("네트워크 오류로 삭제가 취소되었습니다.", "🚨 삭제 실패", "⚠️");
                     }
                 });
