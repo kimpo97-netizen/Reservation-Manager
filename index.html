@@ -597,6 +597,10 @@
                 const cleanModel = model.replace(/\s*\+?\s*보조배터리/g, '').trim();
                 const isAssigned = /\d$/.test(cleanModel);
 
+                // [NEW] 카테고리, 모델명, 메모 등 어디에든 백업/연장이 포함되어 있으면 카운팅하도록 강화
+                const isBackup = String(item.category).includes('백업') || model.includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
+                const isExtension = String(item.category).includes('연장') || model.includes('연장') || String(item.memo).includes('연장');
+
                 const matchQuery = name.includes(query) || phone.includes(query) || model.includes(query);
                 const matchDate = selectedDates.length === 0 || selectedDates.includes(startDateStr);
 
@@ -608,8 +612,8 @@
                 if (matchDate && matchQuery) {
                     counts.model.all++;
                     MODEL_LIST.forEach(m => { if(model.includes(m)) counts.model[m]++; });
-                    if (model.includes('백업')) counts.model['백업']++;
-                    if (model.includes('연장')) counts.model['연장']++;
+                    if (isBackup) counts.model['백업']++;
+                    if (isExtension) counts.model['연장']++;
 
                     counts.delivery.all++;
                     if (delivery.includes('택배')) counts.delivery['택배']++;
@@ -631,7 +635,11 @@
 
                 if (currentFilterStatus !== 'all' && status !== currentFilterStatus) return false;
 
-                const matchModel = (currentModelFilter === 'all') || model.includes(currentModelFilter.toUpperCase());
+                const matchModel = (currentModelFilter === 'all') || 
+                                   (currentModelFilter === '백업' ? isBackup : 
+                                   (currentModelFilter === '연장' ? isExtension : 
+                                   model.includes(currentModelFilter.toUpperCase())));
+                
                 const matchDelivery = (currentDeliveryFilter === 'all') || delivery.includes(currentDeliveryFilter);
                 const matchReturn = (currentReturnFilter === 'all') || (item.returnWay || '').includes(currentReturnFilter);
 
@@ -680,7 +688,9 @@
             updateTabCounts('filter-group-return', counts.return);
             
             const backupBtn = document.getElementById('btn-quick-backup');
+            const backupCount = document.getElementById('quick-backup-count');
             if(backupBtn) {
+                if(backupCount) backupCount.innerText = counts.model['백업'] || 0;
                 if (counts.model['백업'] === 0) backupBtn.classList.add('hidden');
                 else {
                     backupBtn.classList.remove('hidden');
@@ -690,7 +700,9 @@
             }
 
             const extensionBtn = document.getElementById('btn-quick-extension');
+            const extensionCount = document.getElementById('quick-extension-count');
             if(extensionBtn) {
+                if(extensionCount) extensionCount.innerText = counts.model['연장'] || 0;
                 if (counts.model['연장'] === 0) extensionBtn.classList.add('hidden');
                 else {
                     extensionBtn.classList.remove('hidden');
@@ -1061,9 +1073,14 @@
                 const trackingDisplay = item.trackingNumber ? item.trackingNumber : '입력';
                 const memo = item.memo ? '📝' : '';
                 
+                // [NEW] 백업 여부 확인 및 클래스/뱃지 생성
+                const isBackup = String(item.category).includes('백업') || String(item.model).includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
+                const backupBorderClass = isBackup ? '!border-2 !border-yellow-400 !bg-yellow-50/40' : '';
+                const backupBadge = isBackup ? `<span class="bg-yellow-400 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap shrink-0 ml-1">💾 백업</span>` : '';
+
                 let fullAddress = '';
-                if(item.zipCode) fullAddress += `[${item.zipCode}] `;
                 // 화면 리스트 UI에서도 주소가 2줄로 넘어가지 않도록 엔터(줄바꿈) 원천 차단
+                if(item.zipCode) fullAddress += `[${item.zipCode}] `;
                 if(item.address) fullAddress += String(item.address).replace(/\r?\n|\r/g, ' ');
 
                 const rawPay = String(item.paymentMethod || ''); 
@@ -1074,7 +1091,7 @@
                 else if(rawPay === '') { payShort = '-'; }
 
                 const card = document.createElement('div');
-                card.className = `list-row relative overflow-hidden flex items-center px-4 py-4 gap-3 ${isSelected ? 'selected' : ''}`;
+                card.className = `list-row relative overflow-hidden flex items-center px-4 py-4 gap-3 ${isSelected ? 'selected' : ''} ${backupBorderClass}`;
                 card.onclick = () => openModal(item);
                 
                 card.innerHTML = `
@@ -1102,6 +1119,7 @@
                     <div class="flex-1 shrink-0 flex flex-col justify-center min-w-0 pr-2">
                         <div class="flex items-center gap-1">
                             <span class="text-base font-black text-slate-900 truncate">${item.name}</span>
+                            ${backupBadge}
                             <span class="text-sm shrink-0">${memo}</span>
                         </div>
                         <div class="flex items-center mt-0.5 text-slate-500 font-bold text-[13px] font-tnum whitespace-nowrap">
