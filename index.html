@@ -134,6 +134,13 @@
         
         <!-- 왼쪽 사이드바 (고정 필터 영역) -->
         <aside class="w-[300px] shrink-0 flex flex-col gap-5">
+            
+            <!-- [수정] 전체 필터 초기화 버튼 색상 및 디자인 부드럽게 변경 -->
+            <button onclick="resetAllFilters()" class="w-full bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-500 hover:text-slate-700 py-3 rounded-2xl font-bold shadow-sm transition-all flex items-center justify-center gap-2 text-sm mb-1">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                모든 검색/필터 초기화
+            </button>
+
             <!-- 1. 대여 일정 필터 -->
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
@@ -244,7 +251,6 @@
         <!-- 1열: 상태 변경 및 선택 정보 -->
         <div class="flex items-center justify-between gap-4 w-full">
             <div class="flex items-center gap-2 pl-1">
-                <!-- 선택 개수가 많아져도 상자가 글씨에 맞게 늘어납니다 -->
                 <span class="flex items-center justify-center px-2 min-w-[24px] h-6 rounded-full bg-blue-500 text-white font-black text-[12px] font-tnum" id="bulk-count">0</span>
                 <span class="font-bold text-[13px] text-slate-200 whitespace-nowrap">선택됨</span>
             </div>
@@ -507,6 +513,46 @@
             finally { toggleLoading(false); }
         }
 
+        // [NEW] 전체 필터/검색 초기화 기능
+        function resetAllFilters() {
+            currentFilterStatus = 'all';
+            currentModelFilter = 'all';
+            currentDeliveryFilter = 'all';
+            currentDeliverySubFilter = 'all';
+            currentReturnFilter = 'all';
+            selectedDates = [];
+            selectedReturnDates = [];
+            
+            document.getElementById('search-input').value = '';
+
+            const resetActive = (selector) => {
+                document.querySelectorAll(selector).forEach(btn => {
+                    if(btn.dataset.id === 'all') btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+            };
+
+            resetActive('.status-filter-item');
+            resetActive('.date-filter-item');
+            resetActive('.return-date-filter-item');
+            resetActive('.model-filter-item');
+            resetActive('.delivery-filter-item');
+            resetActive('.delivery-sub-filter-item');
+            resetActive('.return-filter-item');
+
+            const subGroup = document.getElementById('sub-filter-group-delivery');
+            if(subGroup) { subGroup.classList.add('hidden'); subGroup.classList.remove('flex'); }
+            
+            const clearDateBtn = document.getElementById('btn-clear-date');
+            if(clearDateBtn) clearDateBtn.classList.add('hidden');
+            
+            const clearReturnDateBtn = document.getElementById('btn-clear-return-date');
+            if(clearReturnDateBtn) clearReturnDateBtn.classList.add('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterData(false);
+        }
+
         function renderDateFilters() {
             const container = document.getElementById('filter-group-date');
             const dates = [...new Set(allData.map(item => String(item.startDate || '')).filter(d => d && d.includes('-')))].sort();
@@ -632,7 +678,6 @@
             }
         }
 
-        // [NEW] isSoftRefresh 파라미터 추가: true일 경우 화면의 리스트 목록/순서를 유지합니다.
         function filterData(isSoftRefresh = false) {
             const query = document.getElementById('search-input').value.toLowerCase();
             
@@ -643,7 +688,7 @@
                 delivery: { 'all': 0, '택배': 0, '공연장': 0, '사무실': 0 },
                 deliverySub: { 'all': 0, 'remaining': 0, 'pickedup': 0 },
                 return: { 'all': 0, '택배': 0, '당일': 0, '사무실': 0 },
-                status: { 'all': 0, '예약신청': 0, '대기': 0, '확정': 0, '반납완료': 0, '취소': 0 } // 상태 카운트 추가
+                status: { 'all': 0, '예약신청': 0, '대기': 0, '확정': 0, '반납완료': 0, '취소': 0 }
             };
 
             document.querySelectorAll('.date-filter-item').forEach(b => {
@@ -732,7 +777,6 @@
 
             updateFilterUI(counts);
             
-            // [NEW] 소프트 새로고침이 아닐 때만 정렬 및 리스트 업데이트를 수행
             if (!isSoftRefresh) {
                 filtered.sort(sortLogic);
                 currentlyFilteredList = filtered;
@@ -811,7 +855,6 @@
             }
         }
 
-        // [UPDATE] 진행 상태 필터 토글 및 자동 스크롤
         function setStatusFilter(status) {
             if (currentFilterStatus === status && status !== 'all') currentFilterStatus = 'all';
             else currentFilterStatus = status;
@@ -930,7 +973,7 @@
                 }
             });
 
-            // [NEW] 낙관적 UI 업데이트 후 소프트 새로고침으로 위치 유지
+            // 낙관적 UI 업데이트 후 소프트 새로고침으로 위치 유지
             clearSelection();
             filterData(true);
             showAppAlert(`${rowsToUpdate.length}건의 상태를 '${newStatus}'(으)로 일괄 변경했습니다.`, "일괄 변경 완료", "✅");
@@ -984,7 +1027,6 @@
                 });
 
                 allData = allData.filter(item => !rowsToDelete.includes(String(item.row)));
-                // [NEW] 현재 필터링된 리스트에서도 제거하여 바로 화면에서 사라지게 함
                 currentlyFilteredList = currentlyFilteredList.filter(item => !rowsToDelete.includes(String(item.row)));
                 clearSelection();
                 filterData(true);
@@ -1184,7 +1226,7 @@
 
             closeBulkTrackingModal();
             clearSelection();
-            filterData(true); // [NEW] 소프트 새로고침
+            filterData(true); // 소프트 새로고침
             showAppAlert(`${rowsToUpdate.length}건의 송장번호를 일괄 배정했습니다.`, "일괄 배정 완료", "✅");
 
             try {
