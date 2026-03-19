@@ -1141,12 +1141,12 @@
             // 낙관적 UI 업데이트 후 소프트 새로고침으로 위치 유지
             clearSelection();
             filterData(true);
-            showAppAlert(`${rowsToUpdate.length}건의 상태를 '${newStatus}'(으)로 일괄 변경했습니다.`, "일괄 변경 완료", "✅");
+            showAppAlert(`${rowsToUpdate.length}건의 상태를 '${newStatus}'(으)로 일괄 변경했습니다.\n(백그라운드에서 순차적으로 저장됩니다.)`, "일괄 변경 완료", "✅");
 
             try {
-                const promises = rowsToUpdate.map(rowId => {
+                for (const rowId of rowsToUpdate) {
                     const item = allData.find(i => String(i.row) === rowId);
-                    if (!item) return Promise.resolve();
+                    if (!item) continue;
 
                     const payload = {
                         type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
@@ -1158,17 +1158,18 @@
                         model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                     };
                     
-                    return fetch(API_URL, { 
+                    const res = await fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify(payload) 
-                    })
-                    .then(res => res.json())
-                    .then(data => { if(data.result !== 'success') throw new Error("서버에서 처리를 실패했습니다."); });
-                });
-
-                await Promise.all(promises);
+                    });
+                    const data = await res.json();
+                    if(data.result !== 'success') throw new Error("서버에서 처리를 실패했습니다.");
+                    
+                    // 구글 앱스 스크립트(GAS)의 동시성 오류 방지를 위해 약간의 대기 시간 추가
+                    await new Promise(resolve => setTimeout(resolve, 150));
+                }
             } catch (err) {
                 console.error("일괄 저장 실패", err);
                 originalDataBackup.forEach(backup => { Object.assign(allData[backup.index], backup.data); });
@@ -1195,24 +1196,25 @@
                 currentlyFilteredList = currentlyFilteredList.filter(item => !rowsToDelete.includes(String(item.row)));
                 clearSelection();
                 filterData(true);
-                showAppAlert(`${rowsToDelete.length}건의 예약이 완전히 삭제되었습니다.`, "일괄 삭제 완료", "🗑️");
+                showAppAlert(`${rowsToDelete.length}건의 예약이 완전히 삭제되었습니다.\n(백그라운드에서 순차적으로 반영됩니다.)`, "일괄 삭제 완료", "🗑️");
 
                 try {
-                    const promises = rowsToDelete.map(rowId => {
+                    for (const rowId of rowsToDelete) {
                         const itemBackup = originalDataBackup.find(i => String(i.row) === String(rowId));
                         const sheetName = itemBackup ? (itemBackup.sheetName || '예약내역') : '예약내역';
                         
-                        return fetch(API_URL, {
+                        const res = await fetch(API_URL, {
                             method: 'POST',
                             redirect: 'follow',
                             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                             body: JSON.stringify({ type: 'delete', row: rowId, sheetName: sheetName })
-                        })
-                        .then(res => res.json())
-                        .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); });
-                    });
-                    
-                    await Promise.all(promises);
+                        });
+                        const data = await res.json();
+                        if(data.result !== 'success') throw new Error("서버 오류");
+                        
+                        // 구글 앱스 스크립트(GAS)의 동시성 오류 방지를 위해 약간의 대기 시간 추가
+                        await new Promise(resolve => setTimeout(resolve, 150));
+                    }
                 } catch (err) {
                     console.error("일괄 삭제 실패", err);
                     allData = [...allData, ...originalDataBackup];
@@ -1392,10 +1394,10 @@
             closeBulkTrackingModal();
             clearSelection();
             filterData(true); // 소프트 새로고침
-            showAppAlert(`${rowsToUpdate.length}건의 송장번호를 일괄 배정했습니다.`, "일괄 배정 완료", "✅");
+            showAppAlert(`${rowsToUpdate.length}건의 송장번호를 일괄 배정했습니다.\n(백그라운드에서 순차적으로 저장됩니다.)`, "일괄 배정 완료", "✅");
 
             try {
-                const promises = rowsToUpdate.map(updateInfo => {
+                for (const updateInfo of rowsToUpdate) {
                     const item = updateInfo.item;
                     const payload = {
                         type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
@@ -1404,16 +1406,18 @@
                         status: item.status || '', tracking: updateInfo.newTracking, model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                     };
                     
-                    return fetch(API_URL, { 
+                    const res = await fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                         body: JSON.stringify(payload) 
-                    })
-                    .then(res => res.json())
-                    .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); });
-                });
-                await Promise.all(promises);
+                    });
+                    const data = await res.json();
+                    if(data.result !== 'success') throw new Error("서버 오류");
+                    
+                    // 구글 앱스 스크립트(GAS)의 동시성 오류 방지를 위해 약간의 대기 시간 추가
+                    await new Promise(resolve => setTimeout(resolve, 150));
+                }
             } catch (err) {
                 console.error("송장 일괄 저장 실패", err);
                 originalDataBackup.forEach(backup => { Object.assign(allData[backup.index], backup.data); });
