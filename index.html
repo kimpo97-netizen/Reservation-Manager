@@ -99,32 +99,68 @@
         .cal-day-cell:hover { background-color: #E2E8F0; }
         .range-start, .range-end { background-color: #2563EB !important; color: white !important; }
         .range-middle { background-color: #EFF6FF !important; color: #1E293B !important; border-radius: 4px !important; }
+
+        /* 특수 필터 커스텀 스타일 (Active & Hover 색상 충돌 해결) */
+        .today-post-filter-item { border-color: #BFDBFE !important; color: #1D4ED8 !important; background-color: #ffffff !important; }
+        .today-post-filter-item:hover { background-color: #DBEAFE !important; }
+        .today-post-filter-item.active { background-color: #2563EB !important; color: #FFFFFF !important; border-color: #2563EB !important; }
+        .today-post-filter-item.active:hover { background-color: #1D4ED8 !important; }
+
+        .office-pickup-filter-item { border-color: #C7D2FE !important; color: #4338CA !important; background-color: #ffffff !important; }
+        .office-pickup-filter-item:hover { background-color: #E0E7FF !important; }
+        .office-pickup-filter-item.active { background-color: #4F46E5 !important; color: #FFFFFF !important; border-color: #4F46E5 !important; }
+        .office-pickup-filter-item.active:hover { background-color: #4338CA !important; }
+
+        .upc-header.active { background-color: #6366F1 !important; border-color: #6366F1 !important; }
+        .upc-header.active:hover { background-color: #4F46E5 !important; }
+        .upc-header.active * { color: #FFFFFF !important; }
+
+        .upc-item { border-color: #C7D2FE !important; color: #4338CA !important; }
+        .upc-item:hover { background-color: #EEF2FF !important; border-color: #A5B4FC !important; }
+        .upc-item.active { background-color: #6366F1 !important; border-color: #6366F1 !important; color: #FFFFFF !important; }
+        .upc-item.active:hover { background-color: #4F46E5 !important; }
+        .upc-item.active * { color: #FFFFFF !important; }
+
+        .ret-upc-header.active { background-color: #F43F5E !important; border-color: #F43F5E !important; }
+        .ret-upc-header.active:hover { background-color: #E11D48 !important; }
+        .ret-upc-header.active * { color: #FFFFFF !important; }
+
+        .ret-upc-item { border-color: #FECDD3 !important; color: #BE123C !important; }
+        .ret-upc-item:hover { background-color: #FFF1F2 !important; border-color: #FDA4AF !important; }
+        .ret-upc-item.active { background-color: #F43F5E !important; border-color: #F43F5E !important; color: #FFFFFF !important; }
+        .ret-upc-item.active:hover { background-color: #E11D48 !important; }
+        .ret-upc-item.active * { color: #FFFFFF !important; }
+
+        /* [NEW] 추가 서비스 필터 스타일 */
+    .svc-header.active { background-color: #EAB308 !important; border-color: #CA8A04 !important; }
+    .svc-header.active:hover { background-color: #CA8A04 !important; }
+    .svc-header.active * { color: #FFFFFF !important; }
     </style>
 </head>
 <body>
 
-    <!-- 상단 네비게이션 바 -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm h-16 flex items-center px-6 md:px-8">
+    <!-- 상단 네비게이션 바 (파스텔톤 및 둥근 UI로 전면 개편) -->
+    <header class="bg-white/90 backdrop-blur-xl border-b border-indigo-100/50 sticky top-0 z-40 shadow-[0_4px_20px_-10px_rgba(99,102,241,0.08)] h-[72px] flex items-center px-6 md:px-8 transition-all">
         <div class="flex-1 flex items-center gap-3">
-            <span class="text-xl font-black text-slate-900 tracking-tight">📱 세린캠 예약 관리자</span>
-            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-md">버전03192254</span>
+            <span class="text-xl font-black text-indigo-950 tracking-tight flex items-center gap-1.5"><span class="text-2xl drop-shadow-sm">🗂️</span> 세린캠 예약 대시보드</span>
+            <span class="bg-pink-100 text-pink-500 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-sm">v1.2</span>
         </div>
         
         <div class="flex-1 max-w-md mx-auto">
-            <div class="relative flex items-center bg-slate-100 border border-slate-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:bg-white transition-all">
-                <svg class="text-slate-400 ml-3 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="text" id="search-input" onkeyup="filterData()" placeholder="모든 정보 검색 (이름, 주소, 송장, 메모, 행사명 등)" class="w-full bg-transparent border-none text-sm font-bold text-slate-800 placeholder-slate-400 outline-none p-2.5">
+            <div class="relative flex items-center bg-indigo-50/50 border border-indigo-100 rounded-[20px] overflow-hidden focus-within:ring-2 focus-within:ring-indigo-300 focus-within:bg-white transition-all shadow-inner">
+                <svg class="text-indigo-300 ml-4 shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="search-input" onkeyup="filterData()" placeholder="모든 정보 검색 (이름, 주소, 송장, 메모 등)" class="w-full bg-transparent border-none text-[13px] font-bold text-indigo-900 placeholder-indigo-300 outline-none p-3 pl-2.5">
             </div>
         </div>
 
-        <div class="flex-1 flex justify-end items-center gap-2">
-            <button onclick="toggleSortMode()" class="h-10 px-4 flex items-center gap-2 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg text-sm font-bold text-slate-700 shadow-sm transition-all">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
-                정렬: <span id="sort-mode-text" class="text-blue-600">최신순</span>
+        <div class="flex-1 flex justify-end items-center gap-2.5">
+            <button onclick="toggleSortMode()" class="h-11 px-5 flex items-center gap-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-[18px] text-[13px] font-bold text-indigo-600 shadow-sm transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+                정렬: <span id="sort-mode-text" class="text-indigo-800 font-black">최신순</span>
             </button>
-            <button onclick="fetchData()" class="h-10 px-4 flex items-center gap-2 bg-slate-800 hover:bg-slate-900 rounded-lg text-sm font-bold text-white shadow-sm transition-all">
+            <button onclick="fetchData()" class="h-11 px-5 flex items-center gap-2 bg-sky-400 hover:bg-sky-500 rounded-[18px] text-[13px] font-bold text-white shadow-md shadow-sky-200 transition-all">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-                새로고침
+                최신 정보 불러오기
             </button>
         </div>
     </header>
@@ -141,117 +177,139 @@
                 모든 검색/필터 초기화
             </button>
 
-            <!-- 발송 시급 (미배정 택배) 특수 필터 -->
-            <div class="bg-blue-50 p-5 rounded-2xl shadow-sm border border-blue-200">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-black text-blue-900 flex items-center gap-1.5">
-                        <span class="text-base">📦</span> 이번주 택배
-                    </h3>
-                    <span class="text-[10px] font-bold text-blue-600 bg-white px-2 py-0.5 rounded-full border border-blue-100 shadow-sm">5일전 ~ 당일</span>
+            <!-- 이번주 수령 현황 세로형 필터 -->
+            <div class="bg-indigo-50 p-4 rounded-2xl shadow-sm border border-indigo-200">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex flex-col gap-1.5">
+                        <h3 class="text-[15px] font-black text-indigo-900 flex items-center gap-1.5">
+                            <span class="text-base">📅</span> 이번주 예약 인원
+                        </h3>
+                    </div>
+                    <span class="text-[11px] font-bold text-indigo-600 bg-white px-1.5 py-0.5 rounded border border-indigo-200 shadow-sm shrink-0 mt-0.5"></span>
                 </div>
-                <div id="filter-group-today-post" class="flex flex-wrap gap-2">
-                    <button onclick="setTodayPostFilter('all')" class="chip-btn today-post-filter-item !bg-white !border-blue-200 text-blue-700 hover:!bg-blue-100" data-id="all">전체 (0)</button>
-                    <button onclick="setTodayPostFilter('23U')" class="chip-btn today-post-filter-item !bg-white !border-blue-200 text-blue-700 hover:!bg-blue-100" data-id="23U">23U (0)</button>
-                    <button onclick="setTodayPostFilter('24U')" class="chip-btn today-post-filter-item !bg-white !border-blue-200 text-blue-700 hover:!bg-blue-100" data-id="24U">24U (0)</button>
-                    <button onclick="setTodayPostFilter('25U')" class="chip-btn today-post-filter-item !bg-white !border-blue-200 text-blue-700 hover:!bg-blue-100" data-id="25U">25U (0)</button>
-                    <button onclick="setTodayPostFilter('26U')" class="chip-btn today-post-filter-item !bg-white !border-blue-200 text-blue-700 hover:!bg-blue-100" data-id="26U">26U (0)</button>
-                    <button onclick="setTodayPostFilter('17P')" class="chip-btn today-post-filter-item !bg-white !border-blue-200 text-blue-700 hover:!bg-blue-100" data-id="17P">17P (0)</button>
-                    <button onclick="setTodayPostFilter('17PM')" class="chip-btn today-post-filter-item !bg-white !border-blue-200 text-blue-700 hover:!bg-blue-100" data-id="17PM">17PM (0)</button>
+                <div id="upcoming-filters-container" class="space-y-2"></div>
+                <!-- 0건일 때 보여줄 빈 상태 메시지 -->
+                <div id="upc-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-indigo-100/50 hidden mt-2">
+                    <span class="text-[11px] font-bold text-indigo-400">이번 주 수령 예정건이 없어요! 🎉</span>
                 </div>
             </div>
 
-            <!-- [NEW] 방문 예정 (미배정 사무실) 특수 필터 -->
-            <div class="bg-indigo-50 p-5 rounded-2xl shadow-sm border border-indigo-200">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-black text-indigo-900 flex items-center gap-1.5">
-                        <span class="text-base">🏢</span> 사무실 방문
-                    </h3>
-                    <span class="text-[10px] font-bold text-indigo-600 bg-white px-2 py-0.5 rounded-full border border-indigo-100 shadow-sm">2일전 ~ 당일</span>
+            <!-- 당일 반납 현황 세로형 필터 -->
+            <div class="bg-rose-50 p-4 rounded-2xl shadow-sm border border-rose-200">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex flex-col gap-1.5">
+                        <h3 class="text-[15px] font-black text-rose-900 flex items-center gap-1.5">
+                            <span class="text-base">📌</span> 이번주 반납 인원
+                        </h3>
+                    </div>
+                    <span class="text-[11px] font-bold text-rose-600 bg-white px-1.5 py-0.5 rounded border border-rose-200 shadow-sm shrink-0 mt-0.5"></span>
                 </div>
-                <div id="filter-group-office-pickup" class="flex flex-wrap gap-2">
-                    <button onclick="setOfficePickupFilter('all')" class="chip-btn office-pickup-filter-item !bg-white !border-indigo-200 text-indigo-700 hover:!bg-indigo-100" data-id="all">전체 (0)</button>
-                    <button onclick="setOfficePickupFilter('23U')" class="chip-btn office-pickup-filter-item !bg-white !border-indigo-200 text-indigo-700 hover:!bg-indigo-100" data-id="23U">23U (0)</button>
-                    <button onclick="setOfficePickupFilter('24U')" class="chip-btn office-pickup-filter-item !bg-white !border-indigo-200 text-indigo-700 hover:!bg-indigo-100" data-id="24U">24U (0)</button>
-                    <button onclick="setOfficePickupFilter('25U')" class="chip-btn office-pickup-filter-item !bg-white !border-indigo-200 text-indigo-700 hover:!bg-indigo-100" data-id="25U">25U (0)</button>
-                    <button onclick="setOfficePickupFilter('26U')" class="chip-btn office-pickup-filter-item !bg-white !border-indigo-200 text-indigo-700 hover:!bg-indigo-100" data-id="26U">26U (0)</button>
-                    <button onclick="setOfficePickupFilter('17P')" class="chip-btn office-pickup-filter-item !bg-white !border-indigo-200 text-indigo-700 hover:!bg-indigo-100" data-id="17P">17P (0)</button>
-                    <button onclick="setOfficePickupFilter('17PM')" class="chip-btn office-pickup-filter-item !bg-white !border-indigo-200 text-indigo-700 hover:!bg-indigo-100" data-id="17PM">17PM (0)</button>
+                <div id="return-upcoming-filters-container" class="space-y-2"></div>
+                <!-- 0건일 때 보여줄 빈 상태 메시지 -->
+                <div id="return-upc-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-rose-100/50 hidden mt-2">
+                    <span class="text-[11px] font-bold text-rose-400">오늘 반납 예정건이 없어요! 🎉</span>
                 </div>
             </div>
 
-            <!-- 1. 대여 일정 필터 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 수령일(예약일)</h3>
-                    <button onclick="setDateFilter('all')" id="btn-clear-date" class="hidden text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors">초기화 ✕</button>
+            <!-- 추가 서비스 현황 세로형 필터 -->
+            <div class="bg-yellow-50 p-4 rounded-2xl shadow-sm border border-yellow-200">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex flex-col gap-1.5">
+                        <h3 class="text-[15px] font-black text-yellow-900 flex items-center gap-1.5">
+                            <span class="text-base">⚙️</span> 부가 서비스
+                        </h3>
+                    </div>
+                    <span class="text-[11px] font-bold text-yellow-600 bg-white px-1.5 py-0.5 rounded border border-yellow-200 shadow-sm shrink-0 mt-0.5"></span>
                 </div>
-                <div id="filter-group-date" class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-1">
-                    <button onclick="setDateFilter('all')" class="chip-btn date-filter-item active" data-id="all">전체</button>
-                </div>
-            </div>
-
-            <!-- 1-2. 반납 일정 필터 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 반납일</h3>
-                    <button onclick="setReturnDateFilter('all')" id="btn-clear-return-date" class="hidden text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors">초기화 ✕</button>
-                </div>
-                <div id="filter-group-return-date" class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-1">
-                    <button onclick="setReturnDateFilter('all')" class="chip-btn return-date-filter-item active" data-id="all">전체</button>
+                <div id="service-filters-container" class="space-y-2"></div>
+                <!-- 0건일 때 보여줄 빈 상태 메시지 -->
+                <div id="service-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-yellow-100/50 hidden mt-2">
+                    <span class="text-[11px] font-bold text-yellow-600">요청한 서비스가 없어요! 🎉</span>
                 </div>
             </div>
 
-            <!-- 2. 기기 모델 필터 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📱 기기 모델</h3>
-                    <div class="flex gap-1 flex-wrap justify-end">
-                        <button onclick="toggleBatteryFilter()" id="btn-quick-battery" class="px-2 py-1 rounded text-[11px] font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-1">
-                            ⚡배터리 <span id="quick-battery-count" class="text-yellow-600 font-tnum">0</span>
-                        </button>
-                        <button onclick="toggleBackupFilter()" id="btn-quick-backup" class="px-2 py-1 rounded text-[11px] font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-1">
-                            백업 <span id="quick-backup-count" class="text-blue-600 font-tnum">0</span>
-                        </button>
-                        <button onclick="toggleExtensionFilter()" id="btn-quick-extension" class="px-2 py-1 rounded text-[11px] font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-1">
-                            연장 <span id="quick-extension-count" class="text-emerald-600 font-tnum">0</span>
-                        </button>
+            <!-- 상세 필터 접기/펼치기 버튼 -->
+            <button onclick="toggleGeneralFilters()" class="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 p-3.5 rounded-2xl font-bold shadow-sm transition-all flex justify-between items-center text-sm">
+                <span class="flex items-center gap-2"><span class="text-lg leading-none mt-[-2px]">🔍</span> <span id="general-filters-text">상세 검색 필터 열기</span></span>
+                <svg id="general-filters-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transform transition-transform duration-300 text-slate-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+
+            <!-- 일반 필터들을 하나로 묶는 컨테이너 -->
+            <div id="general-filters-container" class="hidden flex-col gap-5 transition-all duration-300 origin-top">
+                <!-- 1. 대여 일정 필터 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 수령일(예약일)</h3>
+                        <button onclick="setDateFilter('all')" id="btn-clear-date" class="hidden text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors">초기화 ✕</button>
+                    </div>
+                    <div id="filter-group-date" class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-1">
+                        <button onclick="setDateFilter('all')" class="chip-btn date-filter-item active" data-id="all">전체</button>
                     </div>
                 </div>
-                <div id="filter-group-model" class="flex flex-wrap gap-2">
-                    <button onclick="setModelFilter('all')" class="chip-btn model-filter-item active" data-id="all">전체</button>
-                    <button onclick="setModelFilter('23U')" class="chip-btn model-filter-item" data-id="23U">23U</button>
-                    <button onclick="setModelFilter('24U')" class="chip-btn model-filter-item" data-id="24U">24U</button>
-                    <button onclick="setModelFilter('25U')" class="chip-btn model-filter-item" data-id="25U">25U</button>
-                    <button onclick="setModelFilter('26U')" class="chip-btn model-filter-item" data-id="26U">26U</button>
-                    <button onclick="setModelFilter('17P')" class="chip-btn model-filter-item" data-id="17P">17P</button>
-                    <button onclick="setModelFilter('17PM')" class="chip-btn model-filter-item" data-id="17PM">17PM</button>
-                </div>
-            </div>
 
-            <!-- 3. 수령 방법 필터 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">📦 수령 방법</h3>
-                <div id="filter-group-delivery" class="flex flex-wrap gap-2">
-                    <button onclick="setDeliveryFilter('all')" class="chip-btn delivery-filter-item active" data-id="all">전체</button>
-                    <button onclick="setDeliveryFilter('택배')" class="chip-btn delivery-filter-item" data-id="택배">택배</button>
-                    <button onclick="setDeliveryFilter('공연장')" class="chip-btn delivery-filter-item" data-id="공연장">공연장</button>
-                    <button onclick="setDeliveryFilter('사무실')" class="chip-btn delivery-filter-item" data-id="사무실">사무실</button>
+                <!-- 1-2. 반납 일정 필터 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 반납일</h3>
+                        <button onclick="setReturnDateFilter('all')" id="btn-clear-return-date" class="hidden text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors">초기화 ✕</button>
+                    </div>
+                    <div id="filter-group-return-date" class="flex flex-wrap gap-2 max-h-[160px] overflow-y-auto pr-1">
+                        <button onclick="setReturnDateFilter('all')" class="chip-btn return-date-filter-item active" data-id="all">전체</button>
+                    </div>
                 </div>
-                <div id="sub-filter-group-delivery" class="hidden flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100">
-                    <button onclick="setDeliverySubFilter('all')" class="chip-btn delivery-sub-filter-item active !bg-slate-50 !border-slate-300 text-slate-600" data-id="all">전체보기</button>
-                    <button onclick="setDeliverySubFilter('remaining')" class="chip-btn delivery-sub-filter-item !border-blue-300 text-blue-700 hover:bg-blue-50" data-id="remaining">남은인원</button>
-                    <button onclick="setDeliverySubFilter('pickedup')" class="chip-btn delivery-sub-filter-item !border-emerald-300 text-emerald-700 hover:bg-emerald-50" data-id="pickedup">수령인원</button>
-                </div>
-            </div>
 
-            <!-- 4. 반납 방법 필터 -->
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <h3 class="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">↩️ 반납 방법</h3>
-                <div id="filter-group-return" class="flex flex-wrap gap-2">
-                    <button onclick="setReturnFilter('all')" class="chip-btn return-filter-item active" data-id="all">전체</button>
-                    <button onclick="setReturnFilter('택배')" class="chip-btn return-filter-item" data-id="택배">택배</button>
-                    <button onclick="setReturnFilter('당일')" class="chip-btn return-filter-item" data-id="당일">당일</button>
-                    <button onclick="setReturnFilter('사무실')" class="chip-btn return-filter-item" data-id="사무실">사무실</button>
+                <!-- 2. 기기 모델 필터 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📱 기기 모델</h3>
+                        <div class="flex gap-1 flex-wrap justify-end">
+                            <button onclick="toggleBatteryFilter()" id="btn-quick-battery" class="px-2 py-1 rounded text-[11px] font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-1">
+                                ⚡배터리 <span id="quick-battery-count" class="text-yellow-600 font-tnum">0</span>
+                            </button>
+                            <button onclick="toggleBackupFilter()" id="btn-quick-backup" class="px-2 py-1 rounded text-[11px] font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-1">
+                                백업 <span id="quick-backup-count" class="text-blue-600 font-tnum">0</span>
+                            </button>
+                            <button onclick="toggleExtensionFilter()" id="btn-quick-extension" class="px-2 py-1 rounded text-[11px] font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-1">
+                                연장 <span id="quick-extension-count" class="text-emerald-600 font-tnum">0</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="filter-group-model" class="flex flex-wrap gap-2">
+                        <button onclick="setModelFilter('all')" class="chip-btn model-filter-item active" data-id="all">전체</button>
+                        <button onclick="setModelFilter('23U')" class="chip-btn model-filter-item" data-id="23U">23U</button>
+                        <button onclick="setModelFilter('24U')" class="chip-btn model-filter-item" data-id="24U">24U</button>
+                        <button onclick="setModelFilter('25U')" class="chip-btn model-filter-item" data-id="25U">25U</button>
+                        <button onclick="setModelFilter('26U')" class="chip-btn model-filter-item" data-id="26U">26U</button>
+                        <button onclick="setModelFilter('17P')" class="chip-btn model-filter-item" data-id="17P">17P</button>
+                        <button onclick="setModelFilter('17PM')" class="chip-btn model-filter-item" data-id="17PM">17PM</button>
+                    </div>
+                </div>
+
+                <!-- 3. 수령 방법 필터 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">📦 수령 방법</h3>
+                    <div id="filter-group-delivery" class="flex flex-wrap gap-2">
+                        <button onclick="setDeliveryFilter('all')" class="chip-btn delivery-filter-item active" data-id="all">전체</button>
+                        <button onclick="setDeliveryFilter('택배')" class="chip-btn delivery-filter-item" data-id="택배">택배</button>
+                        <button onclick="setDeliveryFilter('공연장')" class="chip-btn delivery-filter-item" data-id="공연장">공연장</button>
+                        <button onclick="setDeliveryFilter('사무실')" class="chip-btn delivery-filter-item" data-id="사무실">사무실</button>
+                    </div>
+                    <div id="sub-filter-group-delivery" class="hidden flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100">
+                        <button onclick="setDeliverySubFilter('all')" class="chip-btn delivery-sub-filter-item active !bg-slate-50 !border-slate-300 text-slate-600" data-id="all">전체보기</button>
+                        <button onclick="setDeliverySubFilter('remaining')" class="chip-btn delivery-sub-filter-item !border-blue-300 text-blue-700 hover:bg-blue-50" data-id="remaining">남은인원</button>
+                        <button onclick="setDeliverySubFilter('pickedup')" class="chip-btn delivery-sub-filter-item !border-emerald-300 text-emerald-700 hover:bg-emerald-50" data-id="pickedup">수령인원</button>
+                    </div>
+                </div>
+
+                <!-- 4. 반납 방법 필터 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">↩️ 반납 방법</h3>
+                    <div id="filter-group-return" class="flex flex-wrap gap-2">
+                        <button onclick="setReturnFilter('all')" class="chip-btn return-filter-item active" data-id="all">전체</button>
+                        <button onclick="setReturnFilter('택배')" class="chip-btn return-filter-item" data-id="택배">택배</button>
+                        <button onclick="setReturnFilter('당일')" class="chip-btn return-filter-item" data-id="당일">당일</button>
+                        <button onclick="setReturnFilter('사무실')" class="chip-btn return-filter-item" data-id="사무실">사무실</button>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -264,14 +322,14 @@
             </div>
             
             <!-- 리스트 헤더 (가로형) -->
-            <div id="list-header" class="hidden bg-white border border-slate-200 rounded-xl mb-3 items-center px-4 py-3 text-[13px] font-extrabold text-slate-500 gap-3 shadow-sm sticky top-[72px] z-10">
-                <div class="w-8 text-center shrink-0 flex items-center justify-center pl-1">
-                    <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(event)" class="checkbox-custom" title="전체 선택">
+            <div id="list-header" class="hidden bg-white border border-slate-200 rounded-xl mb-3 h-[48px] items-center pl-0 pr-4 text-[13px] font-extrabold text-slate-500 gap-3 shadow-sm sticky top-[72px] z-10 overflow-hidden">
+                <div class="w-16 h-full flex items-center justify-center pl-1.5 cursor-pointer hover:bg-slate-100 transition-colors shrink-0" onclick="document.getElementById('selectAllCheckbox').click()">
+                    <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(event)" class="checkbox-custom pointer-events-none transform scale-110" title="전체 선택">
                 </div>
                 <div class="w-14 text-center shrink-0">상태</div>
                 <div class="w-20 text-center shrink-0">접수일시</div>
-                <div class="w-32 shrink-0">기기 및 번호</div>
-                <div class="w-44 shrink-0">고객 정보</div>
+                <div class="w-36 shrink-0 text-center">기기 및 번호</div>
+                <div class="w-40 shrink-0">고객 정보</div>
                 <div class="w-64 shrink-0">대여 일정 및 행사명</div>
                 <div class="flex-1 shrink-0 px-2">배송지 주소</div>
                 <div class="w-[72px] shrink-0">결제 금액</div>
@@ -283,46 +341,52 @@
         </main>
     </div>
 
-    <!-- 다중 선택 일괄 처리 바 -->
-    <div id="bulk-action-bar" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-[20px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] border border-slate-700 flex flex-col gap-3 z-50 transition-all duration-300 translate-y-32 opacity-0 pointer-events-none w-max max-w-[90vw]">
+    <!-- 다중 선택 일괄 처리 바 (밝고 화사한 스타일로 변경) -->
+    <div id="bulk-action-bar" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-xl text-slate-800 p-5 rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1),0_0_20px_rgba(59,130,246,0.1)] border border-slate-200 flex flex-col gap-4 z-50 transition-all duration-300 translate-y-48 opacity-0 pointer-events-none w-[650px] max-w-[95vw]">
         
-        <!-- 1열: 상태 변경 및 선택 정보 -->
-        <div class="flex items-center justify-between gap-4 w-full">
-            <div class="flex items-center gap-2 pl-1">
-                <span class="flex items-center justify-center px-2 min-w-[24px] h-6 rounded-full bg-blue-500 text-white font-black text-[12px] font-tnum" id="bulk-count">0</span>
-                <span class="font-bold text-[13px] text-slate-200 whitespace-nowrap">선택됨</span>
+        <!-- 1열: 갯수 및 모델 요약 -->
+        <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-2 pl-1 overflow-x-auto no-scrollbar py-1.5">
+                <span class="flex items-center justify-center px-2.5 min-w-[28px] h-7 rounded-full bg-indigo-200 text-indigo-800 font-black text-sm font-tnum shrink-0 shadow-sm" id="bulk-count">0</span>
+                <span class="font-bold text-sm text-slate-600 whitespace-nowrap shrink-0">선택됨</span>
+                <div id="bulk-model-summary" class="hidden items-center gap-2 ml-2 border-l border-slate-300 pl-3"></div>
             </div>
-            <div class="w-px h-5 bg-slate-700"></div>
-            <div class="flex items-center gap-1.5 flex-wrap justify-center">
-                <button onclick="bulkUpdateStatus('확정')" class="text-[13px] font-bold bg-[#0064FF] hover:bg-[#0052D4] px-3.5 py-1.5 rounded-lg transition-colors shadow-sm whitespace-nowrap">확정 ➔</button>
-                <button onclick="bulkUpdateStatus('반납완료')" class="text-[13px] font-bold bg-slate-700 hover:bg-slate-600 px-3.5 py-1.5 rounded-lg transition-colors shadow-sm whitespace-nowrap">반납완료 ➔</button>
-                <button onclick="bulkUpdateStatus('대기')" class="text-[13px] font-bold bg-purple-600 hover:bg-purple-500 px-3.5 py-1.5 rounded-lg transition-colors shadow-sm whitespace-nowrap">대기 ➔</button>
-                <button onclick="bulkUpdateStatus('취소')" class="text-[13px] font-bold bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">취소 ➔</button>
-                
-                <div class="w-px h-4 bg-slate-600 mx-1"></div>
-                <button onclick="bulkDeleteRecords()" class="text-[13px] font-bold bg-transparent border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-3.5 py-1.5 rounded-lg transition-colors whitespace-nowrap">삭제 🗑️</button>
-            </div>
-            <button onclick="clearSelection()" class="ml-1 p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors shrink-0" title="선택 해제">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <button onclick="clearSelection()" class="ml-2 p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors shrink-0" title="선택 해제">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
         </div>
         
-        <!-- 구분선 -->
-        <div class="w-full h-px bg-slate-700/50"></div>
+        <div class="w-full h-px bg-slate-100"></div>
         
-        <!-- 2열: 배송 및 엑셀 관련 기능 -->
-        <div class="flex items-center gap-2 w-full justify-center">
-            <button onclick="copyForPostOffice()" class="flex-1 justify-center text-[13px] font-bold bg-[#F59E0B] hover:bg-[#D97706] text-white px-4 py-2.5 rounded-lg transition-colors shadow-sm flex items-center gap-1.5 whitespace-nowrap" title="대여모델/이름/우편번호/주소/연락처 복사">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+        <!-- 2열: 상태 변경 및 삭제 -->
+        <div class="flex items-center justify-between gap-2 w-full">
+            <div class="flex gap-2 flex-1">
+                <button onclick="bulkUpdateStatus('확정')" class="flex-1 text-[13px] font-bold bg-blue-200 hover:bg-blue-300 text-blue-900 py-2.5 rounded-xl transition-colors shadow-sm">확정</button>
+                <button onclick="bulkUpdateStatus('반납완료')" class="flex-1 text-[13px] font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 py-2.5 rounded-xl transition-colors shadow-sm">반납</button>
+                <button onclick="bulkUpdateStatus('대기')" class="flex-1 text-[13px] font-bold bg-purple-200 hover:bg-purple-300 text-purple-900 py-2.5 rounded-xl transition-colors shadow-sm">대기</button>
+                <button onclick="bulkUpdateStatus('취소')" class="flex-1 text-[13px] font-bold bg-rose-100 hover:bg-rose-200 border border-rose-200 text-rose-700 py-2.5 rounded-xl transition-colors shadow-sm">취소</button>
+            </div>
+            <div class="w-px h-7 bg-slate-200 mx-0.5"></div>
+            <button onclick="bulkDeleteRecords()" class="text-[13px] font-bold bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 hover:border-rose-300 px-4 py-2.5 rounded-xl transition-colors shrink-0 shadow-sm">삭제</button>
+        </div>
+        
+        <!-- 3열: 연장 및 데이터 백업 -->
+        <div class="flex items-center gap-2 w-full">
+            <button onclick="bulkExtendRental()" class="flex-1 justify-center text-[13px] font-bold bg-sky-50 text-sky-600 hover:bg-sky-100 py-3 rounded-xl transition-colors border border-sky-200 flex items-center gap-1.5 shadow-sm">⏳ 대여 연장 (+1일)</button>
+            <button onclick="bulkAddBackupMemo()" class="flex-1 justify-center text-[13px] font-bold bg-amber-50 text-amber-600 hover:bg-amber-100 py-3 rounded-xl transition-colors border border-amber-200 flex items-center gap-1.5 shadow-sm">💾 데이터 백업 추가</button>
+        </div>
+        
+        <!-- 4열: 우체국 등록 및 알림톡 -->
+        <div class="flex items-center gap-2 w-full">
+            <button onclick="copyForPostOffice()" class="flex-1 justify-center text-[13px] font-bold bg-orange-200 hover:bg-orange-300 text-orange-900 py-3 rounded-xl transition-colors shadow-sm flex items-center gap-1.5" title="대여모델/이름/우편번호/주소/연락처 복사">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
                 우체국 배송 등록
             </button>
-
-            <button onclick="openBulkTrackingModal()" class="flex-1 justify-center text-[13px] font-bold bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-lg transition-colors shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> 
-                배송시작 알림톡 발송
+            <button onclick="openBulkTrackingModal()" class="flex-1 justify-center text-[13px] font-bold bg-teal-200 hover:bg-teal-300 text-teal-900 py-3 rounded-xl transition-colors shadow-sm flex items-center gap-1.5">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> 
+                배송시작 알림톡
             </button>
         </div>
-        
     </div>
 
     <!-- 상세 정보 모달 (PC 폼) -->
@@ -403,7 +467,13 @@
                                 <div><label class="input-label">결제 금액</label><input type="text" id="edit-price" placeholder="금액 입력" inputmode="numeric" class="input-field font-bold text-blue-600 font-tnum"></div>
                                 <div><label class="input-label">택배 송장번호</label><input type="text" id="edit-tracking" placeholder="- 없이 숫자만 입력" inputmode="numeric" class="input-field font-tnum font-bold"></div>
                             </div>
-                            <div><label class="input-label">관리자 메모</label><textarea id="edit-memo" rows="2" placeholder="참고사항 입력" class="input-field resize-y"></textarea></div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2 mt-1">
+                                    <label class="input-label !mb-0">관리자 메모</label>
+                                    <button type="button" onclick="addBackupToMemo()" class="text-[11px] bg-yellow-50 text-yellow-700 px-2 py-1 rounded-md font-bold hover:bg-yellow-100 transition-colors flex items-center gap-1 border border-yellow-200 shadow-sm"><span class="text-sm">💾</span> 백업 추가</button>
+                                </div>
+                                <textarea id="edit-memo" rows="2" placeholder="참고사항 입력" class="input-field resize-y"></textarea>
+                            </div>
                         </div>
                     </div>
 
@@ -411,7 +481,13 @@
                         <div class="form-title">대여 일정 및 방법</div>
                         <div class="grid grid-cols-2 gap-4 mb-5">
                             <div><label class="input-label">수령 예정일</label><input type="date" id="edit-start" class="input-field font-tnum cursor-pointer"></div>
-                            <div><label class="input-label">반납 예정일</label><input type="date" id="edit-end" class="input-field font-tnum cursor-pointer"></div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="input-label !mb-0">반납 예정일</label>
+                                    <button type="button" onclick="addOneDayToEndDate()" class="text-[11px] bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-bold hover:bg-blue-100 transition-colors flex items-center gap-1 border border-blue-200 shadow-sm"><span class="text-sm">⏳</span> +1일 연장</button>
+                                </div>
+                                <input type="date" id="edit-end" class="input-field font-tnum cursor-pointer">
+                            </div>
                         </div>
                         <div class="grid grid-cols-2 gap-6">
                             <div>
@@ -503,9 +579,92 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzAXedwJaXm4cdEqSSOrn-ZCXdprFTOfTvN_tjTCW49aNCleL4ONhe2Do6_HC6ybRTd_w/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbzRI1DH1Ls2aHNjJLCf47YE3C1ERJTVvsQmDJA5hXEoaH6oMTlHlPQDsHtKSXW3zY9dBA/exec"; 
         const MODEL_LIST = ['23U', '24U', '25U', '26U', '17P', '17PM'];
         const STATUS_PRIORITY = { '예약신청': 1, '대기': 2, '확정': 3, '반납완료': 4, '취소': 5 };
+
+        const HOLIDAYS = {
+            '2025-1-1': '신정', '2025-1-28': '설날', '2025-1-29': '설날', '2025-1-30': '설날',
+            '2025-3-1': '삼일절', '2025-3-3': '대체공휴일', '2025-5-5': '어린이날', '2025-5-6': '대체공휴일',
+            '2025-6-6': '현충일', '2025-8-15': '광복절', '2025-10-3': '개천절', '2025-10-5': '추석',
+            '2025-10-6': '추석', '2025-10-7': '추석', '2025-10-8': '대체공휴일', '2025-10-9': '한글날',
+            '2025-12-25': '성탄절',
+            '2026-1-1': '신정', 
+            '2026-2-16': '설날', '2026-2-17': '설날', '2026-2-18': '설날',
+            '2026-3-1': '삼일절', '2026-3-2': '대체공휴일',
+            '2026-5-5': '어린이날', '2026-5-24': '부처님오신날', '2026-5-25': '대체공휴일',
+            '2026-6-6': '현충일', 
+            '2026-8-15': '광복절', '2026-8-17': '대체공휴일',
+            '2026-9-24': '추석', '2026-9-25': '추석', '2026-9-26': '추석', 
+            '2026-10-3': '개천절', '2026-10-5': '대체공휴일', '2026-10-9': '한글날',
+            '2026-12-25': '성탄절'
+        };
+
+        function isWithinUpcomingBusinessDays(startDateStr, maxDays) {
+            if (!startDateStr || !startDateStr.includes('-')) return false;
+            const parts = startDateStr.split('-');
+            if (parts.length !== 3) return false;
+            
+            const sDate = new Date(parts[0], parts[1]-1, parts[2]);
+            sDate.setHours(0,0,0,0);
+            
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            
+            if (sDate < today) return false;
+            
+            let businessDays = 0;
+            let curDate = new Date(today);
+            
+            while (curDate < sDate) {
+                const y = curDate.getFullYear();
+                const m = curDate.getMonth() + 1;
+                const d = curDate.getDate();
+                const dateKey = `${y}-${m}-${d}`;
+                
+                const isWeekend = curDate.getDay() === 0 || curDate.getDay() === 6;
+                const isHoliday = !!HOLIDAYS[dateKey];
+                
+                if (!isWeekend && !isHoliday) {
+                    businessDays++;
+                }
+                curDate.setDate(curDate.getDate() + 1);
+            }
+            return businessDays <= maxDays;
+        }
+
+        function isWithinReturnBusinessDays(dateStr, maxDays) {
+            if (!dateStr || !dateStr.includes('-')) return false;
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return false;
+            
+            const sDate = new Date(parts[0], parts[1]-1, parts[2]);
+            sDate.setHours(0,0,0,0);
+            
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            
+            if (sDate < today) return true; // 기한 지남(연체) 건은 무조건 포함
+            
+            let businessDays = 0;
+            let curDate = new Date(today);
+            
+            while (curDate < sDate) {
+                const y = curDate.getFullYear();
+                const m = curDate.getMonth() + 1;
+                const d = curDate.getDate();
+                const dateKey = `${y}-${m}-${d}`;
+                
+                const isWeekend = curDate.getDay() === 0 || curDate.getDay() === 6;
+                const isHoliday = !!HOLIDAYS[dateKey];
+                
+                if (!isWeekend && !isHoliday) {
+                    businessDays++;
+                }
+                curDate.setDate(curDate.getDate() + 1);
+            }
+            return businessDays <= maxDays;
+        }
 
         let allData = [];
         let currentlyFilteredList = []; 
@@ -517,14 +676,44 @@
         let currentDeliveryFilter = 'all';
         let currentDeliverySubFilter = 'all';
         let currentReturnFilter = 'all';
-        let selectedDates = []; 
+        selectedDates = []; 
         let selectedReturnDates = []; 
         let currentSortMode = 'latest'; 
         
-        let currentTodayPostFilter = null; 
-        let currentOfficePickupFilter = null; // [NEW] '방문 예정' 전용 필터 상태
+        let currentUpcomingDelivery = null; 
+        let currentUpcomingModel = null;
+        
+        let currentReturnUpcomingMethod = null; 
+        let currentReturnUpcomingModel = null;
 
-        window.onload = () => fetchData();
+        // 추가 서비스 필터 상태
+        let currentServiceFilter = null; 
+
+        window.onload = () => {
+            renderUpcomingFilters(); 
+            renderReturnUpcomingFilters(); 
+            renderServiceFilters(); 
+            fetchData();
+        };
+
+        // 일반 필터 접기/펼치기 기능
+        function toggleGeneralFilters() {
+            const container = document.getElementById('general-filters-container');
+            const icon = document.getElementById('general-filters-icon');
+            const text = document.getElementById('general-filters-text');
+            
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                container.classList.add('flex');
+                icon.classList.add('rotate-180');
+                text.innerText = '상세 검색 필터 숨기기';
+            } else {
+                container.classList.add('hidden');
+                container.classList.remove('flex');
+                icon.classList.remove('rotate-180');
+                text.innerText = '상세 검색 필터 열기';
+            }
+        }
 
         async function fetchData() {
             toggleLoading(true);
@@ -554,7 +743,6 @@
             finally { toggleLoading(false); }
         }
 
-        // 전체 필터/검색 초기화 기능
         function resetAllFilters() {
             currentFilterStatus = 'all';
             currentModelFilter = 'all';
@@ -563,8 +751,12 @@
             currentReturnFilter = 'all';
             selectedDates = [];
             selectedReturnDates = [];
-            currentTodayPostFilter = null; 
-            currentOfficePickupFilter = null; // [NEW] 특수 필터 초기화
+            
+            currentUpcomingDelivery = null; 
+            currentUpcomingModel = null;
+            currentReturnUpcomingMethod = null; 
+            currentReturnUpcomingModel = null;
+            currentServiceFilter = null; 
             
             document.getElementById('search-input').value = '';
 
@@ -583,12 +775,8 @@
             resetActive('.delivery-sub-filter-item');
             resetActive('.return-filter-item');
 
-            // 특수 필터 버튼 시각적 초기화
-            document.querySelectorAll('.today-post-filter-item').forEach(btn => {
-                btn.classList.remove('!bg-blue-600', '!text-white', '!border-blue-600');
-            });
-            document.querySelectorAll('.office-pickup-filter-item').forEach(btn => {
-                btn.classList.remove('!bg-indigo-600', '!text-white', '!border-indigo-600');
+            document.querySelectorAll('.upc-header, .upc-item, .ret-upc-header, .ret-upc-item, .svc-header').forEach(btn => {
+                btn.classList.remove('active');
             });
 
             const subGroup = document.getElementById('sub-filter-group-delivery');
@@ -599,6 +787,211 @@
             
             const clearReturnDateBtn = document.getElementById('btn-clear-return-date');
             if(clearReturnDateBtn) clearReturnDateBtn.classList.add('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterData(false);
+        }
+
+        function renderUpcomingFilters() {
+            const container = document.getElementById('upcoming-filters-container');
+            if (!container) return;
+            
+            const methods = [
+                { id: '택배', icon: '📦' },
+                { id: '공연장', icon: '🏟️' },
+                { id: '사무실', icon: '🏢' },
+                { id: '퀵', icon: '⚡' }
+            ];
+            
+            let html = '';
+            methods.forEach(m => {
+                html += `
+                <div id="block-upc-${m.id}" class="bg-white border border-indigo-100 rounded-xl overflow-hidden shadow-sm mb-2" style="display:none;">
+                    <button onclick="setUpcomingFilter('${m.id}', 'all')" class="w-full bg-slate-50 hover:bg-indigo-50 p-2.5 flex justify-between items-center transition-colors upc-header border-b border-indigo-50" data-del="${m.id}">
+                        <span class="font-bold text-[13px] text-slate-700 upc-title">${m.icon} ${m.id} 수령 전체보기</span>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs font-bold text-slate-500 upc-count" id="count-upc-${m.id}-all">0건</span>
+                        </div>
+                    </button>
+                    <div class="p-3 flex flex-wrap gap-2 bg-white" id="upc-items-${m.id}">
+                        ${m.id === '공연장' ? '' : MODEL_LIST.map(model => `
+                            <button onclick="setUpcomingFilter('${m.id}', '${model}')" class="chip-btn upc-item" data-del="${m.id}" data-mod="${model}" style="display:none;">
+                                ${model} (<span id="count-upc-${m.id}-${model}">0</span>)
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderReturnUpcomingFilters() {
+            const container = document.getElementById('return-upcoming-filters-container');
+            if (!container) return;
+            
+            const methods = [
+                { id: '택배', icon: '📦' },
+                { id: '사무실', icon: '🏢' },
+                { id: '공연장', icon: '🏟️' },
+                { id: '당일반납', icon: '⚡' }
+            ];
+            
+            let html = '';
+            methods.forEach(m => {
+                html += `
+                <div id="block-ret-upc-${m.id}" class="bg-white border border-rose-100 rounded-xl overflow-hidden shadow-sm mb-2" style="display:none;">
+                    <button onclick="setReturnUpcomingFilter('${m.id}', 'all')" class="w-full bg-slate-50 hover:bg-rose-50 p-2.5 flex justify-between items-center transition-colors ret-upc-header border-b border-rose-50" data-ret="${m.id}">
+                        <span class="font-bold text-[13px] text-slate-700 ret-upc-title">${m.icon} ${m.id} 반납 전체보기</span>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs font-bold text-slate-500 ret-upc-count" id="count-ret-upc-${m.id}-all">0건</span>
+                        </div>
+                    </button>
+                    <div class="p-3 flex flex-wrap gap-2 bg-white">
+                        ${MODEL_LIST.map(model => `
+                            <button onclick="setReturnUpcomingFilter('${m.id}', '${model}')" class="chip-btn ret-upc-item" data-ret="${m.id}" data-mod="${model}" style="display:none;">
+                                ${model} (<span id="count-ret-upc-${m.id}-${model}">0</span>)
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderServiceFilters() {
+            const container = document.getElementById('service-filters-container');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <div id="block-svc-backup" style="display:none;" class="mb-2">
+                    <button onclick="setServiceFilter('backup')" class="w-full bg-white hover:bg-yellow-50 border border-yellow-100 p-2.5 rounded-xl flex justify-between items-center transition-colors svc-header" data-svc="backup">
+                        <span class="font-bold text-[13px] text-slate-700 svc-title">💾 데이터 백업</span>
+                        <span class="text-xs font-bold text-slate-500 svc-count" id="count-svc-backup">0건</span>
+                    </button>
+                </div>
+                <div id="block-svc-extension" style="display:none;">
+                    <button onclick="setServiceFilter('extension')" class="w-full bg-white hover:bg-yellow-50 border border-yellow-100 p-2.5 rounded-xl flex justify-between items-center transition-colors svc-header" data-svc="extension">
+                        <span class="font-bold text-[13px] text-slate-700 svc-title">⏳ 대여 연장</span>
+                        <span class="text-xs font-bold text-slate-500 svc-count" id="count-svc-extension">0건</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        function setUpcomingFilter(del, mod) {
+            if (currentUpcomingDelivery === del && currentUpcomingModel === mod) {
+                currentUpcomingDelivery = null;
+                currentUpcomingModel = null;
+            } else {
+                currentUpcomingDelivery = del;
+                currentUpcomingModel = mod;
+                
+                currentReturnUpcomingMethod = null;
+                currentReturnUpcomingModel = null;
+                currentServiceFilter = null; 
+                
+                currentFilterStatus = 'all';
+                currentModelFilter = 'all';
+                currentDeliveryFilter = 'all';
+                currentDeliverySubFilter = 'all';
+                currentReturnFilter = 'all';
+                selectedDates = [];
+                selectedReturnDates = [];
+                
+                document.querySelectorAll('.chip-btn').forEach(btn => {
+                    if(btn.dataset.id === 'all') btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+                document.getElementById('search-input').value = '';
+            }
+
+            document.querySelectorAll('.upc-header, .upc-item').forEach(btn => {
+                if (currentUpcomingDelivery === btn.dataset.del && currentUpcomingModel === (btn.dataset.mod || 'all')) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            document.querySelectorAll('.ret-upc-header, .ret-upc-item, .svc-header').forEach(btn => btn.classList.remove('active'));
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterData(false);
+        }
+
+        function setReturnUpcomingFilter(ret, mod) {
+            if (currentReturnUpcomingMethod === ret && currentReturnUpcomingModel === mod) {
+                currentReturnUpcomingMethod = null;
+                currentReturnUpcomingModel = null;
+            } else {
+                currentReturnUpcomingMethod = ret;
+                currentReturnUpcomingModel = mod;
+                
+                currentUpcomingDelivery = null; 
+                currentUpcomingModel = null;
+                currentServiceFilter = null; 
+                
+                currentFilterStatus = 'all';
+                currentModelFilter = 'all';
+                currentDeliveryFilter = 'all';
+                currentDeliverySubFilter = 'all';
+                currentReturnFilter = 'all';
+                selectedDates = [];
+                selectedReturnDates = [];
+                
+                document.querySelectorAll('.chip-btn').forEach(btn => {
+                    if(btn.dataset.id === 'all') btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+                document.getElementById('search-input').value = '';
+            }
+
+            document.querySelectorAll('.ret-upc-header, .ret-upc-item').forEach(btn => {
+                if (currentReturnUpcomingMethod === btn.dataset.ret && currentReturnUpcomingModel === (btn.dataset.mod || 'all')) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            document.querySelectorAll('.upc-header, .upc-item, .svc-header').forEach(btn => btn.classList.remove('active'));
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterData(false);
+        }
+
+        function setServiceFilter(svc) {
+            if (currentServiceFilter === svc) {
+                currentServiceFilter = null;
+            } else {
+                currentServiceFilter = svc;
+                
+                currentUpcomingDelivery = null;
+                currentUpcomingModel = null;
+                currentReturnUpcomingMethod = null;
+                currentReturnUpcomingModel = null;
+                
+                currentFilterStatus = 'all';
+                currentModelFilter = 'all';
+                currentDeliveryFilter = 'all';
+                currentDeliverySubFilter = 'all';
+                currentReturnFilter = 'all';
+                selectedDates = [];
+                selectedReturnDates = [];
+                
+                document.querySelectorAll('.chip-btn').forEach(btn => {
+                    if(btn.dataset.id === 'all') btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+                document.getElementById('search-input').value = '';
+            }
+
+            document.querySelectorAll('.svc-header').forEach(btn => {
+                if (currentServiceFilter === btn.dataset.svc) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.upc-header, .upc-item, .ret-upc-header, .ret-upc-item').forEach(btn => btn.classList.remove('active'));
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
@@ -729,58 +1122,6 @@
             }
         }
 
-        // 오늘의 발송(특수 필터) 제어 로직
-        function setTodayPostFilter(m) {
-            if (currentTodayPostFilter === m) currentTodayPostFilter = null;
-            else currentTodayPostFilter = m;
-
-            // [NEW] 다른 특수 필터 해제
-            if (currentTodayPostFilter !== null) {
-                currentOfficePickupFilter = null;
-                document.querySelectorAll('.office-pickup-filter-item').forEach(b => b.classList.remove('!bg-indigo-600', '!text-white', '!border-indigo-600'));
-            }
-
-            document.querySelectorAll('.today-post-filter-item').forEach(b => {
-                if (currentTodayPostFilter === null) {
-                    b.classList.remove('!bg-blue-600', '!text-white', '!border-blue-600');
-                } else {
-                    if (b.dataset.id === currentTodayPostFilter) {
-                        b.classList.add('!bg-blue-600', '!text-white', '!border-blue-600');
-                    } else {
-                        b.classList.remove('!bg-blue-600', '!text-white', '!border-blue-600');
-                    }
-                }
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
-            filterData(false);
-        }
-
-        // [NEW] 방문 예정(특수 필터) 제어 로직
-        function setOfficePickupFilter(m) {
-            if (currentOfficePickupFilter === m) currentOfficePickupFilter = null;
-            else currentOfficePickupFilter = m;
-
-            // 다른 특수 필터 해제
-            if (currentOfficePickupFilter !== null) {
-                currentTodayPostFilter = null;
-                document.querySelectorAll('.today-post-filter-item').forEach(b => b.classList.remove('!bg-blue-600', '!text-white', '!border-blue-600'));
-            }
-
-            document.querySelectorAll('.office-pickup-filter-item').forEach(b => {
-                if (currentOfficePickupFilter === null) {
-                    b.classList.remove('!bg-indigo-600', '!text-white', '!border-indigo-600');
-                } else {
-                    if (b.dataset.id === currentOfficePickupFilter) {
-                        b.classList.add('!bg-indigo-600', '!text-white', '!border-indigo-600');
-                    } else {
-                        b.classList.remove('!bg-indigo-600', '!text-white', '!border-indigo-600');
-                    }
-                }
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
-            filterData(false);
-        }
-
         function filterData(isSoftRefresh = false) {
             const query = document.getElementById('search-input').value.toLowerCase();
             
@@ -792,9 +1133,27 @@
                 deliverySub: { 'all': 0, 'remaining': 0, 'pickedup': 0 },
                 return: { 'all': 0, '택배': 0, '당일': 0, '사무실': 0 },
                 status: { 'all': 0, '예약신청': 0, '대기': 0, '확정': 0, '반납완료': 0, '취소': 0 },
-                todayPost: { 'all': 0, '23U': 0, '24U': 0, '25U': 0, '26U': 0, '17P': 0, '17PM': 0 },
-                officePickup: { 'all': 0, '23U': 0, '24U': 0, '25U': 0, '26U': 0, '17P': 0, '17PM': 0 } // [NEW]
+                upcoming: {
+                    '택배': { 'all': 0, battery: 0 },
+                    '공연장': { 'all': 0, battery: 0, dates: {} },
+                    '사무실': { 'all': 0, battery: 0 },
+                    '퀵': { 'all': 0, battery: 0 }
+                },
+                returnUpcoming: {
+                    '택배': { 'all': 0, battery: 0 },
+                    '사무실': { 'all': 0, battery: 0 },
+                    '공연장': { 'all': 0, battery: 0 },
+                    '당일반납': { 'all': 0, battery: 0 }
+                },
+                service: { backup: 0, extension: 0 } 
             };
+
+            ['택배', '공연장', '사무실', '퀵'].forEach(del => {
+                MODEL_LIST.forEach(m => counts.upcoming[del][m] = 0);
+            });
+            ['택배', '사무실', '공연장', '당일반납'].forEach(ret => {
+                MODEL_LIST.forEach(m => counts.returnUpcoming[ret][m] = 0);
+            });
 
             document.querySelectorAll('.date-filter-item').forEach(b => {
                 if(b.dataset.id !== 'all') counts.date[b.dataset.id] = 0;
@@ -803,13 +1162,13 @@
                 if(b.dataset.id !== 'all') counts.returnDate[b.dataset.id] = 0;
             });
 
-            // 기준 날짜: 자정
             const todayForFilter = new Date();
             todayForFilter.setHours(0,0,0,0);
 
             const filtered = allData.filter(item => {
                 const model = String(item.model || '').toUpperCase();
                 const delivery = String(item.delivery || '');
+                const returnWay = String(item.returnWay || ''); 
                 const status = String(item.status || '');
                 const startDateStr = String(item.startDate || '');
                 const endDateStr = String(item.endDate || ''); 
@@ -823,6 +1182,17 @@
 
                 const matchQuery = query === '' || Object.values(item).some(val => String(val).toLowerCase().includes(query));
                 
+                if (matchQuery && !status.includes('취소')) {
+                    if (isBackup) counts.service.backup++;
+                    if (isExtension) counts.service.extension++;
+                }
+
+                if (currentServiceFilter !== null) {
+                    if (currentServiceFilter === 'backup' && !isBackup) return false;
+                    if (currentServiceFilter === 'extension' && !isExtension) return false;
+                    return matchQuery; 
+                }
+
                 let diffDays = -1;
                 if (startDateStr && startDateStr.includes('-')) {
                     const parts = startDateStr.split('-');
@@ -832,38 +1202,83 @@
                     }
                 }
                 
-                // [UPDATE] 택배 발송 대상 기간을 3일 전에서 5일 전(D~D-5)으로 변경
-                const isTodayPostTarget = delivery.includes('택배') && !isAssigned && !status.includes('취소') && !status.includes('반납') && diffDays >= 0 && diffDays <= 5;
-                // [NEW] 사무실 수령: 수령일이 2일전부터 당일(D~D-2)인 고객 중 미배정 건
-                const isOfficePickupTarget = delivery.includes('사무실') && !isAssigned && !status.includes('취소') && !status.includes('반납') && diffDays >= 0 && diffDays <= 2;
+                const isUpcoming = isWithinUpcomingBusinessDays(startDateStr, 3);
+                const isUpcomingTarget = isUpcoming && !isAssigned && !status.includes('취소') && !status.includes('반납');
 
-                if (matchQuery && isTodayPostTarget) {
-                    counts.todayPost['all']++;
-                    MODEL_LIST.forEach(m => { if(model.includes(m)) counts.todayPost[m]++; });
+                let normDelivery = null;
+                if (delivery.includes('택배')) normDelivery = '택배';
+                else if (delivery.includes('공연장') || delivery.includes('현장')) normDelivery = '공연장';
+                else if (delivery.includes('사무실')) normDelivery = '사무실';
+                else if (delivery.includes('퀵')) normDelivery = '퀵';
+
+                if (matchQuery && isUpcomingTarget && normDelivery && counts.upcoming[normDelivery]) {
+                    counts.upcoming[normDelivery]['all']++;
+                    if (hasBattery) counts.upcoming[normDelivery].battery++; 
+                    
+                    if (normDelivery === '공연장') {
+                        if (startDateStr && startDateStr.includes('-')) {
+                            const parts = startDateStr.split('-');
+                            if (parts.length === 3) {
+                                const shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
+                                counts.upcoming[normDelivery].dates[shortDate] = (counts.upcoming[normDelivery].dates[shortDate] || 0) + 1;
+                            } else {
+                                counts.upcoming[normDelivery].dates['미정'] = (counts.upcoming[normDelivery].dates['미정'] || 0) + 1;
+                            }
+                        } else {
+                            counts.upcoming[normDelivery].dates['미정'] = (counts.upcoming[normDelivery].dates['미정'] || 0) + 1;
+                        }
+                    } else {
+                        MODEL_LIST.forEach(m => {
+                            if (model.includes(m)) counts.upcoming[normDelivery][m]++;
+                        });
+                    }
                 }
 
-                if (matchQuery && isOfficePickupTarget) {
-                    counts.officePickup['all']++;
-                    MODEL_LIST.forEach(m => { if(model.includes(m)) counts.officePickup[m]++; });
+                const isReturnUpcoming = isWithinReturnBusinessDays(endDateStr, 0); 
+                const isReturnUpcomingTarget = isReturnUpcoming && !status.includes('반납') && !status.includes('취소');
+
+                let normReturnWay = null;
+                if (returnWay.includes('택배')) normReturnWay = '택배';
+                else if (returnWay.includes('당일')) normReturnWay = '당일반납';
+                else if (returnWay.includes('공연장') || returnWay.includes('현장')) normReturnWay = '공연장';
+                else if (returnWay.includes('사무실')) normReturnWay = '사무실';
+
+                if (matchQuery && isReturnUpcomingTarget && normReturnWay && counts.returnUpcoming[normReturnWay]) {
+                    counts.returnUpcoming[normReturnWay]['all']++;
+                    if (hasBattery) counts.returnUpcoming[normReturnWay].battery++; 
+                    MODEL_LIST.forEach(m => {
+                        if (model.includes(m)) counts.returnUpcoming[normReturnWay][m]++;
+                    });
                 }
 
-                // 특수 모드가 켜져있다면 다른 모든 필터 무시!
-                if (currentTodayPostFilter !== null) {
-                    if (!isTodayPostTarget) return false;
-                    if (currentTodayPostFilter !== 'all' && !model.includes(currentTodayPostFilter)) return false;
+                if (currentUpcomingDelivery !== null) {
+                    if (!isUpcomingTarget || normDelivery !== currentUpcomingDelivery) return false;
+                    
+                    if (currentUpcomingModel !== 'all') {
+                        if (currentUpcomingModel.startsWith('date:')) {
+                            const targetDate = currentUpcomingModel.replace('date:', '');
+                            let shortDate = '미정';
+                            if (startDateStr && startDateStr.includes('-')) {
+                                const parts = startDateStr.split('-');
+                                if (parts.length === 3) shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
+                            }
+                            if (shortDate !== targetDate) return false;
+                        } else {
+                            if (!model.includes(currentUpcomingModel)) return false;
+                        }
+                    }
                     return matchQuery; 
                 }
 
-                if (currentOfficePickupFilter !== null) {
-                    if (!isOfficePickupTarget) return false;
-                    if (currentOfficePickupFilter !== 'all' && !model.includes(currentOfficePickupFilter)) return false;
+                if (currentReturnUpcomingMethod !== null) {
+                    if (!isReturnUpcomingTarget || normReturnWay !== currentReturnUpcomingMethod) return false;
+                    if (currentReturnUpcomingModel !== 'all' && !model.includes(currentReturnUpcomingModel)) return false;
                     return matchQuery; 
                 }
 
                 const matchDate = selectedDates.length === 0 || selectedDates.includes(startDateStr);
                 const matchReturnDate = selectedReturnDates.length === 0 || selectedReturnDates.includes(endDateStr); 
 
-                // 기본 카운트 계산 로직
                 if (matchQuery) {
                     counts.date['all']++;
                     if (startDateStr && counts.date[startDateStr] !== undefined) counts.date[startDateStr]++;
@@ -964,24 +1379,115 @@
             updateTabCounts('sub-filter-group-delivery', counts.deliverySub); 
             updateTabCounts('filter-group-return', counts.return);
 
-            document.querySelectorAll('.today-post-filter-item').forEach(btn => {
-                const id = btn.getAttribute('data-id');
-                const count = counts.todayPost[id] || 0;
-                let baseText = id === 'all' ? '전체' : id;
-                btn.innerText = `${baseText} (${count})`;
-                if (id !== 'all' && count === 0) btn.style.display = 'none';
-                else btn.style.display = '';
+            let totalService = 0;
+            ['backup', 'extension'].forEach(svc => {
+                const count = counts.service[svc];
+                totalService += count;
+                const block = document.getElementById(`block-svc-${svc}`);
+                if (block) block.style.display = count > 0 ? 'block' : 'none';
+                const elCount = document.getElementById(`count-svc-${svc}`);
+                if (elCount) elCount.innerText = `${count}건`;
             });
-            
-            // [NEW] 방문 예정 카운트 UI 업데이트
-            document.querySelectorAll('.office-pickup-filter-item').forEach(btn => {
-                const id = btn.getAttribute('data-id');
-                const count = counts.officePickup[id] || 0;
-                let baseText = id === 'all' ? '전체' : id;
-                btn.innerText = `${baseText} (${count})`;
-                if (id !== 'all' && count === 0) btn.style.display = 'none';
-                else btn.style.display = '';
+
+            const svcEmptyMsg = document.getElementById('service-empty-msg');
+            if (svcEmptyMsg) {
+                svcEmptyMsg.style.display = totalService === 0 ? 'block' : 'none';
+            }
+
+            let totalUpcoming = 0;
+            ['택배', '공연장', '사무실', '퀵'].forEach(del => {
+                const delTotal = counts.upcoming[del]['all'];
+                const delBattery = counts.upcoming[del].battery; 
+                totalUpcoming += delTotal;
+                
+                const block = document.getElementById(`block-upc-${del}`);
+                if (block) block.style.display = delTotal > 0 ? 'block' : 'none';
+
+                const elAll = document.getElementById(`count-upc-${del}-all`);
+                if (elAll) {
+                    if (delBattery > 0) {
+                        elAll.innerText = `${delTotal}건 (🔋${delBattery}개)`;
+                    } else {
+                        elAll.innerText = `${delTotal}건`;
+                    }
+                }
+                
+                if (del === '공연장') {
+                    const container = document.getElementById(`upc-items-${del}`);
+                    if (container) {
+                        let html = '';
+                        const dates = counts.upcoming[del].dates || {};
+                        const sortedDates = Object.keys(dates).sort((a, b) => {
+                            if (a === '미정') return 1;
+                            if (b === '미정') return -1;
+                            const [m1, d1] = a.split('/').map(Number);
+                            const [m2, d2] = b.split('/').map(Number);
+                            if (m1 !== m2) return m1 - m2;
+                            return d1 - d2;
+                        });
+
+                        sortedDates.forEach(d => {
+                            const count = dates[d];
+                            const isActive = (currentUpcomingDelivery === del && currentUpcomingModel === 'date:' + d) ? 'active' : '';
+                            html += `<button onclick="setUpcomingFilter('${del}', 'date:${d}')" class="chip-btn upc-item ${isActive}" data-del="${del}" data-mod="date:${d}">
+                                ${d} (${count})
+                            </button>`;
+                        });
+                        container.innerHTML = html;
+                    }
+                } else {
+                    MODEL_LIST.forEach(mod => {
+                        const count = counts.upcoming[del][mod];
+                        const elMod = document.getElementById(`count-upc-${del}-${mod}`);
+                        if (elMod) elMod.innerText = count;
+                        
+                        const btnMod = document.querySelector(`.upc-item[data-del="${del}"][data-mod="${mod}"]`);
+                        if (btnMod) {
+                            btnMod.style.display = count > 0 ? 'inline-block' : 'none';
+                        }
+                    });
+                }
             });
+
+            const emptyMsg = document.getElementById('upc-empty-msg');
+            if (emptyMsg) {
+                emptyMsg.style.display = totalUpcoming === 0 ? 'block' : 'none';
+            }
+
+            let totalReturnUpcoming = 0;
+            ['택배', '사무실', '공연장', '당일반납'].forEach(ret => {
+                const retTotal = counts.returnUpcoming[ret]['all'];
+                const retBattery = counts.returnUpcoming[ret].battery; 
+                totalReturnUpcoming += retTotal;
+                
+                const block = document.getElementById(`block-ret-upc-${ret}`);
+                if (block) block.style.display = retTotal > 0 ? 'block' : 'none';
+
+                const elAll = document.getElementById(`count-ret-upc-${ret}-all`);
+                if (elAll) {
+                    if (retBattery > 0) {
+                        elAll.innerText = `${retTotal}건 (🔋${retBattery}개)`;
+                    } else {
+                        elAll.innerText = `${retTotal}건`;
+                    }
+                }
+                
+                MODEL_LIST.forEach(mod => {
+                    const count = counts.returnUpcoming[ret][mod];
+                    const elMod = document.getElementById(`count-ret-upc-${ret}-${mod}`);
+                    if (elMod) elMod.innerText = count;
+                    
+                    const btnMod = document.querySelector(`.ret-upc-item[data-ret="${ret}"][data-mod="${mod}"]`);
+                    if (btnMod) {
+                        btnMod.style.display = count > 0 ? 'inline-block' : 'none';
+                    }
+                });
+            });
+
+            const retEmptyMsg = document.getElementById('return-upc-empty-msg');
+            if (retEmptyMsg) {
+                retEmptyMsg.style.display = totalReturnUpcoming === 0 ? 'block' : 'none';
+            }
             
             const backupBtn = document.getElementById('btn-quick-backup');
             const backupCount = document.getElementById('quick-backup-count');
@@ -1074,7 +1580,6 @@
             filterData(false); 
         }
 
-        // --- 다중 선택 로직 시작 ---
         function toggleRowSelection(e, rowId) {
             e.stopPropagation();
             rowId = String(rowId);
@@ -1113,14 +1618,56 @@
             const bar = document.getElementById('bulk-action-bar');
             const count = document.getElementById('bulk-count');
             const selectAll = document.getElementById('selectAllCheckbox');
+            const modelSummary = document.getElementById('bulk-model-summary'); 
 
             if (selectedRows.length > 0) {
                 count.innerText = selectedRows.length;
-                bar.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+                bar.classList.remove('translate-y-48', 'opacity-0', 'pointer-events-none');
                 if(selectAll) selectAll.checked = selectedRows.length === currentlyFilteredList.length;
+
+                if (modelSummary) {
+                    const modelCounts = {};
+                    selectedRows.forEach(rowId => {
+                        const item = allData.find(i => String(i.row) === String(rowId));
+                        if (item && item.model) {
+                            let rawModel = String(item.model || '').replace(/\+?\s*보조배터리/g, '').trim();
+                            let shortModel = '기타';
+                            const models = ['23U', '24U', '25U', '26U', '17P', '17PM'];
+                            for (const m of models) {
+                                if (rawModel.toUpperCase().includes(m)) { shortModel = m; break; }
+                            }
+                            modelCounts[shortModel] = (modelCounts[shortModel] || 0) + 1;
+                        }
+                    });
+
+                    // 정해진 순서대로 기종을 정렬 (23U, 24U, 25U, 26U, 17P, 17PM, 기타)
+                    const predefinedOrder = ['23U', '24U', '25U', '26U', '17P', '17PM', '기타'];
+                    const sortedModelCounts = Object.entries(modelCounts).sort((a, b) => {
+                        let idxA = predefinedOrder.indexOf(a[0]);
+                        let idxB = predefinedOrder.indexOf(b[0]);
+                        if (idxA === -1) idxA = 999;
+                        if (idxB === -1) idxB = 999;
+                        return idxA - idxB;
+                    });
+
+                    let html = '';
+                    for (const [mod, cnt] of sortedModelCounts) {
+                        // [UPDATE] 밝은 배경에 어울리도록 파스텔 인디고 뱃지 색상으로 수정 (하단 짤림 방지를 위해 inline-flex 및 py-1.5 적용)
+                        html += `<span class="inline-flex items-center justify-center text-[13px] font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 whitespace-nowrap tracking-tight shadow-sm leading-none">${mod} <span class="text-indigo-500 ml-1 text-[14px]">${cnt}</span></span>`;
+                    }
+                    modelSummary.innerHTML = html;
+                    modelSummary.classList.remove('hidden');
+                    modelSummary.classList.add('flex');
+                }
+
             } else {
-                bar.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+                bar.classList.add('translate-y-48', 'opacity-0', 'pointer-events-none');
                 if(selectAll) selectAll.checked = false;
+                
+                if(modelSummary) {
+                    modelSummary.classList.add('hidden');
+                    modelSummary.classList.remove('flex');
+                }
             }
         }
 
@@ -1128,36 +1675,24 @@
             if (selectedRows.length === 0) return;
 
             const originalDataBackup = [];
-            const rowsToUpdate = [...selectedRows]; 
+            const updates = []; 
             
-            rowsToUpdate.forEach(rowId => {
-                const targetIndex = allData.findIndex(item => String(item.row) === rowId);
+            selectedRows.forEach(rowId => {
+                const targetIndex = allData.findIndex(item => String(item.row) === String(rowId));
                 if (targetIndex !== -1) {
                     originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
-                    allData[targetIndex].status = newStatus; // 상태 즉시 변경
+                    allData[targetIndex].status = newStatus; 
+                    updates.push({ row: rowId, status: newStatus });
                 }
             });
 
-            // 낙관적 UI 업데이트 후 소프트 새로고침으로 위치 유지
             clearSelection();
             filterData(true);
-            showAppAlert(`${rowsToUpdate.length}건의 상태를 '${newStatus}'(으)로 일괄 변경했습니다.\n(백그라운드에서 순차적으로 저장됩니다.)`, "일괄 변경 완료", "✅");
+            showAppAlert(`${updates.length}건의 상태를 '${newStatus}'(으)로 일괄 변경했습니다.`, "일괄 변경 완료", "✅");
 
             try {
-                for (const rowId of rowsToUpdate) {
-                    const item = allData.find(i => String(i.row) === rowId);
-                    if (!item) continue;
-
-                    const payload = {
-                        type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
-                        name: item.name || '', phone: item.phone || '',
-                        zipCode: item.zipCode || '', address: item.address || '',
-                        startDate: item.startDate || '', endDate: item.endDate || '', 
-                        delivery: item.delivery || '', returnWay: item.returnWay || '', 
-                        status: newStatus, tracking: item.trackingNumber || '',
-                        model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
-                    };
-                    
+                for (const u of updates) {
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', status: u.status };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
@@ -1165,10 +1700,7 @@
                         body: JSON.stringify(payload) 
                     });
                     const data = await res.json();
-                    if(data.result !== 'success') throw new Error("서버에서 처리를 실패했습니다.");
-                    
-                    // 구글 앱스 스크립트(GAS)의 동시성 오류 방지를 위해 약간의 대기 시간 추가
-                    await new Promise(resolve => setTimeout(resolve, 150));
+                    if(data.result !== 'success') throw new Error("서버 오류");
                 }
             } catch (err) {
                 console.error("일괄 저장 실패", err);
@@ -1183,7 +1715,7 @@
 
             showAppConfirm(`선택한 ${selectedRows.length}개의 예약을 완전히 삭제하시겠습니까?\n(이 작업은 되돌릴 수 없습니다)`, async () => {
                 const originalDataBackup = [];
-                const rowsToDelete = [...selectedRows];
+                const rowsToDelete = [...selectedRows].sort((a, b) => parseInt(b) - parseInt(a));
 
                 rowsToDelete.forEach(rowId => {
                     const targetIndex = allData.findIndex(item => String(item.row) === String(rowId));
@@ -1196,24 +1728,19 @@
                 currentlyFilteredList = currentlyFilteredList.filter(item => !rowsToDelete.includes(String(item.row)));
                 clearSelection();
                 filterData(true);
-                showAppAlert(`${rowsToDelete.length}건의 예약이 완전히 삭제되었습니다.\n(백그라운드에서 순차적으로 반영됩니다.)`, "일괄 삭제 완료", "🗑️");
+                showAppAlert(`${rowsToDelete.length}건의 예약이 완전히 삭제되었습니다.`, "일괄 삭제 완료", "🗑️");
 
                 try {
-                    for (const rowId of rowsToDelete) {
-                        const itemBackup = originalDataBackup.find(i => String(i.row) === String(rowId));
-                        const sheetName = itemBackup ? (itemBackup.sheetName || '예약내역') : '예약내역';
-                        
+                    for (const r of rowsToDelete) {
+                        const payload = { type: 'delete', row: r, sheetName: '예약내역' };
                         const res = await fetch(API_URL, {
                             method: 'POST',
                             redirect: 'follow',
                             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                            body: JSON.stringify({ type: 'delete', row: rowId, sheetName: sheetName })
+                            body: JSON.stringify(payload)
                         });
                         const data = await res.json();
                         if(data.result !== 'success') throw new Error("서버 오류");
-                        
-                        // 구글 앱스 스크립트(GAS)의 동시성 오류 방지를 위해 약간의 대기 시간 추가
-                        await new Promise(resolve => setTimeout(resolve, 150));
                     }
                 } catch (err) {
                     console.error("일괄 삭제 실패", err);
@@ -1224,7 +1751,6 @@
             }, "일괄 삭제", "삭제하기", "bg-[#DC2626]", "🗑️");
         }
 
-        // --- 우체국 배송등록 복사 로직 ---
         function copyForPostOffice() {
             if (selectedRows.length === 0) return;
 
@@ -1264,7 +1790,6 @@
             showAppAlert(`${selectedRows.length}건의 정보가 엑셀용으로 복사되었습니다.`, "우체국 배송등록", "📦");
         }
 
-        // --- 송장번호 엑셀 일괄 붙여넣기 로직 ---
         function openBulkTrackingModal() {
             if (selectedRows.length === 0) return;
             document.getElementById('bulk-tracking-count').innerText = selectedRows.length;
@@ -1372,7 +1897,7 @@
             btn.innerText = '저장 중...'; btn.disabled = true;
 
             const originalDataBackup = [];
-            const rowsToUpdate = [];
+            const updates = [];
             const limit = Math.min(selectedRows.length, trackingNumbers.length);
 
             const sortedSelectedRows = [...selectedRows].sort((a, b) => {
@@ -1387,25 +1912,18 @@
                 if (targetIndex !== -1) {
                     originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
                     allData[targetIndex].trackingNumber = trackingNumbers[i]; 
-                    rowsToUpdate.push({ rowId: rowId, newTracking: trackingNumbers[i], item: allData[targetIndex] });
+                    updates.push({ row: rowId, tracking: trackingNumbers[i] });
                 }
             }
 
             closeBulkTrackingModal();
             clearSelection();
-            filterData(true); // 소프트 새로고침
-            showAppAlert(`${rowsToUpdate.length}건의 송장번호를 일괄 배정했습니다.\n(백그라운드에서 순차적으로 저장됩니다.)`, "일괄 배정 완료", "✅");
+            filterData(true); 
+            showAppAlert(`${updates.length}건의 송장번호를 일괄 배정했습니다.`, "일괄 배정 완료", "✅");
 
             try {
-                for (const updateInfo of rowsToUpdate) {
-                    const item = updateInfo.item;
-                    const payload = {
-                        type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
-                        name: item.name || '', phone: item.phone || '', zipCode: item.zipCode || '', address: item.address || '',
-                        startDate: item.startDate || '', endDate: item.endDate || '', delivery: item.delivery || '', returnWay: item.returnWay || '',
-                        status: item.status || '', tracking: updateInfo.newTracking, model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
-                    };
-                    
+                for (const u of updates) {
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', tracking: u.tracking };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
@@ -1414,15 +1932,113 @@
                     });
                     const data = await res.json();
                     if(data.result !== 'success') throw new Error("서버 오류");
-                    
-                    // 구글 앱스 스크립트(GAS)의 동시성 오류 방지를 위해 약간의 대기 시간 추가
-                    await new Promise(resolve => setTimeout(resolve, 150));
                 }
             } catch (err) {
                 console.error("송장 일괄 저장 실패", err);
                 originalDataBackup.forEach(backup => { Object.assign(allData[backup.index], backup.data); });
                 filterData(true);
                 showAppAlert("인터넷 연결 불안정으로 일부 송장번호가 저장되지 않았습니다.", "🚨 저장 실패", "⚠️");
+            }
+        }
+
+        async function bulkExtendRental() {
+            if (selectedRows.length === 0) return;
+
+            const originalDataBackup = [];
+            const updates = []; 
+            
+            selectedRows.forEach(rowId => {
+                const targetIndex = allData.findIndex(item => String(item.row) === String(rowId));
+                if (targetIndex !== -1) {
+                    originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
+                    
+                    let currentEndDateStr = allData[targetIndex].endDate;
+                    let newEndDateStr = currentEndDateStr;
+                    
+                    if (currentEndDateStr) {
+                        let date = new Date(currentEndDateStr);
+                        if (!isNaN(date.getTime())) {
+                            date.setDate(date.getDate() + 1);
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            const dd = String(date.getDate()).padStart(2, '0');
+                            newEndDateStr = `${yyyy}-${mm}-${dd}`;
+                        }
+                    }
+                    
+                    allData[targetIndex].endDate = newEndDateStr; 
+                    updates.push({ row: rowId, endDate: newEndDateStr });
+                }
+            });
+
+            clearSelection();
+            filterData(true);
+            showAppAlert(`${updates.length}건의 반납일이 1일 연장되었습니다.`, "연장 완료", "✅");
+
+            try {
+                for (const u of updates) {
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', endDate: u.endDate };
+                    const res = await fetch(API_URL, { 
+                        method: 'POST', 
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload) 
+                    });
+                    const data = await res.json();
+                    if(data.result !== 'success') throw new Error("서버 오류");
+                }
+            } catch (err) {
+                originalDataBackup.forEach(backup => { Object.assign(allData[backup.index], backup.data); });
+                filterData(true);
+                showAppAlert("저장에 실패하여 원상복구 되었습니다.", "🚨 실패", "⚠️");
+            }
+        }
+
+        async function bulkAddBackupMemo() {
+            if (selectedRows.length === 0) return;
+
+            const originalDataBackup = [];
+            const updates = []; 
+            
+            selectedRows.forEach(rowId => {
+                const targetIndex = allData.findIndex(item => String(item.row) === String(rowId));
+                if (targetIndex !== -1) {
+                    originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
+                    
+                    let currentMemo = allData[targetIndex].memo || '';
+                    if (!currentMemo.includes("백업")) {
+                        const newMemo = currentMemo ? currentMemo + " / 백업" : "백업";
+                        allData[targetIndex].memo = newMemo; 
+                        updates.push({ row: rowId, memo: newMemo });
+                    }
+                }
+            });
+
+            if (updates.length === 0) {
+                showToast("선택하신 내역에 이미 백업 메모가 있습니다.");
+                return;
+            }
+
+            clearSelection();
+            filterData(true);
+            showAppAlert(`${updates.length}건의 메모에 백업이 추가되었습니다.`, "데이터 백업 추가 완료", "✅");
+
+            try {
+                for (const u of updates) {
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', memo: u.memo };
+                    const res = await fetch(API_URL, { 
+                        method: 'POST', 
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload) 
+                    });
+                    const data = await res.json();
+                    if(data.result !== 'success') throw new Error("서버 오류");
+                }
+            } catch (err) {
+                originalDataBackup.forEach(backup => { Object.assign(allData[backup.index], backup.data); });
+                filterData(true);
+                showAppAlert("저장에 실패하여 원상복구 되었습니다.", "🚨 실패", "⚠️");
             }
         }
 
@@ -1453,25 +2069,22 @@
                 const end = formatMD(item.endDate);
                 
                 const displayModel = String(item.model || '').replace(/\r?\n|\r/g, ' ').replace(/\s*\+?\s*보조배터리/g, '').trim();
-                const battery = String(item.model || '').includes('보조배터리') ? '⚡' : '';
+                const hasBattery = String(item.model || '').includes('보조배터리');
                 const trackingDisplay = item.trackingNumber ? item.trackingNumber : '입력';
-                const memo = item.memo ? '📝' : '';
+                const hasMemo = item.memo ? true : false;
                 
-                // 대여 모델 배정 완료 여부 확인
                 const cleanModelForBorder = String(item.model || '').toUpperCase().replace(/\s*\+?\s*보조배터리/g, '').trim();
                 const isAssigned = /\d$/.test(cleanModelForBorder);
 
                 const isBackup = String(item.category).includes('백업') || String(item.model).includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
+                const isExtension = String(item.category).includes('연장') || String(item.model).includes('연장') || String(item.memo).includes('연장');
                 
-                // 테두리 클래스 통합
                 let extraCardClasses = '';
-                if (isAssigned) {
-                    extraCardClasses = '!border-2 !border-emerald-400 !bg-emerald-50/10'; // 배정 시 녹색 테두리
-                } else if (isBackup) {
-                    extraCardClasses = '!border-2 !border-yellow-400 !bg-yellow-50/40'; // 배정 전 백업이면 노란 테두리
+                if (isBackup) {
+                    extraCardClasses = '!border-[3px] !border-yellow-400 !bg-yellow-50/70 shadow-[0_0_12px_rgba(250,204,21,0.2)] z-10'; 
+                } else if (isAssigned) {
+                    extraCardClasses = '!border-2 !border-emerald-400 !bg-emerald-50/10'; 
                 }
-
-                const backupBadge = isBackup ? `<span class="bg-yellow-400 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap shrink-0 ml-1">💾 백업</span>` : '';
 
                 let fullAddress = '';
                 if(item.zipCode) fullAddress += `[${item.zipCode}] `;
@@ -1485,14 +2098,14 @@
                 else if(rawPay === '') { payShort = '-'; }
 
                 const card = document.createElement('div');
-                card.className = `list-row relative overflow-hidden flex items-center px-4 py-4 gap-3 ${isSelected ? 'selected' : ''} ${extraCardClasses}`;
+                card.className = `list-row relative overflow-hidden flex items-center pl-0 pr-4 py-2 min-h-[70px] gap-3 ${isSelected ? 'selected' : ''} ${extraCardClasses}`;
                 card.onclick = () => openModal(item);
                 
                 card.innerHTML = `
-                    <div class="absolute left-0 top-0 bottom-0 w-1.5 ${accentColor}"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-1.5 ${accentColor} z-20"></div>
                     
-                    <div class="w-8 text-center shrink-0 flex items-center justify-center pl-1 hover:scale-110 transition-transform" onclick="toggleRowSelection(event, '${item.row}')">
-                        <input type="checkbox" ${isSelected ? 'checked' : ''} class="checkbox-custom pointer-events-none">
+                    <div class="w-16 self-stretch flex items-center justify-center shrink-0 pl-1.5 cursor-pointer hover:bg-slate-200/50 transition-colors z-10" onclick="toggleRowSelection(event, '${item.row}')">
+                        <input type="checkbox" ${isSelected ? 'checked' : ''} class="checkbox-custom pointer-events-none transform scale-110">
                     </div>
 
                     <div class="w-14 text-center shrink-0">
@@ -1503,20 +2116,25 @@
                         ${time}
                     </div>
 
-                    <div class="w-32 shrink-0 flex flex-col gap-1 justify-center">
-                        <div class="flex items-center gap-1.5" onclick="event.stopPropagation()" title="클릭하여 기기 바로 배정 (엔터 누르면 다음 줄로 이동)">
-                            <div id="model-display-${item.row}" class="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded-md font-extrabold text-[12px] border border-slate-200 cursor-pointer hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 transition-colors truncate min-w-[70px]" onclick="enableInlineEdit(event, '${item.row}')">📱 ${displayModel || '미정'}</div>
-                            <span class="text-xs shrink-0">${battery}</span>
+                    <div class="w-36 shrink-0 flex flex-col justify-center pr-2">
+                        <div onclick="event.stopPropagation()" title="클릭하여 기기 바로 배정 (엔터 누르면 다음 줄로 이동)" class="w-full">
+                            <div id="model-display-${item.row}" class="bg-white text-slate-800 px-2 py-1.5 rounded-lg font-black text-[14px] border border-slate-300 cursor-pointer hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 transition-all truncate shadow-sm text-center w-full" onclick="enableInlineEdit(event, '${item.row}')">📱 ${displayModel || '미정'}</div>
                         </div>
+                        ${(hasBattery || isBackup || isExtension) ? `
+                        <div class="flex items-center gap-1 mt-1.5 flex-wrap justify-center">
+                            ${hasBattery ? `<span class="text-[10px] font-bold bg-yellow-50 text-yellow-600 border border-yellow-200 px-1.5 py-0.5 rounded shadow-sm">⚡ 배터리</span>` : ''}
+                            ${isBackup ? `<span class="text-[10px] font-bold bg-purple-50 text-purple-600 border border-purple-200 px-1.5 py-0.5 rounded shadow-sm">💾 백업</span>` : ''}
+                            ${isExtension ? `<span class="text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 px-1.5 py-0.5 rounded shadow-sm">⏳ 연장</span>` : ''}
+                        </div>
+                        ` : ''}
                     </div>
                     
-                    <div class="w-44 shrink-0 flex flex-col justify-center min-w-0 pr-2">
-                        <div class="flex items-center gap-1">
-                            <span class="text-base font-black text-slate-900 truncate">${item.name}</span>
-                            ${backupBadge}
-                            <span class="text-sm shrink-0">${memo}</span>
+                    <div class="w-40 shrink-0 flex flex-col justify-center min-w-0 pr-2">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[15px] font-black text-slate-900 truncate">${item.name}</span>
+                            ${hasMemo ? `<span class="text-[10px] bg-slate-100 text-slate-500 border border-slate-200 px-1.5 py-0.5 rounded font-bold shadow-sm cursor-help" title="${item.memo}">📝 메모</span>` : ''}
                         </div>
-                        <div class="flex items-center mt-0.5 text-slate-500 font-bold text-[13px] font-tnum whitespace-nowrap">
+                        <div class="flex items-center mt-1 text-slate-500 font-bold text-[13px] font-tnum whitespace-nowrap">
                             <span>${item.phone || '-'}</span>
                         </div>
                     </div>
@@ -1572,6 +2190,32 @@
             return result;
         }
 
+        function addOneDayToEndDate() {
+            const endInput = document.getElementById('edit-end');
+            if (endInput.value) {
+                const date = new Date(endInput.value);
+                date.setDate(date.getDate() + 1);
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                endInput.value = `${yyyy}-${mm}-${dd}`;
+                showToast("반납일이 1일 연장되었습니다.");
+            } else {
+                showToast("반납 예정일이 설정되어 있지 않습니다.");
+            }
+        }
+
+        function addBackupToMemo() {
+            const memoInput = document.getElementById('edit-memo');
+            let currentMemo = memoInput.value;
+            if (!currentMemo.includes("백업")) {
+                memoInput.value = currentMemo ? currentMemo + " / 백업" : "백업";
+                showToast("메모에 백업이 추가되었습니다.");
+            } else {
+                showToast("이미 백업이 포함되어 있습니다.");
+            }
+        }
+
         let currentInlineEditRow = null;
 
         function enableInlineEdit(e, rowId) {
@@ -1585,10 +2229,32 @@
             if(!container) return;
 
             const displayModel = String(item.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim();
+            
+            // [NEW] 기본 기종명 추출 (지워지지 않도록 보호)
+            let baseModel = '기타';
+            let assignedId = displayModel;
+            const models = ['23U', '24U', '25U', '26U', '17P', '17PM'];
+            for (const m of models) {
+                if (displayModel.toUpperCase().includes(m)) {
+                    baseModel = m;
+                    assignedId = displayModel.replace(new RegExp(m, 'i'), '').trim();
+                    break;
+                }
+            }
+
             currentInlineEditRow = rowId;
 
-            container.innerHTML = `<input type="text" id="inline-input-${rowId}" class="w-full px-1 py-0.5 text-[12px] font-extrabold border-2 border-blue-500 rounded outline-none font-tnum bg-white text-slate-900 shadow-sm" value="${displayModel}">`;
-            container.className = "w-[130px]"; 
+            // [NEW] UI 생성: 기종명(고정) + 입력창(기기번호)
+            let prefixHtml = baseModel !== '기타' ? `<span class="bg-blue-50 text-blue-600 px-2 py-1.5 rounded-l-lg border-y border-l border-blue-500 font-black text-[13px] shrink-0">${baseModel}</span>` : '';
+            let inputClass = baseModel !== '기타' ? 'rounded-r-lg border-y border-r' : 'rounded-lg border-2';
+
+            container.innerHTML = `
+                <div class="flex items-center w-full shadow-sm">
+                    ${prefixHtml}
+                    <input type="text" id="inline-input-${rowId}" class="w-full px-2 py-1.5 text-[14px] font-black ${inputClass} border-blue-500 outline-none font-tnum bg-white text-slate-900 text-center min-w-[30px]" value="${assignedId}" placeholder="기기 번호">
+                </div>
+            `;
+            container.className = "w-full"; 
 
             const input = document.getElementById(`inline-input-${rowId}`);
             input.focus();
@@ -1599,7 +2265,7 @@
                 if(isSaved) return;
                 isSaved = true;
                 currentInlineEditRow = null;
-                saveInlineEdit(rowId, input.value, focusNext);
+                saveInlineEdit(rowId, baseModel, input.value, focusNext);
             };
 
             input.addEventListener('keydown', (event) => {
@@ -1610,14 +2276,14 @@
                     event.preventDefault();
                     isSaved = true;
                     currentInlineEditRow = null;
-                    filterData(true); // 취소 시 소프트 리프레시로 복구
+                    filterData(true); 
                 }
             });
             
             input.addEventListener('blur', () => saveAndNext(false));
         }
 
-        function saveInlineEdit(rowId, newValue, focusNext) {
+        function saveInlineEdit(rowId, baseModel, newValue, focusNext) {
             const itemIndex = allData.findIndex(i => String(i.row) === String(rowId));
             if (itemIndex === -1) return;
 
@@ -1626,8 +2292,16 @@
             const hasBattery = oldModel.includes('보조배터리');
             const oldDisplayModel = oldModel.replace(/\s*\+?\s*보조배터리/g, '').trim();
 
-            let finalModel = newValue.trim();
-            if (hasBattery && !finalModel.includes('보조배터리')) finalModel += (finalModel ? ' ' : '') + '+보조배터리';
+            // [NEW] 고정된 기본 모델명과 입력받은 기기번호를 합침 (띄어쓰기 제거)
+            let finalDisplayModel = baseModel;
+            if (baseModel === '기타') {
+                finalDisplayModel = newValue.trim() || '기타';
+            } else {
+                if (newValue.trim()) finalDisplayModel += newValue.trim();
+            }
+
+            let finalModel = finalDisplayModel;
+            if (hasBattery) finalModel += '+보조배터리';
 
             let nextRowId = null;
             if (focusNext) {
@@ -1639,8 +2313,8 @@
                 }
             }
 
-            if (oldDisplayModel !== newValue.trim()) {
-                allData[itemIndex].model = finalModel; // 낙관적 업데이트
+            if (oldDisplayModel !== finalDisplayModel) {
+                allData[itemIndex].model = finalModel; 
                 
                 const payload = {
                     type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
@@ -1663,7 +2337,7 @@
                 });
             }
 
-            filterData(true); // 화면 즉시 갱신 (소프트 새로고침)
+            filterData(true); 
             
             if (focusNext && nextRowId) setTimeout(() => enableInlineEdit(null, nextRowId), 10);
         }
