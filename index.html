@@ -177,6 +177,23 @@
                 모든 검색/필터 초기화
             </button>
 
+            <!-- 추가 서비스 현황 세로형 필터 (맨 위로 이동) -->
+            <div class="bg-yellow-50 p-4 rounded-2xl shadow-sm border border-yellow-200">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex flex-col gap-1.5">
+                        <h3 class="text-[15px] font-black text-yellow-900 flex items-center gap-1.5">
+                            <span class="text-base">⚙️</span> 부가 서비스
+                        </h3>
+                    </div>
+                    <span class="text-[11px] font-bold text-yellow-600 bg-white px-1.5 py-0.5 rounded border border-yellow-200 shadow-sm shrink-0 mt-0.5"></span>
+                </div>
+                <div id="service-filters-container" class="space-y-2"></div>
+                <!-- 0건일 때 보여줄 빈 상태 메시지 -->
+                <div id="service-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-yellow-100/50 hidden mt-2">
+                    <span class="text-[11px] font-bold text-yellow-600">요청한 서비스가 없어요! 🎉</span>
+                </div>
+            </div>
+
             <!-- 이번주 수령 현황 세로형 필터 -->
             <div class="bg-indigo-50 p-4 rounded-2xl shadow-sm border border-indigo-200">
                 <div class="flex justify-between items-start mb-3">
@@ -208,23 +225,6 @@
                 <!-- 0건일 때 보여줄 빈 상태 메시지 -->
                 <div id="return-upc-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-rose-100/50 hidden mt-2">
                     <span class="text-[11px] font-bold text-rose-400">오늘 반납 예정건이 없어요! 🎉</span>
-                </div>
-            </div>
-
-            <!-- 추가 서비스 현황 세로형 필터 -->
-            <div class="bg-yellow-50 p-4 rounded-2xl shadow-sm border border-yellow-200">
-                <div class="flex justify-between items-start mb-3">
-                    <div class="flex flex-col gap-1.5">
-                        <h3 class="text-[15px] font-black text-yellow-900 flex items-center gap-1.5">
-                            <span class="text-base">⚙️</span> 부가 서비스
-                        </h3>
-                    </div>
-                    <span class="text-[11px] font-bold text-yellow-600 bg-white px-1.5 py-0.5 rounded border border-yellow-200 shadow-sm shrink-0 mt-0.5"></span>
-                </div>
-                <div id="service-filters-container" class="space-y-2"></div>
-                <!-- 0건일 때 보여줄 빈 상태 메시지 -->
-                <div id="service-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-yellow-100/50 hidden mt-2">
-                    <span class="text-[11px] font-bold text-yellow-600">요청한 서비스가 없어요! 🎉</span>
                 </div>
             </div>
 
@@ -846,12 +846,7 @@
                             <span class="text-xs font-bold text-slate-500 ret-upc-count" id="count-ret-upc-${m.id}-all">0건</span>
                         </div>
                     </button>
-                    <div class="p-3 flex flex-wrap gap-2 bg-white">
-                        ${MODEL_LIST.map(model => `
-                            <button onclick="setReturnUpcomingFilter('${m.id}', '${model}')" class="chip-btn ret-upc-item" data-ret="${m.id}" data-mod="${model}" style="display:none;">
-                                ${model} (<span id="count-ret-upc-${m.id}-${model}">0</span>)
-                            </button>
-                        `).join('')}
+                    <div class="p-3 flex flex-wrap gap-2 bg-white" id="ret-upc-items-${m.id}">
                     </div>
                 </div>`;
             });
@@ -1134,16 +1129,16 @@
                 return: { 'all': 0, '택배': 0, '당일': 0, '사무실': 0 },
                 status: { 'all': 0, '예약신청': 0, '대기': 0, '확정': 0, '반납완료': 0, '취소': 0 },
                 upcoming: {
-                    '택배': { 'all': 0, battery: 0 },
+                    '택배': { 'all': 0, battery: 0, dates: {} },
                     '공연장': { 'all': 0, battery: 0, dates: {} },
-                    '사무실': { 'all': 0, battery: 0 },
-                    '퀵': { 'all': 0, battery: 0 }
+                    '사무실': { 'all': 0, battery: 0, dates: {} },
+                    '퀵': { 'all': 0, battery: 0, dates: {} }
                 },
                 returnUpcoming: {
-                    '택배': { 'all': 0, battery: 0 },
-                    '사무실': { 'all': 0, battery: 0 },
-                    '공연장': { 'all': 0, battery: 0 },
-                    '당일반납': { 'all': 0, battery: 0 }
+                    '택배': { 'all': 0, battery: 0, dates: {} },
+                    '사무실': { 'all': 0, battery: 0, dates: {} },
+                    '공연장': { 'all': 0, battery: 0, dates: {} },
+                    '당일반납': { 'all': 0, battery: 0, dates: {} }
                 },
                 service: { backup: 0, extension: 0 } 
             };
@@ -1215,23 +1210,16 @@
                     counts.upcoming[normDelivery]['all']++;
                     if (hasBattery) counts.upcoming[normDelivery].battery++; 
                     
-                    if (normDelivery === '공연장') {
-                        if (startDateStr && startDateStr.includes('-')) {
-                            const parts = startDateStr.split('-');
-                            if (parts.length === 3) {
-                                const shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
-                                counts.upcoming[normDelivery].dates[shortDate] = (counts.upcoming[normDelivery].dates[shortDate] || 0) + 1;
-                            } else {
-                                counts.upcoming[normDelivery].dates['미정'] = (counts.upcoming[normDelivery].dates['미정'] || 0) + 1;
-                            }
-                        } else {
-                            counts.upcoming[normDelivery].dates['미정'] = (counts.upcoming[normDelivery].dates['미정'] || 0) + 1;
+                    let shortDate = '미정';
+                    if (startDateStr && startDateStr.includes('-')) {
+                        const parts = startDateStr.split('-');
+                        if (parts.length === 3) {
+                            const dObj = new Date(parts[0], parts[1]-1, parts[2]);
+                            const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
+                            shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
                         }
-                    } else {
-                        MODEL_LIST.forEach(m => {
-                            if (model.includes(m)) counts.upcoming[normDelivery][m]++;
-                        });
                     }
+                    counts.upcoming[normDelivery].dates[shortDate] = (counts.upcoming[normDelivery].dates[shortDate] || 0) + 1;
                 }
 
                 const isReturnUpcoming = isWithinReturnBusinessDays(endDateStr, 0); 
@@ -1246,9 +1234,17 @@
                 if (matchQuery && isReturnUpcomingTarget && normReturnWay && counts.returnUpcoming[normReturnWay]) {
                     counts.returnUpcoming[normReturnWay]['all']++;
                     if (hasBattery) counts.returnUpcoming[normReturnWay].battery++; 
-                    MODEL_LIST.forEach(m => {
-                        if (model.includes(m)) counts.returnUpcoming[normReturnWay][m]++;
-                    });
+                    
+                    let shortDate = '미정';
+                    if (endDateStr && endDateStr.includes('-')) {
+                        const parts = endDateStr.split('-');
+                        if (parts.length === 3) {
+                            const dObj = new Date(parts[0], parts[1]-1, parts[2]);
+                            const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
+                            shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
+                        }
+                    }
+                    counts.returnUpcoming[normReturnWay].dates[shortDate] = (counts.returnUpcoming[normReturnWay].dates[shortDate] || 0) + 1;
                 }
 
                 if (currentUpcomingDelivery !== null) {
@@ -1260,7 +1256,11 @@
                             let shortDate = '미정';
                             if (startDateStr && startDateStr.includes('-')) {
                                 const parts = startDateStr.split('-');
-                                if (parts.length === 3) shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
+                                if (parts.length === 3) {
+                                    const dObj = new Date(parts[0], parts[1]-1, parts[2]);
+                                    const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
+                                    shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
+                                }
                             }
                             if (shortDate !== targetDate) return false;
                         } else {
@@ -1272,7 +1272,47 @@
 
                 if (currentReturnUpcomingMethod !== null) {
                     if (!isReturnUpcomingTarget || normReturnWay !== currentReturnUpcomingMethod) return false;
-                    if (currentReturnUpcomingModel !== 'all' && !model.includes(currentReturnUpcomingModel)) return false;
+                    
+                    if (currentReturnUpcomingModel !== 'all') {
+                        if (currentReturnUpcomingModel.startsWith('date:')) {
+                            const targetDate = currentReturnUpcomingModel.replace('date:', '');
+                            let shortDate = '미정';
+                            if (endDateStr && endDateStr.includes('-')) {
+                                const parts = endDateStr.split('-');
+                                if (parts.length === 3) {
+                                    const dObj = new Date(parts[0], parts[1]-1, parts[2]);
+                                    const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
+                                    shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
+                                }
+                            }
+                            if (shortDate !== targetDate) return false;
+                        } else {
+                            if (!model.includes(currentUpcomingModel)) return false;
+                        }
+                    }
+                    return matchQuery; 
+                }
+
+                if (currentReturnUpcomingMethod !== null) {
+                    if (!isReturnUpcomingTarget || normReturnWay !== currentReturnUpcomingMethod) return false;
+                    
+                    if (currentReturnUpcomingModel !== 'all') {
+                        if (currentReturnUpcomingModel.startsWith('date:')) {
+                            const targetDate = currentReturnUpcomingModel.replace('date:', '');
+                            let shortDate = '미정';
+                            if (endDateStr && endDateStr.includes('-')) {
+                                const parts = endDateStr.split('-');
+                                if (parts.length === 3) {
+                                    const dObj = new Date(parts[0], parts[1]-1, parts[2]);
+                                    const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
+                                    shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}[${dayStr}]`;
+                                }
+                            }
+                            if (shortDate !== targetDate) return false;
+                        } else {
+                            if (!model.includes(currentReturnUpcomingModel)) return false;
+                        }
+                    }
                     return matchQuery; 
                 }
 
@@ -1412,40 +1452,27 @@
                     }
                 }
                 
-                if (del === '공연장') {
-                    const container = document.getElementById(`upc-items-${del}`);
-                    if (container) {
-                        let html = '';
-                        const dates = counts.upcoming[del].dates || {};
-                        const sortedDates = Object.keys(dates).sort((a, b) => {
-                            if (a === '미정') return 1;
-                            if (b === '미정') return -1;
-                            const [m1, d1] = a.split('/').map(Number);
-                            const [m2, d2] = b.split('/').map(Number);
-                            if (m1 !== m2) return m1 - m2;
-                            return d1 - d2;
-                        });
-
-                        sortedDates.forEach(d => {
-                            const count = dates[d];
-                            const isActive = (currentUpcomingDelivery === del && currentUpcomingModel === 'date:' + d) ? 'active' : '';
-                            html += `<button onclick="setUpcomingFilter('${del}', 'date:${d}')" class="chip-btn upc-item ${isActive}" data-del="${del}" data-mod="date:${d}">
-                                ${d} (${count})
-                            </button>`;
-                        });
-                        container.innerHTML = html;
-                    }
-                } else {
-                    MODEL_LIST.forEach(mod => {
-                        const count = counts.upcoming[del][mod];
-                        const elMod = document.getElementById(`count-upc-${del}-${mod}`);
-                        if (elMod) elMod.innerText = count;
-                        
-                        const btnMod = document.querySelector(`.upc-item[data-del="${del}"][data-mod="${mod}"]`);
-                        if (btnMod) {
-                            btnMod.style.display = count > 0 ? 'inline-block' : 'none';
-                        }
+                const container = document.getElementById(`upc-items-${del}`);
+                if (container) {
+                    let html = '';
+                    const dates = counts.upcoming[del].dates || {};
+                    const sortedDates = Object.keys(dates).sort((a, b) => {
+                        if (a === '미정') return 1;
+                        if (b === '미정') return -1;
+                        const [m1, rest1] = a.split('/');
+                        const [m2, rest2] = b.split('/');
+                        if (parseInt(m1) !== parseInt(m2)) return parseInt(m1) - parseInt(m2);
+                        return parseInt(rest1) - parseInt(rest2);
                     });
+
+                    sortedDates.forEach(d => {
+                        const count = dates[d];
+                        const isActive = (currentUpcomingDelivery === del && currentUpcomingModel === 'date:' + d) ? 'active' : '';
+                        html += `<button onclick="setUpcomingFilter('${del}', 'date:${d}')" class="chip-btn upc-item ${isActive}" data-del="${del}" data-mod="date:${d}">
+                            ${d} ${count}건
+                        </button>`;
+                    });
+                    container.innerHTML = html;
                 }
             });
 
@@ -1460,6 +1487,7 @@
                 const retBattery = counts.returnUpcoming[ret].battery; 
                 totalReturnUpcoming += retTotal;
                 
+                // [FIX] 누락되었던 반납 필터 블록 표시 및 총 건수 텍스트 업데이트 코드 복구
                 const block = document.getElementById(`block-ret-upc-${ret}`);
                 if (block) block.style.display = retTotal > 0 ? 'block' : 'none';
 
@@ -1472,16 +1500,28 @@
                     }
                 }
                 
-                MODEL_LIST.forEach(mod => {
-                    const count = counts.returnUpcoming[ret][mod];
-                    const elMod = document.getElementById(`count-ret-upc-${ret}-${mod}`);
-                    if (elMod) elMod.innerText = count;
-                    
-                    const btnMod = document.querySelector(`.ret-upc-item[data-ret="${ret}"][data-mod="${mod}"]`);
-                    if (btnMod) {
-                        btnMod.style.display = count > 0 ? 'inline-block' : 'none';
-                    }
-                });
+                const container = document.getElementById(`ret-upc-items-${ret}`);
+                if (container) {
+                    let html = '';
+                    const dates = counts.returnUpcoming[ret].dates || {};
+                    const sortedDates = Object.keys(dates).sort((a, b) => {
+                        if (a === '미정') return 1;
+                        if (b === '미정') return -1;
+                        const [m1, rest1] = a.split('/');
+                        const [m2, rest2] = b.split('/');
+                        if (parseInt(m1) !== parseInt(m2)) return parseInt(m1) - parseInt(m2);
+                        return parseInt(rest1) - parseInt(rest2);
+                    });
+
+                    sortedDates.forEach(d => {
+                        const count = dates[d];
+                        const isActive = (currentReturnUpcomingMethod === ret && currentReturnUpcomingModel === 'date:' + d) ? 'active' : '';
+                        html += `<button onclick="setReturnUpcomingFilter('${ret}', 'date:${d}')" class="chip-btn ret-upc-item ${isActive}" data-ret="${ret}" data-mod="date:${d}">
+                            ${d} ${count}건
+                        </button>`;
+                    });
+                    container.innerHTML = html;
+                }
             });
 
             const retEmptyMsg = document.getElementById('return-upc-empty-msg');
@@ -1627,9 +1667,11 @@
 
                 if (modelSummary) {
                     const modelCounts = {};
+                    let batteryCount = 0;
                     selectedRows.forEach(rowId => {
                         const item = allData.find(i => String(i.row) === String(rowId));
                         if (item && item.model) {
+                            if (String(item.model).includes('보조배터리')) batteryCount++;
                             let rawModel = String(item.model || '').replace(/\+?\s*보조배터리/g, '').trim();
                             let shortModel = '기타';
                             const models = ['23U', '24U', '25U', '26U', '17P', '17PM'];
@@ -1654,6 +1696,9 @@
                     for (const [mod, cnt] of sortedModelCounts) {
                         // [UPDATE] 밝은 배경에 어울리도록 파스텔 인디고 뱃지 색상으로 수정 (하단 짤림 방지를 위해 inline-flex 및 py-1.5 적용)
                         html += `<span class="inline-flex items-center justify-center text-[13px] font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 whitespace-nowrap tracking-tight shadow-sm leading-none">${mod} <span class="text-indigo-500 ml-1 text-[14px]">${cnt}</span></span>`;
+                    }
+                    if (batteryCount > 0) {
+                        html += `<span class="inline-flex items-center justify-center text-[13px] font-extrabold text-yellow-700 bg-yellow-50 px-2.5 py-1 rounded-lg border border-yellow-200 whitespace-nowrap tracking-tight shadow-sm leading-none">⚡ <span class="text-yellow-600 ml-1 text-[14px]">${batteryCount}</span></span>`;
                     }
                     modelSummary.innerHTML = html;
                     modelSummary.classList.remove('hidden');
