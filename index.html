@@ -132,9 +132,9 @@
         .ret-upc-item.active * { color: #FFFFFF !important; }
 
         /* [NEW] 추가 서비스 필터 스타일 */
-    .svc-header.active { background-color: #EAB308 !important; border-color: #CA8A04 !important; }
-    .svc-header.active:hover { background-color: #CA8A04 !important; }
-    .svc-header.active * { color: #FFFFFF !important; }
+        .svc-header.active { background-color: #EAB308 !important; border-color: #CA8A04 !important; }
+        .svc-header.active:hover { background-color: #CA8A04 !important; }
+        .svc-header.active * { color: #FFFFFF !important; }
     </style>
 </head>
 <body>
@@ -200,7 +200,8 @@
                             <span class="text-base">📅</span> 이번주 예약 인원
                         </h3>
                     </div>
-                    <span class="text-[11px] font-bold text-indigo-600 bg-white px-1.5 py-0.5 rounded border border-indigo-200 shadow-sm shrink-0 mt-0.5"></span>
+                    <!-- [추가] 예약 인원 전체보기 버튼 -->
+                    <button id="btn-view-all-upc" onclick="viewAllUpcoming()" class="text-[11px] font-bold text-indigo-600 bg-white hover:bg-indigo-100 px-2 py-1 rounded border border-indigo-200 shadow-sm transition-colors cursor-pointer shrink-0 mt-0.5">전체보기</button>
                 </div>
                 <div id="upcoming-filters-container" class="space-y-2"></div>
                 <div id="upc-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-indigo-100/50 hidden mt-2">
@@ -216,7 +217,7 @@
                             <span class="text-base">📌</span> 이번주 반납 인원
                         </h3>
                     </div>
-                    <span class="text-[11px] font-bold text-rose-600 bg-white px-1.5 py-0.5 rounded border border-rose-200 shadow-sm shrink-0 mt-0.5"></span>
+                    <button id="btn-view-all-return-upc" onclick="viewAllReturnUpcoming()" class="text-[11px] font-bold text-rose-600 bg-white hover:bg-rose-100 px-2 py-1 rounded border border-rose-200 shadow-sm transition-colors cursor-pointer shrink-0 mt-0.5">전체보기</button>
                 </div>
                 <div id="return-upcoming-filters-container" class="space-y-2"></div>
                 <div id="return-upc-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-rose-100/50 hidden mt-2">
@@ -313,7 +314,7 @@
             </div>
             
             <div id="list-header" class="hidden bg-white border border-slate-200 rounded-xl mb-3 h-[48px] items-center pl-0 pr-4 text-[13px] font-extrabold text-slate-500 gap-3 shadow-sm sticky top-[72px] z-10 overflow-hidden">
-                <div class="w-16 h-full flex items-center justify-center pl-1.5 cursor-pointer hover:bg-slate-100 transition-colors shrink-0" onclick="document.getElementById('selectAllCheckbox').click()">
+                <div class="w-16 h-full flex items-center justify-center pl-1.5 cursor-pointer transition-colors shrink-0" onclick="document.getElementById('selectAllCheckbox').click()">
                     <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(event)" class="checkbox-custom pointer-events-none transform scale-110" title="전체 선택">
                 </div>
                 <div class="w-14 text-center shrink-0">상태</div>
@@ -387,7 +388,6 @@
             
             <div class="scroll-area bg-slate-50">
                 <form id="edit-form" onsubmit="submitUpdate(event)">
-                    <!-- [수정] orderTime(접수시간)을 저장할 숨김 필드 추가 (행 밀림 방지용) -->
                     <input type="hidden" id="edit-row">
                     <input type="hidden" id="edit-sheet-name">
                     <input type="hidden" id="edit-order-time"> 
@@ -725,7 +725,7 @@
                 } else { showToast("데이터 로드 실패: " + (json.message || "")); }
             } catch(e) { 
                 console.error("Fetch Error:", e);
-                showAppAlert(`앱에서 데이터를 처리하다가 오류가 났습니다.\n(숫자/날짜 형식 문제일 수 있습니다)\n\n상세오류: ${e.message}`, "🚨 데이터 로드 실패", "⚠️");
+                showAppAlert(`앱에서 데이터를 처리하다가 오류가 났습니다.\n(숫자/날짜 형식 문제일 수 기습니다)\n\n상세오류: ${e.message}`, "🚨 데이터 로드 실패", "⚠️");
             } 
             finally { toggleLoading(false); }
         }
@@ -765,6 +765,18 @@
             document.querySelectorAll('.upc-header, .upc-item, .ret-upc-header, .ret-upc-item, .svc-header').forEach(btn => {
                 btn.classList.remove('active');
             });
+
+            const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
+            if (viewAllRetBtn) {
+                viewAllRetBtn.classList.remove('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
+                viewAllRetBtn.classList.add('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
+            }
+
+            const viewAllUpcBtn = document.getElementById('btn-view-all-upc');
+            if (viewAllUpcBtn) {
+                viewAllUpcBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
+                viewAllUpcBtn.classList.add('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
+            }
 
             const subGroup = document.getElementById('sub-filter-group-delivery');
             if(subGroup) { subGroup.classList.add('hidden'); subGroup.classList.remove('flex'); }
@@ -860,6 +872,104 @@
             `;
         }
 
+        // [추가] 예약 인원 전체보기 전용 토글 함수
+        function viewAllUpcoming() {
+            if (currentUpcomingDelivery === 'ALL_METHODS') {
+                currentUpcomingDelivery = null;
+                currentUpcomingModel = null;
+            } else {
+                currentUpcomingDelivery = 'ALL_METHODS';
+                currentUpcomingModel = 'all';
+                
+                currentReturnUpcomingMethod = null; 
+                currentReturnUpcomingModel = null;
+                currentServiceFilter = null; 
+                
+                currentFilterStatus = 'all';
+                currentModelFilter = 'all';
+                currentDeliveryFilter = 'all';
+                currentDeliverySubFilter = 'all';
+                currentReturnFilter = 'all';
+                selectedDates = [];
+                selectedReturnDates = [];
+                
+                document.querySelectorAll('.chip-btn').forEach(btn => {
+                    if(btn.dataset.id === 'all') btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+                document.getElementById('search-input').value = '';
+            }
+
+            document.querySelectorAll('.upc-header, .upc-item').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const viewAllBtn = document.getElementById('btn-view-all-upc');
+            if(viewAllBtn) {
+                if (currentUpcomingDelivery === 'ALL_METHODS') {
+                    viewAllBtn.classList.remove('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
+                    viewAllBtn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
+                } else {
+                    viewAllBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
+                    viewAllBtn.classList.add('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
+                }
+            }
+            
+            document.querySelectorAll('.ret-upc-header, .ret-upc-item, .svc-header').forEach(btn => btn.classList.remove('active'));
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterData(false);
+        }
+
+        // 반납 전체보기 전용 토글 함수
+        function viewAllReturnUpcoming() {
+            if (currentReturnUpcomingMethod === 'ALL_METHODS') {
+                currentReturnUpcomingMethod = null;
+                currentReturnUpcomingModel = null;
+            } else {
+                currentReturnUpcomingMethod = 'ALL_METHODS';
+                currentReturnUpcomingModel = 'all';
+                
+                currentUpcomingDelivery = null; 
+                currentUpcomingModel = null;
+                currentServiceFilter = null; 
+                
+                currentFilterStatus = 'all';
+                currentModelFilter = 'all';
+                currentDeliveryFilter = 'all';
+                currentDeliverySubFilter = 'all';
+                currentReturnFilter = 'all';
+                selectedDates = [];
+                selectedReturnDates = [];
+                
+                document.querySelectorAll('.chip-btn').forEach(btn => {
+                    if(btn.dataset.id === 'all') btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+                document.getElementById('search-input').value = '';
+            }
+
+            document.querySelectorAll('.ret-upc-header, .ret-upc-item').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const viewAllBtn = document.getElementById('btn-view-all-return-upc');
+            if(viewAllBtn) {
+                if (currentReturnUpcomingMethod === 'ALL_METHODS') {
+                    viewAllBtn.classList.remove('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
+                    viewAllBtn.classList.add('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
+                } else {
+                    viewAllBtn.classList.remove('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
+                    viewAllBtn.classList.add('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
+                }
+            }
+            
+            document.querySelectorAll('.upc-header, .upc-item, .svc-header').forEach(btn => btn.classList.remove('active'));
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            filterData(false);
+        }
+
         function setUpcomingFilter(del, mod) {
             if (currentUpcomingDelivery === del && currentUpcomingModel === mod) {
                 currentUpcomingDelivery = null;
@@ -885,6 +995,18 @@
                     else btn.classList.remove('active');
                 });
                 document.getElementById('search-input').value = '';
+            }
+
+            const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
+            if (viewAllRetBtn) {
+                viewAllRetBtn.classList.remove('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
+                viewAllRetBtn.classList.add('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
+            }
+
+            const viewAllUpcBtn = document.getElementById('btn-view-all-upc');
+            if (viewAllUpcBtn) {
+                viewAllUpcBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
+                viewAllUpcBtn.classList.add('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
             }
 
             document.querySelectorAll('.upc-header, .upc-item').forEach(btn => {
@@ -928,6 +1050,18 @@
                 document.getElementById('search-input').value = '';
             }
 
+            const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
+            if (viewAllRetBtn) {
+                viewAllRetBtn.classList.remove('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
+                viewAllRetBtn.classList.add('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
+            }
+
+            const viewAllUpcBtn = document.getElementById('btn-view-all-upc');
+            if (viewAllUpcBtn) {
+                viewAllUpcBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
+                viewAllUpcBtn.classList.add('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
+            }
+
             document.querySelectorAll('.ret-upc-header, .ret-upc-item').forEach(btn => {
                 if (currentReturnUpcomingMethod === btn.dataset.ret && currentReturnUpcomingModel === (btn.dataset.mod || 'all')) {
                     btn.classList.add('active');
@@ -966,6 +1100,18 @@
                     else btn.classList.remove('active');
                 });
                 document.getElementById('search-input').value = '';
+            }
+
+            const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
+            if (viewAllRetBtn) {
+                viewAllRetBtn.classList.remove('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
+                viewAllRetBtn.classList.add('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
+            }
+
+            const viewAllUpcBtn = document.getElementById('btn-view-all-upc');
+            if (viewAllUpcBtn) {
+                viewAllUpcBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
+                viewAllUpcBtn.classList.add('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
             }
 
             document.querySelectorAll('.svc-header').forEach(btn => {
@@ -1234,8 +1380,10 @@
                     counts.returnUpcoming[normReturnWay].dates[shortDate] = (counts.returnUpcoming[normReturnWay].dates[shortDate] || 0) + 1;
                 }
 
+                // [수정] 예약 인원 전체보기 필터 로직 보완
                 if (currentUpcomingDelivery !== null) {
-                    if (!isUpcomingTarget || normDelivery !== currentUpcomingDelivery) return false;
+                    if (!isUpcomingTarget) return false;
+                    if (currentUpcomingDelivery !== 'ALL_METHODS' && normDelivery !== currentUpcomingDelivery) return false;
                     
                     if (currentUpcomingModel !== 'all') {
                         if (currentUpcomingModel.startsWith('date:')) {
@@ -1257,8 +1405,10 @@
                     return matchQuery; 
                 }
 
+                // 반납 인원 전체보기 필터 로직 보완
                 if (currentReturnUpcomingMethod !== null) {
-                    if (!isReturnUpcomingTarget || normReturnWay !== currentReturnUpcomingMethod) return false;
+                    if (!isReturnUpcomingTarget) return false;
+                    if (currentReturnUpcomingMethod !== 'ALL_METHODS' && normReturnWay !== currentReturnUpcomingMethod) return false;
                     
                     if (currentReturnUpcomingModel !== 'all') {
                         if (currentReturnUpcomingModel.startsWith('date:')) {
@@ -1269,7 +1419,7 @@
                                 if (parts.length === 3) {
                                     const dObj = new Date(parts[0], parts[1]-1, parts[2]);
                                     const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
-                                    shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}[${dayStr}]`;
+                                    shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
                                 }
                             }
                             if (shortDate !== targetDate) return false;
@@ -1490,6 +1640,26 @@
             const retEmptyMsg = document.getElementById('return-upc-empty-msg');
             if (retEmptyMsg) {
                 retEmptyMsg.style.display = totalReturnUpcoming === 0 ? 'block' : 'none';
+            }
+
+            // [추가] 예약 인원 전체보기 버튼 카운트 업데이트
+            const viewAllUpcBtn = document.getElementById('btn-view-all-upc');
+            if (viewAllUpcBtn) {
+                if (currentUpcomingDelivery === 'ALL_METHODS') {
+                    viewAllUpcBtn.innerText = `전체 해제 (${totalUpcoming})`;
+                } else {
+                    viewAllUpcBtn.innerText = `전체보기 (${totalUpcoming})`;
+                }
+            }
+
+            // 반납 인원 전체보기 버튼 카운트 업데이트
+            const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
+            if (viewAllRetBtn) {
+                if (currentReturnUpcomingMethod === 'ALL_METHODS') {
+                    viewAllRetBtn.innerText = `전체 해제 (${totalReturnUpcoming})`;
+                } else {
+                    viewAllRetBtn.innerText = `전체보기 (${totalReturnUpcoming})`;
+                }
             }
             
             const backupBtn = document.getElementById('btn-quick-backup');
@@ -2122,7 +2292,7 @@
                 card.innerHTML = `
                     <div class="absolute left-0 top-0 bottom-0 w-1.5 ${accentColor} z-20"></div>
                     
-                    <div class="w-16 self-stretch flex items-center justify-center shrink-0 pl-1.5 cursor-pointer hover:bg-slate-200/50 transition-colors z-10" onclick="toggleRowSelection(event, '${item.row}')">
+                    <div class="w-16 self-stretch flex items-center justify-center shrink-0 pl-1.5 cursor-pointer transition-colors z-10" onclick="toggleRowSelection(event, '${item.row}')">
                         <input type="checkbox" ${isSelected ? 'checked' : ''} class="checkbox-custom pointer-events-none transform scale-110">
                     </div>
 
