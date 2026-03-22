@@ -139,7 +139,7 @@
 </head>
 <body>
 
-    <!-- 상단 네비게이션 바 (파스텔톤 및 둥근 UI로 전면 개편) -->
+    <!-- 상단 네비게이션 바 -->
     <header class="bg-white/90 backdrop-blur-xl border-b border-indigo-100/50 sticky top-0 z-40 shadow-[0_4px_20px_-10px_rgba(99,102,241,0.08)] h-[72px] flex items-center px-6 md:px-8 transition-all">
         <div class="flex-1 flex items-center gap-3">
             <span class="text-xl font-black text-indigo-950 tracking-tight flex items-center gap-1.5"><span class="text-2xl drop-shadow-sm">🗂️</span> 세린캠 예약 대시보드</span>
@@ -171,7 +171,6 @@
         <!-- 왼쪽 사이드바 (고정 필터 영역) -->
         <aside class="w-[300px] shrink-0 flex flex-col gap-5">
             
-            <!-- 전체 필터 초기화 버튼 -->
             <button onclick="resetAllFilters()" class="w-full bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-500 hover:text-slate-700 py-3 rounded-2xl font-bold shadow-sm transition-all flex items-center justify-center gap-2 text-sm mb-1">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
                 모든 검색/필터 초기화
@@ -188,7 +187,6 @@
                     <span class="text-[11px] font-bold text-yellow-600 bg-white px-1.5 py-0.5 rounded border border-yellow-200 shadow-sm shrink-0 mt-0.5"></span>
                 </div>
                 <div id="service-filters-container" class="space-y-2"></div>
-                <!-- 0건일 때 보여줄 빈 상태 메시지 -->
                 <div id="service-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-yellow-100/50 hidden mt-2">
                     <span class="text-[11px] font-bold text-yellow-600">요청한 서비스가 없어요! 🎉</span>
                 </div>
@@ -205,7 +203,6 @@
                     <span class="text-[11px] font-bold text-indigo-600 bg-white px-1.5 py-0.5 rounded border border-indigo-200 shadow-sm shrink-0 mt-0.5"></span>
                 </div>
                 <div id="upcoming-filters-container" class="space-y-2"></div>
-                <!-- 0건일 때 보여줄 빈 상태 메시지 -->
                 <div id="upc-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-indigo-100/50 hidden mt-2">
                     <span class="text-[11px] font-bold text-indigo-400">이번 주 수령 예정건이 없어요! 🎉</span>
                 </div>
@@ -222,7 +219,6 @@
                     <span class="text-[11px] font-bold text-rose-600 bg-white px-1.5 py-0.5 rounded border border-rose-200 shadow-sm shrink-0 mt-0.5"></span>
                 </div>
                 <div id="return-upcoming-filters-container" class="space-y-2"></div>
-                <!-- 0건일 때 보여줄 빈 상태 메시지 -->
                 <div id="return-upc-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-rose-100/50 hidden mt-2">
                     <span class="text-[11px] font-bold text-rose-400">오늘 반납 예정건이 없어요! 🎉</span>
                 </div>
@@ -234,9 +230,8 @@
                 <svg id="general-filters-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transform transition-transform duration-300 text-slate-400"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
 
-            <!-- 일반 필터들을 하나로 묶는 컨테이너 -->
+            <!-- 일반 필터 컨테이너 -->
             <div id="general-filters-container" class="hidden flex-col gap-5 transition-all duration-300 origin-top">
-                <!-- 1. 대여 일정 필터 -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 수령일(예약일)</h3>
@@ -247,7 +242,6 @@
                     </div>
                 </div>
 
-                <!-- 1-2. 반납 일정 필터 -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📅 반납일</h3>
@@ -258,7 +252,6 @@
                     </div>
                 </div>
 
-                <!-- 2. 기기 모델 필터 -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-sm font-black text-slate-800 flex items-center gap-2">📱 기기 모델</h3>
@@ -285,7 +278,6 @@
                     </div>
                 </div>
 
-                <!-- 3. 수령 방법 필터 -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">📦 수령 방법</h3>
                     <div id="filter-group-delivery" class="flex flex-wrap gap-2">
@@ -301,7 +293,6 @@
                     </div>
                 </div>
 
-                <!-- 4. 반납 방법 필터 -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-sm font-black text-slate-800 mb-4 flex items-center gap-2">↩️ 반납 방법</h3>
                     <div id="filter-group-return" class="flex flex-wrap gap-2">
@@ -314,14 +305,13 @@
             </div>
         </aside>
 
-        <!-- 오른쪽 메인 콘텐츠 (예약 리스트) -->
+        <!-- 오른쪽 메인 콘텐츠 -->
         <main class="flex-1 relative">
             <div id="loading" class="flex flex-col items-center justify-center py-40 h-full bg-white rounded-2xl border border-slate-200 shadow-sm">
                 <div class="w-12 h-12 border-4 border-slate-100 border-t-blue-600 rounded-full animate-spin mb-4"></div>
                 <p class="text-sm font-bold text-slate-500">서버에서 예약 데이터를 불러오는 중입니다...</p>
             </div>
             
-            <!-- 리스트 헤더 (가로형) -->
             <div id="list-header" class="hidden bg-white border border-slate-200 rounded-xl mb-3 h-[48px] items-center pl-0 pr-4 text-[13px] font-extrabold text-slate-500 gap-3 shadow-sm sticky top-[72px] z-10 overflow-hidden">
                 <div class="w-16 h-full flex items-center justify-center pl-1.5 cursor-pointer hover:bg-slate-100 transition-colors shrink-0" onclick="document.getElementById('selectAllCheckbox').click()">
                     <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(event)" class="checkbox-custom pointer-events-none transform scale-110" title="전체 선택">
@@ -336,15 +326,13 @@
                 <div class="w-24 shrink-0 text-center">송장번호</div>
             </div>
 
-            <!-- PC 가로형 리스트 컨테이너 -->
             <div id="list-container" class="flex flex-col gap-2.5 pb-24"></div>
         </main>
     </div>
 
-    <!-- 다중 선택 일괄 처리 바 (밝고 화사한 스타일로 변경) -->
+    <!-- 다중 선택 일괄 처리 바 -->
     <div id="bulk-action-bar" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/95 backdrop-blur-xl text-slate-800 p-5 rounded-[24px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1),0_0_20px_rgba(59,130,246,0.1)] border border-slate-200 flex flex-col gap-4 z-50 transition-all duration-300 translate-y-48 opacity-0 pointer-events-none w-[650px] max-w-[95vw]">
         
-        <!-- 1열: 갯수 및 모델 요약 -->
         <div class="flex items-center justify-between w-full">
             <div class="flex items-center gap-2 pl-1 overflow-x-auto no-scrollbar py-1.5">
                 <span class="flex items-center justify-center px-2.5 min-w-[28px] h-7 rounded-full bg-indigo-200 text-indigo-800 font-black text-sm font-tnum shrink-0 shadow-sm" id="bulk-count">0</span>
@@ -358,7 +346,6 @@
         
         <div class="w-full h-px bg-slate-100"></div>
         
-        <!-- 2열: 상태 변경 및 삭제 -->
         <div class="flex items-center justify-between gap-2 w-full">
             <div class="flex gap-2 flex-1">
                 <button onclick="bulkUpdateStatus('확정')" class="flex-1 text-[13px] font-bold bg-blue-200 hover:bg-blue-300 text-blue-900 py-2.5 rounded-xl transition-colors shadow-sm">확정</button>
@@ -370,13 +357,11 @@
             <button onclick="bulkDeleteRecords()" class="text-[13px] font-bold bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 hover:border-rose-300 px-4 py-2.5 rounded-xl transition-colors shrink-0 shadow-sm">삭제</button>
         </div>
         
-        <!-- 3열: 연장 및 데이터 백업 -->
         <div class="flex items-center gap-2 w-full">
             <button onclick="bulkExtendRental()" class="flex-1 justify-center text-[13px] font-bold bg-sky-50 text-sky-600 hover:bg-sky-100 py-3 rounded-xl transition-colors border border-sky-200 flex items-center gap-1.5 shadow-sm">⏳ 대여 연장 (+1일)</button>
             <button onclick="bulkAddBackupMemo()" class="flex-1 justify-center text-[13px] font-bold bg-amber-50 text-amber-600 hover:bg-amber-100 py-3 rounded-xl transition-colors border border-amber-200 flex items-center gap-1.5 shadow-sm">💾 데이터 백업 추가</button>
         </div>
         
-        <!-- 4열: 우체국 등록 및 알림톡 -->
         <div class="flex items-center gap-2 w-full">
             <button onclick="copyForPostOffice()" class="flex-1 justify-center text-[13px] font-bold bg-orange-200 hover:bg-orange-300 text-orange-900 py-3 rounded-xl transition-colors shadow-sm flex items-center gap-1.5" title="대여모델/이름/우편번호/주소/연락처 복사">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
@@ -402,8 +387,10 @@
             
             <div class="scroll-area bg-slate-50">
                 <form id="edit-form" onsubmit="submitUpdate(event)">
+                    <!-- [수정] orderTime(접수시간)을 저장할 숨김 필드 추가 (행 밀림 방지용) -->
                     <input type="hidden" id="edit-row">
                     <input type="hidden" id="edit-sheet-name">
+                    <input type="hidden" id="edit-order-time"> 
                     
                     <div class="form-section shadow-sm bg-white">
                         <div class="flex justify-between items-center mb-4">
@@ -579,7 +566,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzRI1DH1Ls2aHNjJLCf47YE3C1ERJTVvsQmDJA5hXEoaH6oMTlHlPQDsHtKSXW3zY9dBA/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbxOW1c3x8t5tc7rw0FMTMxRxeCBY_H_FK61iupmfBJ2-fTJlHuweacG7uEEaBYqTEtm4Q/exec"; 
         const MODEL_LIST = ['23U', '24U', '25U', '26U', '17P', '17PM'];
         const STATUS_PRIORITY = { '예약신청': 1, '대기': 2, '확정': 3, '반납완료': 4, '취소': 5 };
 
@@ -1282,29 +1269,6 @@
                                 if (parts.length === 3) {
                                     const dObj = new Date(parts[0], parts[1]-1, parts[2]);
                                     const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
-                                    shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
-                                }
-                            }
-                            if (shortDate !== targetDate) return false;
-                        } else {
-                            if (!model.includes(currentUpcomingModel)) return false;
-                        }
-                    }
-                    return matchQuery; 
-                }
-
-                if (currentReturnUpcomingMethod !== null) {
-                    if (!isReturnUpcomingTarget || normReturnWay !== currentReturnUpcomingMethod) return false;
-                    
-                    if (currentReturnUpcomingModel !== 'all') {
-                        if (currentReturnUpcomingModel.startsWith('date:')) {
-                            const targetDate = currentReturnUpcomingModel.replace('date:', '');
-                            let shortDate = '미정';
-                            if (endDateStr && endDateStr.includes('-')) {
-                                const parts = endDateStr.split('-');
-                                if (parts.length === 3) {
-                                    const dObj = new Date(parts[0], parts[1]-1, parts[2]);
-                                    const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
                                     shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}[${dayStr}]`;
                                 }
                             }
@@ -1487,7 +1451,6 @@
                 const retBattery = counts.returnUpcoming[ret].battery; 
                 totalReturnUpcoming += retTotal;
                 
-                // [FIX] 누락되었던 반납 필터 블록 표시 및 총 건수 텍스트 업데이트 코드 복구
                 const block = document.getElementById(`block-ret-upc-${ret}`);
                 if (block) block.style.display = retTotal > 0 ? 'block' : 'none';
 
@@ -1682,7 +1645,6 @@
                         }
                     });
 
-                    // 정해진 순서대로 기종을 정렬 (23U, 24U, 25U, 26U, 17P, 17PM, 기타)
                     const predefinedOrder = ['23U', '24U', '25U', '26U', '17P', '17PM', '기타'];
                     const sortedModelCounts = Object.entries(modelCounts).sort((a, b) => {
                         let idxA = predefinedOrder.indexOf(a[0]);
@@ -1694,7 +1656,6 @@
 
                     let html = '';
                     for (const [mod, cnt] of sortedModelCounts) {
-                        // [UPDATE] 밝은 배경에 어울리도록 파스텔 인디고 뱃지 색상으로 수정 (하단 짤림 방지를 위해 inline-flex 및 py-1.5 적용)
                         html += `<span class="inline-flex items-center justify-center text-[13px] font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 whitespace-nowrap tracking-tight shadow-sm leading-none">${mod} <span class="text-indigo-500 ml-1 text-[14px]">${cnt}</span></span>`;
                     }
                     if (batteryCount > 0) {
@@ -1727,7 +1688,8 @@
                 if (targetIndex !== -1) {
                     originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
                     allData[targetIndex].status = newStatus; 
-                    updates.push({ row: rowId, status: newStatus });
+                    // [수정] orderTime과 phone 데이터를 포함하여 updates 배열에 추가
+                    updates.push({ row: rowId, status: newStatus, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                 }
             });
 
@@ -1737,7 +1699,8 @@
 
             try {
                 for (const u of updates) {
-                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', status: u.status };
+                    // [수정] payload에 orderTime과 phone 추가
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', status: u.status, orderTime: u.orderTime, phone: u.phone };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
@@ -1761,11 +1724,14 @@
             showAppConfirm(`선택한 ${selectedRows.length}개의 예약을 완전히 삭제하시겠습니까?\n(이 작업은 되돌릴 수 없습니다)`, async () => {
                 const originalDataBackup = [];
                 const rowsToDelete = [...selectedRows].sort((a, b) => parseInt(b) - parseInt(a));
+                const deleteTargets = []; // [수정] 삭제할 정보 (row, orderTime, phone) 저장 배열
 
                 rowsToDelete.forEach(rowId => {
                     const targetIndex = allData.findIndex(item => String(item.row) === String(rowId));
                     if (targetIndex !== -1) {
                         originalDataBackup.push(allData[targetIndex]);
+                        // [수정] orderTime과 phone 데이터를 포함
+                        deleteTargets.push({ row: rowId, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                     }
                 });
 
@@ -1776,8 +1742,9 @@
                 showAppAlert(`${rowsToDelete.length}건의 예약이 완전히 삭제되었습니다.`, "일괄 삭제 완료", "🗑️");
 
                 try {
-                    for (const r of rowsToDelete) {
-                        const payload = { type: 'delete', row: r, sheetName: '예약내역' };
+                    for (const t of deleteTargets) {
+                        // [수정] payload에 orderTime과 phone 추가
+                        const payload = { type: 'delete', row: t.row, sheetName: '예약내역', orderTime: t.orderTime, phone: t.phone };
                         const res = await fetch(API_URL, {
                             method: 'POST',
                             redirect: 'follow',
@@ -1957,7 +1924,8 @@
                 if (targetIndex !== -1) {
                     originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
                     allData[targetIndex].trackingNumber = trackingNumbers[i]; 
-                    updates.push({ row: rowId, tracking: trackingNumbers[i] });
+                    // [수정] orderTime과 phone 데이터를 포함하여 updates 배열에 추가
+                    updates.push({ row: rowId, tracking: trackingNumbers[i], orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                 }
             }
 
@@ -1968,7 +1936,8 @@
 
             try {
                 for (const u of updates) {
-                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', tracking: u.tracking };
+                    // [수정] payload에 orderTime과 phone 추가
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', tracking: u.tracking, orderTime: u.orderTime, phone: u.phone };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
@@ -2012,7 +1981,8 @@
                     }
                     
                     allData[targetIndex].endDate = newEndDateStr; 
-                    updates.push({ row: rowId, endDate: newEndDateStr });
+                    // [수정] orderTime과 phone 데이터를 포함하여 updates 배열에 추가
+                    updates.push({ row: rowId, endDate: newEndDateStr, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                 }
             });
 
@@ -2022,7 +1992,8 @@
 
             try {
                 for (const u of updates) {
-                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', endDate: u.endDate };
+                    // [수정] payload에 orderTime과 phone 추가
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', endDate: u.endDate, orderTime: u.orderTime, phone: u.phone };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
@@ -2054,7 +2025,8 @@
                     if (!currentMemo.includes("백업")) {
                         const newMemo = currentMemo ? currentMemo + " / 백업" : "백업";
                         allData[targetIndex].memo = newMemo; 
-                        updates.push({ row: rowId, memo: newMemo });
+                        // [수정] orderTime과 phone 데이터를 포함하여 updates 배열에 추가
+                        updates.push({ row: rowId, memo: newMemo, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                     }
                 }
             });
@@ -2070,7 +2042,8 @@
 
             try {
                 for (const u of updates) {
-                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', memo: u.memo };
+                    // [수정] payload에 orderTime과 phone 추가
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', memo: u.memo, orderTime: u.orderTime, phone: u.phone };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
                         redirect: 'follow',
@@ -2275,7 +2248,6 @@
 
             const displayModel = String(item.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim();
             
-            // [NEW] 기본 기종명 추출 (지워지지 않도록 보호)
             let baseModel = '기타';
             let assignedId = displayModel;
             const models = ['23U', '24U', '25U', '26U', '17P', '17PM'];
@@ -2289,7 +2261,6 @@
 
             currentInlineEditRow = rowId;
 
-            // [NEW] UI 생성: 기종명(고정) + 입력창(기기번호)
             let prefixHtml = baseModel !== '기타' ? `<span class="bg-blue-50 text-blue-600 px-2 py-1.5 rounded-l-lg border-y border-l border-blue-500 font-black text-[13px] shrink-0">${baseModel}</span>` : '';
             let inputClass = baseModel !== '기타' ? 'rounded-r-lg border-y border-r' : 'rounded-lg border-2';
 
@@ -2337,7 +2308,6 @@
             const hasBattery = oldModel.includes('보조배터리');
             const oldDisplayModel = oldModel.replace(/\s*\+?\s*보조배터리/g, '').trim();
 
-            // [NEW] 고정된 기본 모델명과 입력받은 기기번호를 합침 (띄어쓰기 제거)
             let finalDisplayModel = baseModel;
             if (baseModel === '기타') {
                 finalDisplayModel = newValue.trim() || '기타';
@@ -2361,9 +2331,10 @@
             if (oldDisplayModel !== finalDisplayModel) {
                 allData[itemIndex].model = finalModel; 
                 
+                // [수정] payload에 orderTime 추가 (phone은 이미 있음)
                 const payload = {
                     type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
-                    name: item.name || '', phone: item.phone || '', zipCode: item.zipCode || '', address: item.address || '',
+                    name: item.name || '', phone: item.phone || '', orderTime: item.orderTime || '', zipCode: item.zipCode || '', address: item.address || '',
                     startDate: item.startDate || '', endDate: item.endDate || '', delivery: item.delivery || '', returnWay: item.returnWay || '',
                     status: item.status || '', tracking: item.trackingNumber || '', model: finalModel, memo: item.memo || '', totalPrice: item.totalPrice || 0
                 };
@@ -2453,9 +2424,10 @@
             if (oldTracking !== newTracking) {
                 allData[itemIndex].trackingNumber = newTracking; 
                 
+                // [수정] payload에 orderTime 추가 (phone은 이미 있음)
                 const payload = {
                     type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
-                    name: item.name || '', phone: item.phone || '', zipCode: item.zipCode || '', address: item.address || '',
+                    name: item.name || '', phone: item.phone || '', orderTime: item.orderTime || '', zipCode: item.zipCode || '', address: item.address || '',
                     startDate: item.startDate || '', endDate: item.endDate || '', delivery: item.delivery || '', returnWay: item.returnWay || '',
                     status: item.status || '', tracking: newTracking, model: item.model || '', memo: item.memo || '', totalPrice: item.totalPrice || 0
                 };
@@ -2511,6 +2483,10 @@
             if(!root) return;
             document.getElementById('edit-row').value = item.row;
             document.getElementById('edit-sheet-name').value = item.sheetName || '예약내역'; 
+            
+            // [수정] 모달 열 때 orderTime 정보도 숨김 필드에 저장해둡니다.
+            document.getElementById('edit-order-time').value = item.orderTime || ''; 
+            
             document.getElementById('display-order-time').innerHTML = "접수: " + (formatTime(item.orderTime).replace('<br>', ' ') || '-');
             document.getElementById('edit-name').value = item.name || '';
             document.getElementById('edit-phone').value = item.phone || '';
@@ -2609,8 +2585,10 @@
             const isBattery = document.getElementById('edit-battery').checked;
             let finalModel = (modelType === '기타' ? deviceId : modelType + deviceId) + (isBattery ? "+보조배터리" : "");
             
+            // [수정] payload에 orderTime 포함
             const payload = {
                 type: 'update', row: rowId, sheetName: document.getElementById('edit-sheet-name').value,
+                orderTime: document.getElementById('edit-order-time').value,
                 name: document.getElementById('edit-name').value, phone: document.getElementById('edit-phone').value,
                 zipCode: document.getElementById('edit-zipcode').value, address: document.getElementById('edit-address').value,
                 startDate: document.getElementById('edit-start').value, endDate: document.getElementById('edit-end').value, 
@@ -2656,6 +2634,10 @@
             const rowId = document.getElementById('edit-row').value;
             showAppConfirm("목록에서 완전히 삭제(이동)하시겠습니까?", () => {
                 const targetItem = allData.find(item => String(item.row) === String(rowId));
+                // [수정] 삭제할 대상의 원래 orderTime과 phone 정보를 저장해둠
+                const orderTime = targetItem ? targetItem.orderTime : '';
+                const phone = targetItem ? targetItem.phone : '';
+
                 allData = allData.filter(item => String(item.row) !== String(rowId));
                 currentlyFilteredList = currentlyFilteredList.filter(item => String(item.row) !== String(rowId)); 
                 
@@ -2663,11 +2645,12 @@
                 closeModal();
                 showAppAlert("삭제 처리되었습니다.", "완료", "🗑️");
                 
+                // [수정] 삭제 payload에 orderTime과 phone 포함
                 fetch(API_URL, { 
                     method: 'POST', 
                     redirect: 'follow',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ type: 'delete', row: rowId, sheetName: document.getElementById('edit-sheet-name').value }) 
+                    body: JSON.stringify({ type: 'delete', row: rowId, orderTime: orderTime, phone: phone, sheetName: document.getElementById('edit-sheet-name').value }) 
                 })
                 .then(res => res.json())
                 .then(data => { if(data.result !== 'success') throw new Error("서버 오류"); })
