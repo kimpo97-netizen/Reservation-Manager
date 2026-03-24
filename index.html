@@ -1330,7 +1330,7 @@
                     }
                 }
                 
-                const isUpcoming = isWithinUpcomingBusinessDays(startDateStr, 3);
+                const isUpcoming = isWithinUpcomingBusinessDays(startDateStr, 7);
                 const isUpcomingTarget = isUpcoming && !isAssigned && !status.includes('취소') && !status.includes('반납');
 
                 let normDelivery = null;
