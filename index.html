@@ -154,13 +154,13 @@
         </div>
 
         <div class="flex-1 flex justify-end items-center gap-2.5">
-            <button onclick="toggleSortMode()" class="h-11 px-5 flex items-center gap-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-[18px] text-[13px] font-bold text-indigo-600 shadow-sm transition-all">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
-                정렬: <span id="sort-mode-text" class="text-indigo-800 font-black">최신순</span>
-            </button>
             <button onclick="fetchData()" class="h-11 px-5 flex items-center gap-2 bg-sky-400 hover:bg-sky-500 rounded-[18px] text-[13px] font-bold text-white shadow-md shadow-sky-200 transition-all">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
                 최신 정보 불러오기
+            </button>
+            <button onclick="toggleSortMode()" class="h-11 px-5 flex items-center gap-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/80 rounded-[18px] text-[13px] font-bold text-indigo-600 shadow-sm transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+                정렬: <span id="sort-mode-text" class="text-indigo-800 font-black">최신순</span>
             </button>
         </div>
     </header>
@@ -221,7 +221,7 @@
                 </div>
                 <div id="return-upcoming-filters-container" class="space-y-2"></div>
                 <div id="return-upc-empty-msg" class="text-center py-4 bg-white/50 rounded-xl border border-rose-100/50 hidden mt-2">
-                    <span class="text-[11px] font-bold text-rose-400">오늘 반납 예정건이 없어요! 🎉</span>
+                    <span class="text-[11px] font-bold text-rose-400">이번 주 반납 예정건이 없어요! 🎉</span>
                 </div>
             </div>
 
@@ -314,17 +314,29 @@
             </div>
             
             <!-- 리스트 헤더 부분: z-10에서 z-30으로 수정하여 리스트 내용과 겹치지 않게 고정 -->
-            <div id="list-header" class="hidden bg-white border border-slate-200 rounded-xl mb-3 h-[48px] items-center pl-0 pr-4 text-[13px] font-extrabold text-slate-500 gap-3 shadow-sm relative z-20 overflow-hidden">
+            <div id="list-header" class="hidden bg-white border border-slate-200 rounded-xl mb-3 h-[48px] items-center pl-0 pr-4 text-[13px] font-extrabold text-slate-500 gap-3 shadow-sm relative z-20 overflow-hidden select-none">
                 <div class="w-16 h-full flex items-center justify-center pl-1.5 cursor-pointer transition-colors shrink-0" onclick="document.getElementById('selectAllCheckbox').click()">
                     <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(event)" class="checkbox-custom pointer-events-none transform scale-110" title="전체 선택">
                 </div>
-                <div class="w-14 text-center shrink-0">상태</div>
-                <div class="w-20 text-center shrink-0">접수일시</div>
-                <div class="w-36 shrink-0 text-center">기기 및 번호</div>
-                <div class="w-40 shrink-0">고객 정보</div>
-                <div class="w-64 shrink-0">대여 일정 및 행사명</div>
+                <div class="w-14 flex items-center justify-center gap-1 cursor-pointer hover:text-slate-800 shrink-0 transition-colors" onclick="toggleSort('status')" title="클릭하여 상태 정렬">
+                    상태 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="sort-icon text-slate-300" data-field="status"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                </div>
+                <div class="w-20 flex items-center justify-center gap-1 cursor-pointer hover:text-slate-800 shrink-0 transition-colors" onclick="toggleSort('orderTime')" title="클릭하여 접수일시 정렬">
+                    접수일시 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="sort-icon text-indigo-600" data-field="orderTime"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+                <div class="w-36 flex items-center justify-center gap-1 cursor-pointer hover:text-slate-800 shrink-0 transition-colors" onclick="toggleSort('model')" title="클릭하여 기기 정렬">
+                    기기/번호 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="sort-icon text-slate-300" data-field="model"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                </div>
+                <div class="w-40 flex items-center gap-1 cursor-pointer hover:text-slate-800 shrink-0 transition-colors" onclick="toggleSort('name')" title="클릭하여 고객명 오름차순 정렬">
+                    고객 정보 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="sort-icon text-slate-300" data-field="name"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                </div>
+                <div class="w-64 flex items-center justify-center gap-1 cursor-pointer hover:text-slate-800 shrink-0 transition-colors" onclick="toggleSort('startDate')" title="클릭하여 대여일 정렬">
+                    대여 일정 및 행사명 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="sort-icon text-slate-300" data-field="startDate"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                </div>
                 <div class="flex-1 shrink-0 px-2">배송지 주소</div>
-                <div class="w-[72px] shrink-0">결제 금액</div>
+                <div class="w-[72px] flex items-center gap-1 cursor-pointer hover:text-slate-800 shrink-0 transition-colors" onclick="toggleSort('price')" title="클릭하여 금액 정렬">
+                    결제 금액 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="sort-icon text-slate-300" data-field="price"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+                </div>
                 <div class="w-24 shrink-0 text-center">송장번호</div>
             </div>
 
@@ -618,24 +630,10 @@
             
             if (sDate < today) return false;
             
-            let businessDays = 0;
-            let curDate = new Date(today);
+            const diffTime = sDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
-            while (curDate < sDate) {
-                const y = curDate.getFullYear();
-                const m = curDate.getMonth() + 1;
-                const d = curDate.getDate();
-                const dateKey = `${y}-${m}-${d}`;
-                
-                const isWeekend = curDate.getDay() === 0 || curDate.getDay() === 6;
-                const isHoliday = !!HOLIDAYS[dateKey];
-                
-                if (!isWeekend && !isHoliday) {
-                    businessDays++;
-                }
-                curDate.setDate(curDate.getDate() + 1);
-            }
-            return businessDays <= maxDays;
+            return diffDays <= maxDays;
         }
 
         function isWithinReturnBusinessDays(dateStr, maxDays) {
@@ -651,24 +649,10 @@
             
             if (sDate < today) return true; // 기한 지남(연체) 건은 무조건 포함
             
-            let businessDays = 0;
-            let curDate = new Date(today);
+            const diffTime = sDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
-            while (curDate < sDate) {
-                const y = curDate.getFullYear();
-                const m = curDate.getMonth() + 1;
-                const d = curDate.getDate();
-                const dateKey = `${y}-${m}-${d}`;
-                
-                const isWeekend = curDate.getDay() === 0 || curDate.getDay() === 6;
-                const isHoliday = !!HOLIDAYS[dateKey];
-                
-                if (!isWeekend && !isHoliday) {
-                    businessDays++;
-                }
-                curDate.setDate(curDate.getDate() + 1);
-            }
-            return businessDays <= maxDays;
+            return diffDays <= maxDays;
         }
 
         let allData = [];
@@ -683,13 +667,15 @@
         let currentReturnFilter = 'all';
         selectedDates = []; 
         let selectedReturnDates = []; 
-        let currentSortMode = 'latest'; 
         
-        let currentUpcomingDelivery = null; 
-        let currentUpcomingModel = null;
+        let currentSortField = 'orderTime'; // [변경] 단일 모드에서 항목별 필드 기준으로 변경
+        let currentSortDirection = 'desc'; // [추가] 오름차순(asc) / 내림차순(desc) 상태 추가
         
-        let currentReturnUpcomingMethod = null; 
-        let currentReturnUpcomingModel = null;
+        let selectedUpcomingFilters = []; // 다중 선택 지원을 위한 배열
+        let isViewAllUpcoming = false;
+        
+        let selectedReturnUpcomingFilters = []; // 다중 선택 지원을 위한 배열
+        let isViewAllReturnUpcoming = false;
 
         // 추가 서비스 필터 상태
         let currentServiceFilter = null; 
@@ -698,6 +684,7 @@
             renderUpcomingFilters(); 
             renderReturnUpcomingFilters(); 
             renderServiceFilters(); 
+            updateSortUI(); // [추가] 초기 로딩 시 정렬 화살표 및 UI 동기화
             fetchData();
         };
 
@@ -757,10 +744,10 @@
             selectedDates = [];
             selectedReturnDates = [];
             
-            currentUpcomingDelivery = null; 
-            currentUpcomingModel = null;
-            currentReturnUpcomingMethod = null; 
-            currentReturnUpcomingModel = null;
+            selectedUpcomingFilters = [];
+            isViewAllUpcoming = false;
+            selectedReturnUpcomingFilters = [];
+            isViewAllReturnUpcoming = false;
             currentServiceFilter = null; 
             
             document.getElementById('search-input').value = '';
@@ -892,15 +879,15 @@
 
         // [추가] 예약 인원 전체보기 전용 토글 함수
         function viewAllUpcoming() {
-            if (currentUpcomingDelivery === 'ALL_METHODS') {
-                currentUpcomingDelivery = null;
-                currentUpcomingModel = null;
+            if (isViewAllUpcoming) {
+                isViewAllUpcoming = false;
+                selectedUpcomingFilters = [];
             } else {
-                currentUpcomingDelivery = 'ALL_METHODS';
-                currentUpcomingModel = 'all';
+                isViewAllUpcoming = true;
+                selectedUpcomingFilters = [];
                 
-                currentReturnUpcomingMethod = null; 
-                currentReturnUpcomingModel = null;
+                selectedReturnUpcomingFilters = [];
+                isViewAllReturnUpcoming = false;
                 currentServiceFilter = null; 
                 
                 currentFilterStatus = 'all';
@@ -924,7 +911,7 @@
             
             const viewAllBtn = document.getElementById('btn-view-all-upc');
             if(viewAllBtn) {
-                if (currentUpcomingDelivery === 'ALL_METHODS') {
+                if (isViewAllUpcoming) {
                     viewAllBtn.classList.remove('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
                     viewAllBtn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
                 } else {
@@ -941,15 +928,15 @@
 
         // 반납 전체보기 전용 토글 함수
         function viewAllReturnUpcoming() {
-            if (currentReturnUpcomingMethod === 'ALL_METHODS') {
-                currentReturnUpcomingMethod = null;
-                currentReturnUpcomingModel = null;
+            if (isViewAllReturnUpcoming) {
+                isViewAllReturnUpcoming = false;
+                selectedReturnUpcomingFilters = [];
             } else {
-                currentReturnUpcomingMethod = 'ALL_METHODS';
-                currentReturnUpcomingModel = 'all';
+                isViewAllReturnUpcoming = true;
+                selectedReturnUpcomingFilters = [];
                 
-                currentUpcomingDelivery = null; 
-                currentUpcomingModel = null;
+                selectedUpcomingFilters = [];
+                isViewAllUpcoming = false;
                 currentServiceFilter = null; 
                 
                 currentFilterStatus = 'all';
@@ -973,7 +960,7 @@
             
             const viewAllBtn = document.getElementById('btn-view-all-return-upc');
             if(viewAllBtn) {
-                if (currentReturnUpcomingMethod === 'ALL_METHODS') {
+                if (isViewAllReturnUpcoming) {
                     viewAllBtn.classList.remove('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
                     viewAllBtn.classList.add('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
                 } else {
@@ -989,15 +976,27 @@
         }
 
         function setUpcomingFilter(del, mod) {
-            if (currentUpcomingDelivery === del && currentUpcomingModel === mod) {
-                currentUpcomingDelivery = null;
-                currentUpcomingModel = null;
+            isViewAllUpcoming = false; // 개별 선택 시 전체보기 해제
+            
+            const existingIdx = selectedUpcomingFilters.findIndex(f => f.method === del && f.value === mod);
+            
+            if (existingIdx > -1) {
+                // 이미 선택된 항목이면 해제
+                selectedUpcomingFilters.splice(existingIdx, 1);
             } else {
-                currentUpcomingDelivery = del;
-                currentUpcomingModel = mod;
+                // 새로 선택
+                if (mod === 'all') {
+                    // 해당 수령방법의 다른 하위 선택 지우기
+                    selectedUpcomingFilters = selectedUpcomingFilters.filter(f => f.method !== del);
+                } else {
+                    // 해당 수령방법의 'all' 선택 지우기
+                    selectedUpcomingFilters = selectedUpcomingFilters.filter(f => !(f.method === del && f.value === 'all'));
+                }
+                selectedUpcomingFilters.push({ method: del, value: mod });
                 
-                currentReturnUpcomingMethod = null;
-                currentReturnUpcomingModel = null;
+                // 다른 메인 필터들은 초기화 (기존 로직 유지)
+                selectedReturnUpcomingFilters = [];
+                isViewAllReturnUpcoming = false;
                 currentServiceFilter = null; 
                 
                 currentFilterStatus = 'all';
@@ -1028,7 +1027,9 @@
             }
 
             document.querySelectorAll('.upc-header, .upc-item').forEach(btn => {
-                if (currentUpcomingDelivery === btn.dataset.del && currentUpcomingModel === (btn.dataset.mod || 'all')) {
+                const method = btn.dataset.del;
+                const value = btn.dataset.mod || 'all';
+                if (selectedUpcomingFilters.some(f => f.method === method && f.value === value)) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
@@ -1042,15 +1043,22 @@
         }
 
         function setReturnUpcomingFilter(ret, mod) {
-            if (currentReturnUpcomingMethod === ret && currentReturnUpcomingModel === mod) {
-                currentReturnUpcomingMethod = null;
-                currentReturnUpcomingModel = null;
+            isViewAllReturnUpcoming = false;
+            
+            const existingIdx = selectedReturnUpcomingFilters.findIndex(f => f.method === ret && f.value === mod);
+            
+            if (existingIdx > -1) {
+                selectedReturnUpcomingFilters.splice(existingIdx, 1);
             } else {
-                currentReturnUpcomingMethod = ret;
-                currentReturnUpcomingModel = mod;
+                if (mod === 'all') {
+                    selectedReturnUpcomingFilters = selectedReturnUpcomingFilters.filter(f => f.method !== ret);
+                } else {
+                    selectedReturnUpcomingFilters = selectedReturnUpcomingFilters.filter(f => !(f.method === ret && f.value === 'all'));
+                }
+                selectedReturnUpcomingFilters.push({ method: ret, value: mod });
                 
-                currentUpcomingDelivery = null; 
-                currentUpcomingModel = null;
+                selectedUpcomingFilters = [];
+                isViewAllUpcoming = false;
                 currentServiceFilter = null; 
                 
                 currentFilterStatus = 'all';
@@ -1081,7 +1089,9 @@
             }
 
             document.querySelectorAll('.ret-upc-header, .ret-upc-item').forEach(btn => {
-                if (currentReturnUpcomingMethod === btn.dataset.ret && currentReturnUpcomingModel === (btn.dataset.mod || 'all')) {
+                const method = btn.dataset.ret;
+                const value = btn.dataset.mod || 'all';
+                if (selectedReturnUpcomingFilters.some(f => f.method === method && f.value === value)) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
@@ -1100,10 +1110,10 @@
             } else {
                 currentServiceFilter = svc;
                 
-                currentUpcomingDelivery = null;
-                currentUpcomingModel = null;
-                currentReturnUpcomingMethod = null;
-                currentReturnUpcomingModel = null;
+                selectedUpcomingFilters = [];
+                isViewAllUpcoming = false;
+                selectedReturnUpcomingFilters = [];
+                isViewAllReturnUpcoming = false;
                 
                 currentFilterStatus = 'all';
                 currentModelFilter = 'all';
@@ -1120,24 +1130,26 @@
                 document.getElementById('search-input').value = '';
             }
 
-            const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
-            if (viewAllRetBtn) {
-                viewAllRetBtn.classList.remove('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
-                viewAllRetBtn.classList.add('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
+            document.querySelectorAll('.upc-header, .upc-item, .ret-upc-header, .ret-upc-item').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const viewAllBtn = document.getElementById('btn-view-all-upc');
+            if(viewAllBtn) {
+                viewAllBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
+                viewAllBtn.classList.add('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
             }
 
-            const viewAllUpcBtn = document.getElementById('btn-view-all-upc');
-            if (viewAllUpcBtn) {
-                viewAllUpcBtn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600', 'hover:bg-indigo-700');
-                viewAllUpcBtn.classList.add('bg-white', 'text-indigo-600', 'border-indigo-200', 'hover:bg-indigo-100');
+            const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
+            if(viewAllRetBtn) {
+                viewAllRetBtn.classList.remove('bg-rose-600', 'text-white', 'border-rose-600', 'hover:bg-rose-700');
+                viewAllRetBtn.classList.add('bg-white', 'text-rose-600', 'border-rose-200', 'hover:bg-rose-100');
             }
 
             document.querySelectorAll('.svc-header').forEach(btn => {
                 if (currentServiceFilter === btn.dataset.svc) btn.classList.add('active');
                 else btn.classList.remove('active');
             });
-            
-            document.querySelectorAll('.upc-header, .upc-item, .ret-upc-header, .ret-upc-item').forEach(btn => btn.classList.remove('active'));
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
@@ -1222,35 +1234,105 @@
         }
 
         function toggleSortMode() {
-            currentSortMode = currentSortMode === 'latest' ? 'model' : 'latest';
-            const btnText = document.getElementById('sort-mode-text');
-            if (btnText) {
-                btnText.innerText = currentSortMode === 'latest' ? '최신순' : '모델순';
+            // [변경] 우측 상단 정렬 버튼 사이클 로직 (최신순 -> 기기명 오름차순 -> 고객명 오름차순)
+            if (currentSortField === 'orderTime' && currentSortDirection === 'desc') {
+                currentSortField = 'model'; currentSortDirection = 'asc';
+            } else if (currentSortField === 'model') {
+                currentSortField = 'name'; currentSortDirection = 'asc';
+            } else {
+                currentSortField = 'orderTime'; currentSortDirection = 'desc';
             }
+            updateSortUI();
             filterData(false);
         }
 
-        function sortLogic(a, b) {
-            if (currentSortMode === 'model') {
-                const modelA = String(a.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim().toUpperCase();
-                const modelB = String(b.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim().toUpperCase();
+        // [추가] 항목 헤더 클릭 시 개별 정렬 처리 함수
+        function toggleSort(field) {
+            if (currentSortField === field) {
+                // 같은 항목 클릭 시 오름차순/내림차순 토글
+                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                // 새로운 항목 클릭 시 기본적으로 오름차순 적용
+                currentSortField = field;
+                currentSortDirection = 'asc';
+            }
+            updateSortUI();
+            filterData(false);
+        }
+
+        // [추가] 정렬 아이콘 화살표 및 상단 버튼 텍스트 업데이트
+        function updateSortUI() {
+            document.querySelectorAll('.sort-icon').forEach(icon => {
+                const field = icon.dataset.field;
+                if (field === currentSortField) {
+                    icon.classList.remove('text-slate-300');
+                    icon.classList.add('text-indigo-600');
+                    if (currentSortDirection === 'asc') {
+                        icon.innerHTML = '<path d="m18 15-6-6-6 6"/>'; // 오름차순 (위 화살표)
+                    } else {
+                        icon.innerHTML = '<path d="m6 9 6 6 6-6"/>'; // 내림차순 (아래 화살표)
+                    }
+                } else {
+                    icon.classList.remove('text-indigo-600');
+                    icon.classList.add('text-slate-300');
+                    icon.innerHTML = '<path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>'; // 비활성 (위아래 화살표)
+                }
+            });
+
+            const btnText = document.getElementById('sort-mode-text');
+            if (btnText) {
+                const names = { 'orderTime': '접수일', 'status': '상태', 'model': '기기명', 'name': '고객명', 'startDate': '일정', 'price': '금액' };
+                let dir = currentSortDirection === 'asc' ? '오름차순' : '내림차순';
                 
-                const comp = modelA.localeCompare(modelB, undefined, { numeric: true, sensitivity: 'base' });
-                if (comp !== 0) return comp;
+                if (currentSortField === 'orderTime' && currentSortDirection === 'desc') {
+                    btnText.innerText = '최신순';
+                } else if (currentSortField === 'orderTime' && currentSortDirection === 'asc') {
+                    btnText.innerText = '과거순';
+                } else {
+                    btnText.innerText = `${names[currentSortField] || ''} ${dir}`;
+                }
+            }
+        }
+
+        function sortLogic(a, b) {
+            let valA, valB;
+
+            // [변경] 선택된 정렬 항목(Field)에 따라 비교값 매핑
+            if (currentSortField === 'status') {
+                valA = STATUS_PRIORITY[a.status || '예약신청'] || 99;
+                valB = STATUS_PRIORITY[b.status || '예약신청'] || 99;
+            } else if (currentSortField === 'model') {
+                valA = String(a.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim().toUpperCase();
+                valB = String(b.model || '').replace(/\s*\+?\s*보조배터리/g, '').trim().toUpperCase();
+            } else if (currentSortField === 'name') {
+                valA = String(a.name || '').trim();
+                valB = String(b.name || '').trim();
+            } else if (currentSortField === 'startDate') {
+                valA = new Date(a.startDate || '2099-12-31').getTime();
+                valB = new Date(b.startDate || '2099-12-31').getTime();
+            } else if (currentSortField === 'price') {
+                valA = parseInt(String(a.totalPrice || 0).replace(/[^0-9]/g, '')) || 0;
+                valB = parseInt(String(b.totalPrice || 0).replace(/[^0-9]/g, '')) || 0;
+            } else { // 기본값: orderTime (접수일시)
+                valA = new Date(a.orderTime).getTime();
+                if (isNaN(valA)) valA = 0;
+                valB = new Date(b.orderTime).getTime();
+                if (isNaN(valB)) valB = 0;
             }
 
-            const timeA = new Date(a.orderTime).getTime();
-            const timeB = new Date(b.orderTime).getTime();
-            
-            if (!isNaN(timeA) && !isNaN(timeB)) {
-                if (timeA !== timeB) return timeB - timeA;
-            } else if (!isNaN(timeA)) {
-                return -1;
-            } else if (!isNaN(timeB)) {
-                return 1;
+            let comp = 0;
+            // 문자열일 경우 가나다순 우선 정렬 지원, 숫자/날짜는 크기 비교
+            if (typeof valA === 'string' && typeof valB === 'string') {
+                comp = valA.localeCompare(valB, undefined, { numeric: true, sensitivity: 'base' });
+            } else {
+                comp = valA - valB;
             }
-            
-            return b.row - a.row;
+
+            // 비교값이 같을 경우 엑셀의 최신행(row)을 우선하여 2차 정렬
+            if (comp === 0) return b.row - a.row; 
+
+            // 선택된 오름차순/내림차순 방향 반영
+            return currentSortDirection === 'asc' ? comp : -comp;
         }
 
         function toggleLoading(show) {
@@ -1373,7 +1455,7 @@
                     counts.upcoming[normDelivery].dates[shortDate] = (counts.upcoming[normDelivery].dates[shortDate] || 0) + 1;
                 }
 
-                const isReturnUpcoming = isWithinReturnBusinessDays(endDateStr, 0); 
+                const isReturnUpcoming = isWithinReturnBusinessDays(endDateStr, 7); 
                 const isReturnUpcomingTarget = isReturnUpcoming && !status.includes('반납') && !status.includes('취소');
 
                 let normReturnWay = null;
@@ -1398,52 +1480,62 @@
                     counts.returnUpcoming[normReturnWay].dates[shortDate] = (counts.returnUpcoming[normReturnWay].dates[shortDate] || 0) + 1;
                 }
 
-                // [수정] 예약 인원 전체보기 필터 로직 보완
-                if (currentUpcomingDelivery !== null) {
+                // [수정] 예약 인원 전체보기/다중 필터 로직 보완
+                if (isViewAllUpcoming || selectedUpcomingFilters.length > 0) {
                     if (!isUpcomingTarget) return false;
-                    if (currentUpcomingDelivery !== 'ALL_METHODS' && normDelivery !== currentUpcomingDelivery) return false;
                     
-                    if (currentUpcomingModel !== 'all') {
-                        if (currentUpcomingModel.startsWith('date:')) {
-                            const targetDate = currentUpcomingModel.replace('date:', '');
-                            let shortDate = '미정';
-                            if (startDateStr && startDateStr.includes('-')) {
-                                const parts = startDateStr.split('-');
-                                if (parts.length === 3) {
-                                    const dObj = new Date(parts[0], parts[1]-1, parts[2]);
-                                    const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
-                                    shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
+                    if (selectedUpcomingFilters.length > 0) {
+                        const isMatch = selectedUpcomingFilters.some(filter => {
+                            if (filter.method !== normDelivery) return false;
+                            if (filter.value === 'all') return true;
+                            
+                            if (filter.value.startsWith('date:')) {
+                                const targetDate = filter.value.replace('date:', '');
+                                let shortDate = '미정';
+                                if (startDateStr && startDateStr.includes('-')) {
+                                    const parts = startDateStr.split('-');
+                                    if (parts.length === 3) {
+                                        const dObj = new Date(parts[0], parts[1]-1, parts[2]);
+                                        const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
+                                        shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
+                                    }
                                 }
+                                return shortDate === targetDate;
+                            } else {
+                                return model.includes(filter.value);
                             }
-                            if (shortDate !== targetDate) return false;
-                        } else {
-                            if (!model.includes(currentUpcomingModel)) return false;
-                        }
+                        });
+                        if (!isMatch) return false;
                     }
                     return matchQuery; 
                 }
 
-                // 반납 인원 전체보기 필터 로직 보완
-                if (currentReturnUpcomingMethod !== null) {
+                // 반납 인원 전체보기/다중 필터 로직 보완
+                if (isViewAllReturnUpcoming || selectedReturnUpcomingFilters.length > 0) {
                     if (!isReturnUpcomingTarget) return false;
-                    if (currentReturnUpcomingMethod !== 'ALL_METHODS' && normReturnWay !== currentReturnUpcomingMethod) return false;
                     
-                    if (currentReturnUpcomingModel !== 'all') {
-                        if (currentReturnUpcomingModel.startsWith('date:')) {
-                            const targetDate = currentReturnUpcomingModel.replace('date:', '');
-                            let shortDate = '미정';
-                            if (endDateStr && endDateStr.includes('-')) {
-                                const parts = endDateStr.split('-');
-                                if (parts.length === 3) {
-                                    const dObj = new Date(parts[0], parts[1]-1, parts[2]);
-                                    const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
-                                    shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
+                    if (selectedReturnUpcomingFilters.length > 0) {
+                        const isMatch = selectedReturnUpcomingFilters.some(filter => {
+                            if (filter.method !== normReturnWay) return false;
+                            if (filter.value === 'all') return true;
+                            
+                            if (filter.value.startsWith('date:')) {
+                                const targetDate = filter.value.replace('date:', '');
+                                let shortDate = '미정';
+                                if (endDateStr && endDateStr.includes('-')) {
+                                    const parts = endDateStr.split('-');
+                                    if (parts.length === 3) {
+                                        const dObj = new Date(parts[0], parts[1]-1, parts[2]);
+                                        const dayStr = ['일', '월', '화', '수', '목', '금', '토'][dObj.getDay()];
+                                        shortDate = `${parseInt(parts[1])}/${parseInt(parts[2])}(${dayStr})`;
+                                    }
                                 }
+                                return shortDate === targetDate;
+                            } else {
+                                return model.includes(filter.value);
                             }
-                            if (shortDate !== targetDate) return false;
-                        } else {
-                            if (!model.includes(currentReturnUpcomingModel)) return false;
-                        }
+                        });
+                        if (!isMatch) return false;
                     }
                     return matchQuery; 
                 }
@@ -1599,7 +1691,7 @@
 
                     sortedDates.forEach(d => {
                         const count = dates[d];
-                        const isActive = (currentUpcomingDelivery === del && currentUpcomingModel === 'date:' + d) ? 'active' : '';
+                        const isActive = selectedUpcomingFilters.some(f => f.method === del && f.value === 'date:' + d) ? 'active' : '';
                         html += `<button onclick="setUpcomingFilter('${del}', 'date:${d}')" class="chip-btn upc-item ${isActive}" data-del="${del}" data-mod="date:${d}">
                             ${d} ${count}건
                         </button>`;
@@ -1646,7 +1738,7 @@
 
                     sortedDates.forEach(d => {
                         const count = dates[d];
-                        const isActive = (currentReturnUpcomingMethod === ret && currentReturnUpcomingModel === 'date:' + d) ? 'active' : '';
+                        const isActive = selectedReturnUpcomingFilters.some(f => f.method === ret && f.value === 'date:' + d) ? 'active' : '';
                         html += `<button onclick="setReturnUpcomingFilter('${ret}', 'date:${d}')" class="chip-btn ret-upc-item ${isActive}" data-ret="${ret}" data-mod="date:${d}">
                             ${d} ${count}건
                         </button>`;
@@ -1663,7 +1755,7 @@
             // [추가] 예약 인원 전체보기 버튼 카운트 업데이트
             const viewAllUpcBtn = document.getElementById('btn-view-all-upc');
             if (viewAllUpcBtn) {
-                if (currentUpcomingDelivery === 'ALL_METHODS') {
+                if (isViewAllUpcoming) {
                     viewAllUpcBtn.innerText = `전체 해제 (${totalUpcoming})`;
                 } else {
                     viewAllUpcBtn.innerText = `전체보기 (${totalUpcoming})`;
@@ -1673,12 +1765,33 @@
             // 반납 인원 전체보기 버튼 카운트 업데이트
             const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
             if (viewAllRetBtn) {
-                if (currentReturnUpcomingMethod === 'ALL_METHODS') {
+                if (isViewAllReturnUpcoming) {
                     viewAllRetBtn.innerText = `전체 해제 (${totalReturnUpcoming})`;
                 } else {
                     viewAllRetBtn.innerText = `전체보기 (${totalReturnUpcoming})`;
                 }
             }
+
+            // [추가] 필터 UI 렌더링 후 헤더/아이템의 active 상태 동기화
+            document.querySelectorAll('.upc-header, .upc-item').forEach(btn => {
+                const method = btn.dataset.del;
+                const value = btn.dataset.mod || 'all';
+                if (selectedUpcomingFilters.some(f => f.method === method && f.value === value)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            document.querySelectorAll('.ret-upc-header, .ret-upc-item').forEach(btn => {
+                const method = btn.dataset.ret;
+                const value = btn.dataset.mod || 'all';
+                if (selectedReturnUpcomingFilters.some(f => f.method === method && f.value === value)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
             
             const backupBtn = document.getElementById('btn-quick-backup');
             const backupCount = document.getElementById('quick-backup-count');
