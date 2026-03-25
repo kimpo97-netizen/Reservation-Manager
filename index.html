@@ -792,7 +792,6 @@
             const clearReturnDateBtn = document.getElementById('btn-clear-return-date');
             if(clearReturnDateBtn) clearReturnDateBtn.classList.add('hidden');
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
         }
 
@@ -922,7 +921,6 @@
             
             document.querySelectorAll('.ret-upc-header, .ret-upc-item, .svc-header').forEach(btn => btn.classList.remove('active'));
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
         }
 
@@ -971,7 +969,6 @@
             
             document.querySelectorAll('.upc-header, .upc-item, .svc-header').forEach(btn => btn.classList.remove('active'));
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
         }
 
@@ -1038,7 +1035,6 @@
 
             document.querySelectorAll('.ret-upc-header, .ret-upc-item, .svc-header').forEach(btn => btn.classList.remove('active'));
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
         }
 
@@ -1100,7 +1096,6 @@
             
             document.querySelectorAll('.upc-header, .upc-item, .svc-header').forEach(btn => btn.classList.remove('active'));
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
         }
 
@@ -1151,7 +1146,6 @@
                 else btn.classList.remove('active');
             });
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
         }
 
@@ -1190,7 +1184,6 @@
                 else clearBtn.classList.add('hidden');
             }
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
         }
 
@@ -1229,7 +1222,6 @@
                 else clearBtn.classList.add('hidden');
             }
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             filterData(false);
         }
 
@@ -1835,7 +1827,6 @@
             else currentFilterStatus = status;
             
             document.querySelectorAll('.status-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentFilterStatus));
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
             filterData(false);
         }
 
@@ -1848,7 +1839,6 @@
             else currentModelFilter = m; 
             
             document.querySelectorAll('.model-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentModelFilter)); 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
             filterData(false); 
         }
         
@@ -1862,7 +1852,6 @@
             if (currentDeliveryFilter === 'all') { subGroup.classList.add('hidden'); subGroup.classList.remove('flex'); } 
             else { subGroup.classList.remove('hidden'); subGroup.classList.add('flex'); }
             document.querySelectorAll('.delivery-sub-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === 'all'));
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
             filterData(false); 
         }
 
@@ -1871,7 +1860,6 @@
             else currentDeliverySubFilter = sub; 
             
             document.querySelectorAll('.delivery-sub-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentDeliverySubFilter)); 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
             filterData(false); 
         }
 
@@ -1880,7 +1868,6 @@
             else currentReturnFilter = r; 
             
             document.querySelectorAll('.return-filter-item').forEach(b => b.classList.toggle('active', b.dataset.id === currentReturnFilter)); 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
             filterData(false); 
         }
 
