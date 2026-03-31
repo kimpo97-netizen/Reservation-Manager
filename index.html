@@ -375,6 +375,12 @@
             <button onclick="bulkExtendRental()" class="flex-1 justify-center text-[13px] font-bold bg-sky-50 text-sky-600 hover:bg-sky-100 py-3 rounded-xl transition-colors border border-sky-200 flex items-center gap-1.5 shadow-sm">⏳ 대여 연장 (+1일)</button>
             <button onclick="bulkAddBackupMemo()" class="flex-1 justify-center text-[13px] font-bold bg-amber-50 text-amber-600 hover:bg-amber-100 py-3 rounded-xl transition-colors border border-amber-200 flex items-center gap-1.5 shadow-sm">💾 데이터 백업 추가</button>
         </div>
+
+        <!-- [NEW] 백업 관련 버튼 (선택 항목 중 백업이 포함된 경우에만 표시됨) -->
+        <div id="bulk-backup-actions" class="hidden items-center gap-2 w-full">
+            <button onclick="bulkSetBackupStatus('백업시작')" class="flex-1 justify-center text-[13px] font-bold bg-purple-100 text-purple-700 hover:bg-purple-200 py-3 rounded-xl transition-colors shadow-sm flex items-center gap-1.5">▶️ 백업 시작</button>
+            <button onclick="bulkSetBackupStatus('백업완료')" class="flex-1 justify-center text-[13px] font-bold bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl transition-colors shadow-sm flex items-center gap-1.5">✅ 백업 완료</button>
+        </div>
         
         <div class="flex items-center gap-2 w-full">
             <button onclick="copyForPostOffice()" class="flex-1 justify-center text-[13px] font-bold bg-orange-200 hover:bg-orange-300 text-orange-900 py-3 rounded-xl transition-colors shadow-sm flex items-center gap-1.5" title="대여모델/이름/우편번호/주소/연락처 복사">
@@ -1910,26 +1916,35 @@
             const count = document.getElementById('bulk-count');
             const selectAll = document.getElementById('selectAllCheckbox');
             const modelSummary = document.getElementById('bulk-model-summary'); 
+            const backupActions = document.getElementById('bulk-backup-actions'); // [NEW] 백업 액션 컨테이너
 
             if (selectedRows.length > 0) {
                 count.innerText = selectedRows.length;
                 bar.classList.remove('translate-y-48', 'opacity-0', 'pointer-events-none');
                 if(selectAll) selectAll.checked = selectedRows.length === currentlyFilteredList.length;
 
+                let hasBackup = false; // [NEW] 백업 항목 포함 여부
+
                 if (modelSummary) {
                     const modelCounts = {};
                     let batteryCount = 0;
                     selectedRows.forEach(rowId => {
                         const item = allData.find(i => String(i.row) === String(rowId));
-                        if (item && item.model) {
-                            if (String(item.model).includes('보조배터리')) batteryCount++;
-                            let rawModel = String(item.model || '').replace(/\+?\s*보조배터리/g, '').trim();
-                            let shortModel = '기타';
-                            const models = ['23U', '24U', '25U', '26U', '17PM', '17P'];
-                            for (const m of models) {
-                                if (rawModel.toUpperCase().includes(m)) { shortModel = m; break; }
+                        if (item) {
+                            // [NEW] 백업 여부 확인 로직
+                            const isBackup = String(item.category).includes('백업') || String(item.model).includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
+                            if (isBackup) hasBackup = true;
+
+                            if (item.model) {
+                                if (String(item.model).includes('보조배터리')) batteryCount++;
+                                let rawModel = String(item.model || '').replace(/\+?\s*보조배터리/g, '').trim();
+                                let shortModel = '기타';
+                                const models = ['23U', '24U', '25U', '26U', '17PM', '17P'];
+                                for (const m of models) {
+                                    if (rawModel.toUpperCase().includes(m)) { shortModel = m; break; }
+                                }
+                                modelCounts[shortModel] = (modelCounts[shortModel] || 0) + 1;
                             }
-                            modelCounts[shortModel] = (modelCounts[shortModel] || 0) + 1;
                         }
                     });
 
@@ -1954,6 +1969,17 @@
                     modelSummary.classList.add('flex');
                 }
 
+                // [NEW] 선택 항목 중 백업 건이 있으면 백업시작/완료 버튼 노출
+                if (backupActions) {
+                    if (hasBackup) {
+                        backupActions.classList.remove('hidden');
+                        backupActions.classList.add('flex');
+                    } else {
+                        backupActions.classList.add('hidden');
+                        backupActions.classList.remove('flex');
+                    }
+                }
+
             } else {
                 bar.classList.add('translate-y-48', 'opacity-0', 'pointer-events-none');
                 if(selectAll) selectAll.checked = false;
@@ -1961,6 +1987,10 @@
                 if(modelSummary) {
                     modelSummary.classList.add('hidden');
                     modelSummary.classList.remove('flex');
+                }
+                if (backupActions) {
+                    backupActions.classList.add('hidden');
+                    backupActions.classList.remove('flex');
                 }
             }
         }
@@ -2348,6 +2378,56 @@
             }
         }
 
+        // [NEW] 백업 상태 (시작/완료) 일괄 변경 함수
+        async function bulkSetBackupStatus(status) {
+            if (selectedRows.length === 0) return;
+
+            const originalDataBackup = [];
+            const updates = []; 
+            
+            selectedRows.forEach(rowId => {
+                const targetIndex = allData.findIndex(item => String(item.row) === String(rowId));
+                if (targetIndex !== -1) {
+                    originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
+                    
+                    let currentMemo = allData[targetIndex].memo || '';
+                    
+                    // 기존 '백업시작'이나 '백업완료' 텍스트를 제거하여 중복 방지 (ex: 백업 / 백업시작 / 백업완료)
+                    let cleanMemo = currentMemo.replace(/\/?\s*백업시작/g, '').replace(/\/?\s*백업완료/g, '').trim();
+                    if (cleanMemo.endsWith('/')) cleanMemo = cleanMemo.slice(0, -1).trim();
+
+                    const newMemo = cleanMemo ? cleanMemo + " / " + status : status;
+                    
+                    allData[targetIndex].memo = newMemo; 
+                    updates.push({ row: rowId, memo: newMemo, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
+                }
+            });
+
+            if (updates.length === 0) return;
+
+            clearSelection();
+            filterData(true);
+            showAppAlert(`${updates.length}건의 메모 상태를 '${status}'(으)로 일괄 변경했습니다.`, "백업 상태 업데이트", "✅");
+
+            try {
+                for (const u of updates) {
+                    const payload = { type: 'update', row: u.row, sheetName: '예약내역', memo: u.memo, orderTime: u.orderTime, phone: u.phone };
+                    const res = await fetch(API_URL, { 
+                        method: 'POST', 
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload) 
+                    });
+                    const data = await res.json();
+                    if(data.result !== 'success') throw new Error("서버 오류");
+                }
+            } catch (err) {
+                originalDataBackup.forEach(backup => { Object.assign(allData[backup.index], backup.data); });
+                filterData(true);
+                showAppAlert("저장에 실패하여 원상복구 되었습니다.", "🚨 실패", "⚠️");
+            }
+        }
+
         function renderList(list) {
             const container = document.getElementById('list-container');
             container.innerHTML = '';
@@ -2385,6 +2465,18 @@
                 const isBackup = String(item.category).includes('백업') || String(item.model).includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
                 const isExtension = String(item.category).includes('연장') || String(item.model).includes('연장') || String(item.memo).includes('연장');
                 
+                let backupBadgeHtml = '';
+                if (isBackup) {
+                    const memoStr = String(item.memo || '');
+                    if (memoStr.includes('백업완료')) {
+                        backupBadgeHtml = `<span class="text-[10px] font-bold bg-purple-600 text-white border border-purple-700 px-1.5 py-0.5 rounded shadow-sm">✅ 백업완료</span>`;
+                    } else if (memoStr.includes('백업시작')) {
+                        backupBadgeHtml = `<span class="text-[10px] font-bold bg-purple-100 text-purple-800 border border-purple-300 px-1.5 py-0.5 rounded shadow-sm">▶️ 백업시작</span>`;
+                    } else {
+                        backupBadgeHtml = `<span class="text-[10px] font-bold bg-purple-50 text-purple-600 border border-purple-200 px-1.5 py-0.5 rounded shadow-sm">💾 백업</span>`;
+                    }
+                }
+
                 let extraCardClasses = '';
                 if (isBackup) {
                     extraCardClasses = '!border-[3px] !border-yellow-400 !bg-yellow-50/70 shadow-[0_0_12px_rgba(250,204,21,0.2)] z-10'; 
@@ -2429,7 +2521,7 @@
                         ${(hasBattery || isBackup || isExtension) ? `
                         <div class="flex items-center gap-1 mt-1.5 flex-wrap justify-center">
                             ${hasBattery ? `<span class="text-[10px] font-bold bg-yellow-50 text-yellow-600 border border-yellow-200 px-1.5 py-0.5 rounded shadow-sm">⚡ 배터리</span>` : ''}
-                            ${isBackup ? `<span class="text-[10px] font-bold bg-purple-50 text-purple-600 border border-purple-200 px-1.5 py-0.5 rounded shadow-sm">💾 백업</span>` : ''}
+                            ${backupBadgeHtml}
                             ${isExtension ? `<span class="text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 px-1.5 py-0.5 rounded shadow-sm">⏳ 연장</span>` : ''}
                         </div>
                         ` : ''}
