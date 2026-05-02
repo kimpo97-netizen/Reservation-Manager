@@ -2188,7 +2188,7 @@
 
             if (trackingNumbers.length !== selectedRows.length) {
                 showAppConfirm(
-                    `체크된 고객은 ${selectedRows.length}명인데, 붙여넣은 송장번호는 ${trackingNumbers.length}개입니다.\n(위에서부터 순서대로 빈틈없이 배정됩니다) 계속 진행할까요?`, 
+                    `체크된 고객은 ${selectedRows.length}명인데, 붙여넣은 송장번호는 ${trackingNumbers.length}개입니다.\n(위에서부터 순서대로 빈틈없이 배정됩니다) 일속 진행할까요?`, 
                     () => openBulkTrackingReviewModal(trackingNumbers), 
                     "개수 불일치 안내", 
                     "검토 화면으로", 
@@ -2472,6 +2472,22 @@
             container.innerHTML = '';
             if(!list.length) { container.innerHTML = `<div class="py-20 text-center text-slate-500 font-bold bg-white rounded-xl border border-dashed border-slate-300">검색 조건에 맞는 예약 내역이 없습니다.</div>`; return; }
             
+            // --- [추가] 중복 확인 로직 ---
+            const nameCounts = {};
+            const phoneCounts = {};
+            
+            allData.forEach(item => {
+                const statusStr = String(item.status || '');
+                if (statusStr.includes('취소') || statusStr.includes('반납')) return; // 취소 및 반납건은 중복 확인 대상에서 제외
+                
+                const name = String(item.name || '').replace(/\s+/g, '');
+                const phone = String(item.phone || '').replace(/[^0-9]/g, '');
+                
+                if (name.length >= 2) nameCounts[name] = (nameCounts[name] || 0) + 1;
+                if (phone.length >= 9) phoneCounts[phone] = (phoneCounts[phone] || 0) + 1;
+            });
+            // -------------------------
+
             list.forEach(item => {
                 const isSelected = selectedRows.includes(String(item.row));
                 let accentColor = 'bg-slate-300';
@@ -2486,6 +2502,26 @@
                 else if(item.status === '반납완료') { badgeClass = 'status-return'; badgeText = '반납'; }
                 else if(item.status === '대기') { badgeClass = 'status-hold'; badgeText = '대기'; }
                 else if(item.status === '취소') { badgeClass = 'status-cancel'; badgeText = '취소'; }
+
+                // --- [추가] 중복 플래그 처리 ---
+                const cleanName = String(item.name || '').replace(/\s+/g, '');
+                const cleanPhone = String(item.phone || '').replace(/[^0-9]/g, '');
+                const itemStatusStr = String(item.status || '');
+                const isExcludedFromDup = itemStatusStr.includes('취소') || itemStatusStr.includes('반납');
+                
+                let duplicateBadgeHtml = '';
+                if (!isExcludedFromDup) {
+                    const isDupName = cleanName.length >= 2 && nameCounts[cleanName] > 1;
+                    const isDupPhone = cleanPhone.length >= 9 && phoneCounts[cleanPhone] > 1;
+                    
+                    if (isDupName || isDupPhone) {
+                        let msg = [];
+                        if (isDupName) msg.push('동명이인');
+                        if (isDupPhone) msg.push('동일 연락처');
+                        duplicateBadgeHtml = `<span class="text-[10px] bg-red-50 text-red-600 border border-red-200 px-1.5 py-0.5 rounded font-bold shadow-sm cursor-help whitespace-nowrap" title="${msg.join(', ')} 다수 존재">⚠️ 중복</span>`;
+                    }
+                }
+                // -------------------------
 
                 const time = formatTime(item.orderTime);
                 const price = (parseInt(String(item.totalPrice||0).replace(/[^0-9]/g, '')) || 0).toLocaleString() + '원';
@@ -2569,7 +2605,8 @@
                     <div class="w-40 shrink-0 flex flex-col justify-center min-w-0 pr-2">
                         <div class="flex items-center gap-1.5">
                             <span class="text-[15px] font-black text-slate-900 truncate">${item.name}</span>
-                            ${hasMemo ? `<span class="text-[10px] bg-slate-100 text-slate-500 border border-slate-200 px-1.5 py-0.5 rounded font-bold shadow-sm cursor-help" title="${item.memo}">📝 메모</span>` : ''}
+                            ${duplicateBadgeHtml}
+                            ${hasMemo ? `<span class="text-[10px] bg-slate-100 text-slate-500 border border-slate-200 px-1.5 py-0.5 rounded font-bold shadow-sm cursor-help shrink-0" title="${item.memo}">📝 메모</span>` : ''}
                         </div>
                         <div class="flex items-center mt-1 text-slate-500 font-bold text-[13px] font-tnum whitespace-nowrap">
                             <span>${item.phone || '-'}</span>
