@@ -2472,20 +2472,37 @@
             container.innerHTML = '';
             if(!list.length) { container.innerHTML = `<div class="py-20 text-center text-slate-500 font-bold bg-white rounded-xl border border-dashed border-slate-300">검색 조건에 맞는 예약 내역이 없습니다.</div>`; return; }
             
-            // --- [추가] 중복 확인 로직 ---
-            const nameCounts = {};
-            const phoneCounts = {};
+            // --- [수정] 중복 확인 로직 (동명이인 & 연락처 4자리 이상 연속 일치) ---
+            const activeByName = {};
             
             allData.forEach(item => {
                 const statusStr = String(item.status || '');
-                if (statusStr.includes('취소') || statusStr.includes('반납')) return; // 취소 및 반납건은 중복 확인 대상에서 제외
+                if (statusStr.includes('취소') || statusStr.includes('반납')) return; // 취소 및 반납건 제외
                 
-                const name = String(item.name || '').replace(/\s+/g, '');
-                const phone = String(item.phone || '').replace(/[^0-9]/g, '');
-                
-                if (name.length >= 2) nameCounts[name] = (nameCounts[name] || 0) + 1;
-                if (phone.length >= 9) phoneCounts[phone] = (phoneCounts[phone] || 0) + 1;
+                const cleanName = String(item.name || '').replace(/\s+/g, '');
+                if (cleanName.length >= 2) {
+                    if (!activeByName[cleanName]) activeByName[cleanName] = [];
+                    activeByName[cleanName].push(item);
+                }
             });
+
+            function isPhoneSimilar(p1, p2) {
+                if (!p1 || !p2) return false;
+                let s1 = String(p1).replace(/[^0-9]/g, '');
+                let s2 = String(p2).replace(/[^0-9]/g, '');
+                
+                // 010을 제외한 나머지 번호에서 4자리 연속 일치 확인 (010만 겹치는 것 방지)
+                if (s1.startsWith('010')) s1 = s1.substring(3);
+                if (s2.startsWith('010')) s2 = s2.substring(3);
+
+                if (s1.length < 4 || s2.length < 4) return false;
+
+                // 4자리 연속 부분 문자열이 포함되어 있는지 검사
+                for (let i = 0; i <= s1.length - 4; i++) {
+                    if (s2.includes(s1.substr(i, 4))) return true;
+                }
+                return false;
+            }
             // -------------------------
 
             list.forEach(item => {
@@ -2503,22 +2520,23 @@
                 else if(item.status === '대기') { badgeClass = 'status-hold'; badgeText = '대기'; }
                 else if(item.status === '취소') { badgeClass = 'status-cancel'; badgeText = '취소'; }
 
-                // --- [추가] 중복 플래그 처리 ---
+                // --- [수정] 중복 플래그 처리 (동명이인 & 연락처 유사) ---
                 const cleanName = String(item.name || '').replace(/\s+/g, '');
-                const cleanPhone = String(item.phone || '').replace(/[^0-9]/g, '');
                 const itemStatusStr = String(item.status || '');
                 const isExcludedFromDup = itemStatusStr.includes('취소') || itemStatusStr.includes('반납');
                 
                 let duplicateBadgeHtml = '';
-                if (!isExcludedFromDup) {
-                    const isDupName = cleanName.length >= 2 && nameCounts[cleanName] > 1;
-                    const isDupPhone = cleanPhone.length >= 9 && phoneCounts[cleanPhone] > 1;
+                if (!isExcludedFromDup && cleanName.length >= 2) {
+                    const sameNameItems = activeByName[cleanName] || [];
                     
-                    if (isDupName || isDupPhone) {
-                        let msg = [];
-                        if (isDupName) msg.push('동명이인');
-                        if (isDupPhone) msg.push('동일 연락처');
-                        duplicateBadgeHtml = `<span class="text-[10px] bg-red-50 text-red-600 border border-red-200 px-1.5 py-0.5 rounded font-bold shadow-sm cursor-help whitespace-nowrap" title="${msg.join(', ')} 다수 존재">⚠️ 중복</span>`;
+                    // 본인을 제외한 동일 이름 예약건 중 연락처 4자리 연속 일치가 있는지 확인
+                    const isDup = sameNameItems.some(otherItem => {
+                        if (String(otherItem.row) === String(item.row)) return false; // 본인 제외
+                        return isPhoneSimilar(item.phone, otherItem.phone);
+                    });
+                    
+                    if (isDup) {
+                        duplicateBadgeHtml = `<span class="text-[10px] bg-red-50 text-red-600 border border-red-200 px-1.5 py-0.5 rounded font-bold shadow-sm cursor-help whitespace-nowrap" title="동명이인이면서 연락처가 4자리 이상 일치하는 예약건 존재">⚠️ 중복</span>`;
                     }
                 }
                 // -------------------------
