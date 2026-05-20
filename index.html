@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>세린캠 대시보드(PC)</title>
+    <title>예약 관리자 (PC 대시보드)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" />
     <style>
@@ -142,7 +142,7 @@
     <header class="bg-white/90 backdrop-blur-xl border-b border-indigo-100/50 relative z-40 shadow-[0_4px_20px_-10px_rgba(99,102,241,0.08)] h-[72px] flex items-center px-6 md:px-8 transition-all">
         <div class="flex-1 flex items-center gap-3">
             <span class="text-xl font-black text-indigo-950 tracking-tight flex items-center gap-1.5"><span class="text-2xl drop-shadow-sm">🗂️</span> 세린캠 예약 대시보드</span>
-            <span class="bg-pink-100 text-pink-500 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-sm">v1.2</span>
+            <span class="bg-pink-100 text-pink-500 text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-sm">v1.3</span>
         </div>
         
         <div class="flex-1 max-w-md mx-auto">
@@ -708,8 +708,8 @@
         selectedDates = []; 
         let selectedReturnDates = []; 
         
-        let currentSortField = 'orderTime'; // [변경] 단일 모드에서 항목별 필드 기준으로 변경
-        let currentSortDirection = 'desc'; // [추가] 오름차순(asc) / 내림차순(desc) 상태 추가
+        let currentSortField = 'orderTime'; // 단일 모드에서 항목별 필드 기준으로 변경
+        let currentSortDirection = 'desc'; // 오름차순(asc) / 내림차순(desc) 상태 추가
         
         let selectedUpcomingFilters = []; // 다중 선택 지원을 위한 배열
         let isViewAllUpcoming = false;
@@ -720,7 +720,7 @@
         // 추가 서비스 필터 상태
         let currentServiceFilter = null; 
 
-        // [NEW] 달력 상태 변수
+        // 달력 상태 변수
         let currentCalDate = new Date();
         let tempSelectedDates = [];
         let lastClickedCalDateStr = null; 
@@ -729,7 +729,7 @@
             renderUpcomingFilters(); 
             renderReturnUpcomingFilters(); 
             renderServiceFilters(); 
-            updateSortUI(); // [추가] 초기 로딩 시 정렬 화살표 및 UI 동기화
+            updateSortUI(); // 초기 로딩 시 정렬 화살표 및 UI 동기화
             fetchData();
         };
 
@@ -844,11 +844,12 @@
             const container = document.getElementById('upcoming-filters-container');
             if (!container) return;
             
+            // 퀵 > 사무실 > 택배 > 공연장 순서로 변경
             const methods = [
-                { id: '택배', icon: '📦' },
-                { id: '공연장', icon: '🏟️' },
+                { id: '퀵', icon: '⚡' },
                 { id: '사무실', icon: '🏢' },
-                { id: '퀵', icon: '⚡' }
+                { id: '택배', icon: '📦' },
+                { id: '공연장', icon: '🏟️' }
             ];
             
             let html = '';
@@ -877,11 +878,12 @@
             const container = document.getElementById('return-upcoming-filters-container');
             if (!container) return;
             
+            // 당일반납(퀵) > 사무실 > 택배 > 공연장 순서로 변경
             const methods = [
-                { id: '택배', icon: '📦' },
+                { id: '당일반납', icon: '⚡' },
                 { id: '사무실', icon: '🏢' },
-                { id: '공연장', icon: '🏟️' },
-                { id: '당일반납', icon: '⚡' }
+                { id: '택배', icon: '📦' },
+                { id: '공연장', icon: '🏟️' }
             ];
             
             let html = '';
@@ -921,7 +923,7 @@
             `;
         }
 
-        // [추가] 예약 인원 전체보기 전용 토글 함수
+        // 예약 인원 전체보기 전용 토글 함수
         function viewAllUpcoming() {
             if (isViewAllUpcoming) {
                 isViewAllUpcoming = false;
@@ -1271,7 +1273,6 @@
         }
 
         function toggleSortMode() {
-            // [변경] 우측 상단 정렬 버튼 사이클 로직 (최신순 -> 기기명 오름차순 -> 고객명 오름차순)
             if (currentSortField === 'orderTime' && currentSortDirection === 'desc') {
                 currentSortField = 'model'; currentSortDirection = 'asc';
             } else if (currentSortField === 'model') {
@@ -1283,13 +1284,10 @@
             filterData(false);
         }
 
-        // [추가] 항목 헤더 클릭 시 개별 정렬 처리 함수
         function toggleSort(field) {
             if (currentSortField === field) {
-                // 같은 항목 클릭 시 오름차순/내림차순 토글
                 currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
             } else {
-                // 새로운 항목 클릭 시 기본적으로 오름차순 적용
                 currentSortField = field;
                 currentSortDirection = 'asc';
             }
@@ -1297,7 +1295,6 @@
             filterData(false);
         }
 
-        // [추가] 정렬 아이콘 화살표 및 상단 버튼 텍스트 업데이트
         function updateSortUI() {
             document.querySelectorAll('.sort-icon').forEach(icon => {
                 const field = icon.dataset.field;
@@ -1305,14 +1302,14 @@
                     icon.classList.remove('text-slate-300');
                     icon.classList.add('text-indigo-600');
                     if (currentSortDirection === 'asc') {
-                        icon.innerHTML = '<path d="m18 15-6-6-6 6"/>'; // 오름차순 (위 화살표)
+                        icon.innerHTML = '<path d="m18 15-6-6-6 6"/>'; 
                     } else {
-                        icon.innerHTML = '<path d="m6 9 6 6 6-6"/>'; // 내림차순 (아래 화살표)
+                        icon.innerHTML = '<path d="m6 9 6 6 6-6"/>'; 
                     }
                 } else {
                     icon.classList.remove('text-indigo-600');
                     icon.classList.add('text-slate-300');
-                    icon.innerHTML = '<path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>'; // 비활성 (위아래 화살표)
+                    icon.innerHTML = '<path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>'; 
                 }
             });
 
@@ -1334,7 +1331,6 @@
         function sortLogic(a, b) {
             let valA, valB;
 
-            // [변경] 선택된 정렬 항목(Field)에 따라 비교값 매핑
             if (currentSortField === 'status') {
                 valA = STATUS_PRIORITY[a.status || '예약신청'] || 99;
                 valB = STATUS_PRIORITY[b.status || '예약신청'] || 99;
@@ -1350,7 +1346,7 @@
             } else if (currentSortField === 'price') {
                 valA = parseInt(String(a.totalPrice || 0).replace(/[^0-9]/g, '')) || 0;
                 valB = parseInt(String(b.totalPrice || 0).replace(/[^0-9]/g, '')) || 0;
-            } else { // 기본값: orderTime (접수일시)
+            } else { 
                 valA = new Date(a.orderTime).getTime();
                 if (isNaN(valA)) valA = 0;
                 valB = new Date(b.orderTime).getTime();
@@ -1358,17 +1354,14 @@
             }
 
             let comp = 0;
-            // 문자열일 경우 가나다순 우선 정렬 지원, 숫자/날짜는 크기 비교
             if (typeof valA === 'string' && typeof valB === 'string') {
                 comp = valA.localeCompare(valB, undefined, { numeric: true, sensitivity: 'base' });
             } else {
                 comp = valA - valB;
             }
 
-            // 비교값이 같을 경우 엑셀의 최신행(row)을 우선하여 2차 정렬
             if (comp === 0) return b.row - a.row; 
 
-            // 선택된 오름차순/내림차순 방향 반영
             return currentSortDirection === 'asc' ? comp : -comp;
         }
 
@@ -1399,24 +1392,24 @@
                 return: { 'all': 0, '택배': 0, '당일': 0, '사무실': 0 },
                 status: { 'all': 0, '예약신청': 0, '대기': 0, '확정': 0, '반납완료': 0, '취소': 0 },
                 upcoming: {
-                    '택배': { 'all': 0, battery: 0, dates: {} },
-                    '공연장': { 'all': 0, battery: 0, dates: {} },
+                    '퀵': { 'all': 0, battery: 0, dates: {} },
                     '사무실': { 'all': 0, battery: 0, dates: {} },
-                    '퀵': { 'all': 0, battery: 0, dates: {} }
+                    '택배': { 'all': 0, battery: 0, dates: {} },
+                    '공연장': { 'all': 0, battery: 0, dates: {} }
                 },
                 returnUpcoming: {
-                    '택배': { 'all': 0, battery: 0, dates: {} },
+                    '당일반납': { 'all': 0, battery: 0, dates: {} },
                     '사무실': { 'all': 0, battery: 0, dates: {} },
-                    '공연장': { 'all': 0, battery: 0, dates: {} },
-                    '당일반납': { 'all': 0, battery: 0, dates: {} }
+                    '택배': { 'all': 0, battery: 0, dates: {} },
+                    '공연장': { 'all': 0, battery: 0, dates: {} }
                 },
                 service: { backup: 0, extension: 0 } 
             };
 
-            ['택배', '공연장', '사무실', '퀵'].forEach(del => {
+            ['퀵', '사무실', '택배', '공연장'].forEach(del => {
                 MODEL_LIST.forEach(m => counts.upcoming[del][m] = 0);
             });
-            ['택배', '사무실', '공연장', '당일반납'].forEach(ret => {
+            ['당일반납', '사무실', '택배', '공연장'].forEach(ret => {
                 MODEL_LIST.forEach(m => counts.returnUpcoming[ret][m] = 0);
             });
 
@@ -1517,7 +1510,6 @@
                     counts.returnUpcoming[normReturnWay].dates[shortDate] = (counts.returnUpcoming[normReturnWay].dates[shortDate] || 0) + 1;
                 }
 
-                // [수정] 예약 인원 전체보기/다중 필터 로직 보완
                 if (isViewAllUpcoming || selectedUpcomingFilters.length > 0) {
                     if (!isUpcomingTarget) return false;
                     
@@ -1547,7 +1539,6 @@
                     return matchQuery; 
                 }
 
-                // 반납 인원 전체보기/다중 필터 로직 보완
                 if (isViewAllReturnUpcoming || selectedReturnUpcomingFilters.length > 0) {
                     if (!isReturnUpcomingTarget) return false;
                     
@@ -1696,7 +1687,7 @@
             }
 
             let totalUpcoming = 0;
-            ['택배', '공연장', '사무실', '퀵'].forEach(del => {
+            ['퀵', '사무실', '택배', '공연장'].forEach(del => {
                 const delTotal = counts.upcoming[del]['all'];
                 const delBattery = counts.upcoming[del].battery; 
                 totalUpcoming += delTotal;
@@ -1743,7 +1734,7 @@
             }
 
             let totalReturnUpcoming = 0;
-            ['택배', '사무실', '공연장', '당일반납'].forEach(ret => {
+            ['당일반납', '사무실', '택배', '공연장'].forEach(ret => {
                 const retTotal = counts.returnUpcoming[ret]['all'];
                 const retBattery = counts.returnUpcoming[ret].battery; 
                 totalReturnUpcoming += retTotal;
@@ -1789,7 +1780,6 @@
                 retEmptyMsg.style.display = totalReturnUpcoming === 0 ? 'block' : 'none';
             }
 
-            // [추가] 예약 인원 전체보기 버튼 카운트 업데이트
             const viewAllUpcBtn = document.getElementById('btn-view-all-upc');
             if (viewAllUpcBtn) {
                 if (isViewAllUpcoming) {
@@ -1799,7 +1789,6 @@
                 }
             }
 
-            // 반납 인원 전체보기 버튼 카운트 업데이트
             const viewAllRetBtn = document.getElementById('btn-view-all-return-upc');
             if (viewAllRetBtn) {
                 if (isViewAllReturnUpcoming) {
@@ -1809,7 +1798,6 @@
                 }
             }
 
-            // [추가] 필터 UI 렌더링 후 헤더/아이템의 active 상태 동기화
             document.querySelectorAll('.upc-header, .upc-item').forEach(btn => {
                 const method = btn.dataset.del;
                 const value = btn.dataset.mod || 'all';
@@ -1955,14 +1943,14 @@
             const count = document.getElementById('bulk-count');
             const selectAll = document.getElementById('selectAllCheckbox');
             const modelSummary = document.getElementById('bulk-model-summary'); 
-            const backupActions = document.getElementById('bulk-backup-actions'); // [NEW] 백업 액션 컨테이너
+            const backupActions = document.getElementById('bulk-backup-actions'); 
 
             if (selectedRows.length > 0) {
                 count.innerText = selectedRows.length;
                 bar.classList.remove('translate-y-48', 'opacity-0', 'pointer-events-none');
                 if(selectAll) selectAll.checked = selectedRows.length === currentlyFilteredList.length;
 
-                let hasBackup = false; // [NEW] 백업 항목 포함 여부
+                let hasBackup = false; 
 
                 if (modelSummary) {
                     const modelCounts = {};
@@ -1970,7 +1958,6 @@
                     selectedRows.forEach(rowId => {
                         const item = allData.find(i => String(i.row) === String(rowId));
                         if (item) {
-                            // [NEW] 백업 여부 확인 로직
                             const isBackup = String(item.category).includes('백업') || String(item.model).includes('백업') || String(item.dataBackup).includes('신청') || String(item.memo).includes('백업');
                             if (isBackup) hasBackup = true;
 
@@ -2008,7 +1995,6 @@
                     modelSummary.classList.add('flex');
                 }
 
-                // [NEW] 선택 항목 중 백업 건이 있으면 백업시작/완료 버튼 노출
                 if (backupActions) {
                     if (hasBackup) {
                         backupActions.classList.remove('hidden');
@@ -2045,7 +2031,6 @@
                 if (targetIndex !== -1) {
                     originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
                     allData[targetIndex].status = newStatus; 
-                    // [수정] orderTime과 phone 데이터를 포함하여 updates 배열에 추가
                     updates.push({ row: rowId, status: newStatus, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                 }
             });
@@ -2056,7 +2041,6 @@
 
             try {
                 for (const u of updates) {
-                    // [수정] payload에 orderTime과 phone 추가
                     const payload = { type: 'update', row: u.row, sheetName: '예약내역', status: u.status, orderTime: u.orderTime, phone: u.phone };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
@@ -2081,13 +2065,12 @@
             showAppConfirm(`선택한 ${selectedRows.length}개의 예약을 완전히 삭제하시겠습니까?\n(이 작업은 되돌릴 수 없습니다)`, async () => {
                 const originalDataBackup = [];
                 const rowsToDelete = [...selectedRows].sort((a, b) => parseInt(b) - parseInt(a));
-                const deleteTargets = []; // [수정] 삭제할 정보 (row, orderTime, phone) 저장 배열
+                const deleteTargets = [];
 
                 rowsToDelete.forEach(rowId => {
                     const targetIndex = allData.findIndex(item => String(item.row) === String(rowId));
                     if (targetIndex !== -1) {
                         originalDataBackup.push(allData[targetIndex]);
-                        // [수정] orderTime과 phone 데이터를 포함
                         deleteTargets.push({ row: rowId, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                     }
                 });
@@ -2100,7 +2083,6 @@
 
                 try {
                     for (const t of deleteTargets) {
-                        // [수정] payload에 orderTime과 phone 추가
                         const payload = { type: 'delete', row: t.row, sheetName: '예약내역', orderTime: t.orderTime, phone: t.phone };
                         const res = await fetch(API_URL, {
                             method: 'POST',
@@ -2188,7 +2170,7 @@
 
             if (trackingNumbers.length !== selectedRows.length) {
                 showAppConfirm(
-                    `체크된 고객은 ${selectedRows.length}명인데, 붙여넣은 송장번호는 ${trackingNumbers.length}개입니다.\n(위에서부터 순서대로 빈틈없이 배정됩니다) 일속 진행할까요?`, 
+                    `체크된 고객은 ${selectedRows.length}명인데, 붙여넣은 송장번호는 ${trackingNumbers.length}개입니다.\n(위에서부터 순서대로 빈틈없이 배정됩니다) 계속 진행할까요?`, 
                     () => openBulkTrackingReviewModal(trackingNumbers), 
                     "개수 불일치 안내", 
                     "검토 화면으로", 
@@ -2281,7 +2263,6 @@
                 if (targetIndex !== -1) {
                     originalDataBackup.push({ index: targetIndex, data: { ...allData[targetIndex] } });
                     allData[targetIndex].trackingNumber = trackingNumbers[i]; 
-                    // [수정] orderTime과 phone 데이터를 포함하여 updates 배열에 추가
                     updates.push({ row: rowId, tracking: trackingNumbers[i], orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                 }
             }
@@ -2293,7 +2274,6 @@
 
             try {
                 for (const u of updates) {
-                    // [수정] payload에 orderTime과 phone 추가
                     const payload = { type: 'update', row: u.row, sheetName: '예약내역', tracking: u.tracking, orderTime: u.orderTime, phone: u.phone };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
@@ -2338,7 +2318,6 @@
                     }
                     
                     allData[targetIndex].endDate = newEndDateStr; 
-                    // [수정] orderTime과 phone 데이터를 포함하여 updates 배열에 추가
                     updates.push({ row: rowId, endDate: newEndDateStr, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                 }
             });
@@ -2349,7 +2328,6 @@
 
             try {
                 for (const u of updates) {
-                    // [수정] payload에 orderTime과 phone 추가
                     const payload = { type: 'update', row: u.row, sheetName: '예약내역', endDate: u.endDate, orderTime: u.orderTime, phone: u.phone };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
@@ -2382,7 +2360,6 @@
                     if (!currentMemo.includes("백업")) {
                         const newMemo = currentMemo ? currentMemo + " / 백업" : "백업";
                         allData[targetIndex].memo = newMemo; 
-                        // [수정] orderTime과 phone 데이터를 포함하여 updates 배열에 추가
                         updates.push({ row: rowId, memo: newMemo, orderTime: allData[targetIndex].orderTime, phone: allData[targetIndex].phone });
                     }
                 }
@@ -2399,7 +2376,6 @@
 
             try {
                 for (const u of updates) {
-                    // [수정] payload에 orderTime과 phone 추가
                     const payload = { type: 'update', row: u.row, sheetName: '예약내역', memo: u.memo, orderTime: u.orderTime, phone: u.phone };
                     const res = await fetch(API_URL, { 
                         method: 'POST', 
@@ -2417,7 +2393,6 @@
             }
         }
 
-        // [NEW] 백업 상태 (시작/완료) 일괄 변경 함수
         async function bulkSetBackupStatus(status) {
             if (selectedRows.length === 0) return;
 
@@ -2431,7 +2406,6 @@
                     
                     let currentMemo = allData[targetIndex].memo || '';
                     
-                    // 기존 '백업시작'이나 '백업완료' 텍스트를 제거하여 중복 방지 (ex: 백업 / 백업시작 / 백업완료)
                     let cleanMemo = currentMemo.replace(/\/?\s*백업시작/g, '').replace(/\/?\s*백업완료/g, '').trim();
                     if (cleanMemo.endsWith('/')) cleanMemo = cleanMemo.slice(0, -1).trim();
 
@@ -2472,7 +2446,7 @@
             container.innerHTML = '';
             if(!list.length) { container.innerHTML = `<div class="py-20 text-center text-slate-500 font-bold bg-white rounded-xl border border-dashed border-slate-300">검색 조건에 맞는 예약 내역이 없습니다.</div>`; return; }
             
-            // --- [수정] 중복 확인 로직 (동명이인 & 연락처 4자리 이상 연속 일치) ---
+            // --- [유지] 중복 확인 로직 (동명이인 & 연락처 4자리 이상 연속 일치 & 대여시작일 동일) ---
             const activeByName = {};
             
             allData.forEach(item => {
@@ -2491,13 +2465,11 @@
                 let s1 = String(p1).replace(/[^0-9]/g, '');
                 let s2 = String(p2).replace(/[^0-9]/g, '');
                 
-                // 010을 제외한 나머지 번호에서 4자리 연속 일치 확인 (010만 겹치는 것 방지)
                 if (s1.startsWith('010')) s1 = s1.substring(3);
                 if (s2.startsWith('010')) s2 = s2.substring(3);
 
                 if (s1.length < 4 || s2.length < 4) return false;
 
-                // 4자리 연속 부분 문자열이 포함되어 있는지 검사
                 for (let i = 0; i <= s1.length - 4; i++) {
                     if (s2.includes(s1.substr(i, 4))) return true;
                 }
@@ -2520,7 +2492,7 @@
                 else if(item.status === '대기') { badgeClass = 'status-hold'; badgeText = '대기'; }
                 else if(item.status === '취소') { badgeClass = 'status-cancel'; badgeText = '취소'; }
 
-                // --- [수정] 중복 플래그 처리 (동명이인 & 연락처 유사) ---
+                // --- [유지] 중복 플래그 처리 ---
                 const cleanName = String(item.name || '').replace(/\s+/g, '');
                 const itemStatusStr = String(item.status || '');
                 const isExcludedFromDup = itemStatusStr.includes('취소') || itemStatusStr.includes('반납');
@@ -2529,14 +2501,16 @@
                 if (!isExcludedFromDup && cleanName.length >= 2) {
                     const sameNameItems = activeByName[cleanName] || [];
                     
-                    // 본인을 제외한 동일 이름 예약건 중 연락처 4자리 연속 일치가 있는지 확인
                     const isDup = sameNameItems.some(otherItem => {
-                        if (String(otherItem.row) === String(item.row)) return false; // 본인 제외
+                        if (String(otherItem.row) === String(item.row)) return false; 
+                        // 대여 시작일이 다르면 중복이 아님
+                        if (String(item.startDate || '') !== String(otherItem.startDate || '')) return false; 
+                        
                         return isPhoneSimilar(item.phone, otherItem.phone);
                     });
                     
                     if (isDup) {
-                        duplicateBadgeHtml = `<span class="text-[10px] bg-red-50 text-red-600 border border-red-200 px-1.5 py-0.5 rounded font-bold shadow-sm cursor-help whitespace-nowrap" title="동명이인이면서 연락처가 4자리 이상 일치하는 예약건 존재">⚠️ 중복</span>`;
+                        duplicateBadgeHtml = `<span class="text-[10px] bg-red-50 text-red-600 border border-red-200 px-1.5 py-0.5 rounded font-bold shadow-sm cursor-help whitespace-nowrap" title="동일한 날짜에 동명이인이면서 연락처가 4자리 이상 일치하는 예약건 존재">⚠️ 중복</span>`;
                     }
                 }
                 // -------------------------
@@ -2805,7 +2779,6 @@
             if (oldDisplayModel !== finalDisplayModel) {
                 allData[itemIndex].model = finalModel; 
                 
-                // [수정] payload에 orderTime 추가 (phone은 이미 있음)
                 const payload = {
                     type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
                     name: item.name || '', phone: item.phone || '', orderTime: item.orderTime || '', zipCode: item.zipCode || '', address: item.address || '',
@@ -2898,7 +2871,6 @@
             if (oldTracking !== newTracking) {
                 allData[itemIndex].trackingNumber = newTracking; 
                 
-                // [수정] payload에 orderTime 추가 (phone은 이미 있음)
                 const payload = {
                     type: 'update', row: item.row, sheetName: item.sheetName || '예약내역',
                     name: item.name || '', phone: item.phone || '', orderTime: item.orderTime || '', zipCode: item.zipCode || '', address: item.address || '',
@@ -2958,7 +2930,6 @@
             document.getElementById('edit-row').value = item.row;
             document.getElementById('edit-sheet-name').value = item.sheetName || '예약내역'; 
             
-            // [수정] 모달 열 때 orderTime 정보도 숨김 필드에 저장해둡니다.
             document.getElementById('edit-order-time').value = item.orderTime || ''; 
             
             document.getElementById('display-order-time').innerHTML = "접수: " + (formatTime(item.orderTime).replace('<br>', ' ') || '-');
@@ -3059,7 +3030,6 @@
             const isBattery = document.getElementById('edit-battery').checked;
             let finalModel = (modelType === '기타' ? deviceId : modelType + deviceId) + (isBattery ? "+보조배터리" : "");
             
-            // [수정] payload에 orderTime 포함
             const payload = {
                 type: 'update', row: rowId, sheetName: document.getElementById('edit-sheet-name').value,
                 orderTime: document.getElementById('edit-order-time').value,
@@ -3108,7 +3078,6 @@
             const rowId = document.getElementById('edit-row').value;
             showAppConfirm("목록에서 완전히 삭제(이동)하시겠습니까?", () => {
                 const targetItem = allData.find(item => String(item.row) === String(rowId));
-                // [수정] 삭제할 대상의 원래 orderTime과 phone 정보를 저장해둠
                 const orderTime = targetItem ? targetItem.orderTime : '';
                 const phone = targetItem ? targetItem.phone : '';
 
@@ -3119,7 +3088,6 @@
                 closeModal();
                 showAppAlert("삭제 처리되었습니다.", "완료", "🗑️");
                 
-                // [수정] 삭제 payload에 orderTime과 phone 포함
                 fetch(API_URL, { 
                     method: 'POST', 
                     redirect: 'follow',
